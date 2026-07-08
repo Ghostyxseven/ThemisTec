@@ -3,7 +3,7 @@ _bmad/
 design-artifacts/
 .agent/
 .kiro/
-.github/
+.github/agents/
 
 # Dependencies
 node_modules/
