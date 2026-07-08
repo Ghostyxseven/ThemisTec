@@ -126,9 +126,46 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 
 ---
 
+## 🌿 Branches e Git Workflow
+
+| Branch | Propósito | Quem usa |
+|--------|-----------|----------|
+| `main` | Produção — só código estável e testado | Merge da `develop` (via PR) |
+| `develop` | Integração — branch principal de trabalho | Todos |
+| `feature/*` | Features individuais | Cada dev na sua feature |
+
+**⚠️ Regra: nunca commite direto na `main`. Sempre trabalhe na `develop` ou numa `feature/*`.**
+
+```bash
+# Para começar a trabalhar:
+git checkout develop
+git pull origin develop
+
+# Para criar uma feature:
+git checkout -b feature/nome-da-feature
+
+# Para enviar:
+git push -u origin feature/nome-da-feature
+# Criar PR → develop (no GitHub)
+```
+
+📖 Guia completo: [`docs/GIT_WORKFLOW.md`](docs/GIT_WORKFLOW.md)
+
+---
+
 ## 📂 Documentação
 
-A documentação técnica fica na pasta `docs/`. Todas as decisões arquiteturais são registradas como **ADRs (Architecture Decision Records)**:
+A documentação técnica fica na pasta `docs/`:
+
+| Documento | O que é |
+|-----------|---------|
+| [`docs/PRD.md`](docs/PRD.md) | Requisitos do Produto (Artefato 1) |
+| [`docs/AI_Harness.md`](docs/AI_Harness.md) | Harness Engineering (Artefato 3) |
+| [`docs/GIT_WORKFLOW.md`](docs/GIT_WORKFLOW.md) | Padrão de branches, commits e responsabilidades |
+| [`docs/BMAD_METHOD_GUIA.md`](docs/BMAD_METHOD_GUIA.md) | Como usar o BMad Method |
+| [`src/specs/`](src/specs/) | Contratos OpenAPI + Schemas Zod (Artefato 2) |
+
+### ADRs (Architecture Decision Records)
 
 - [ADR-0001](docs/architecture/decisions/0001-adocao-de-adrs.md) · Adoção de ADRs
 - [ADR-0002](docs/architecture/decisions/0002-organizacao-do-codigo.md) · Organização do Código
