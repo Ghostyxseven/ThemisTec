@@ -1,0 +1,701 @@
+openapi: "3.0.3"
+info:
+  title: ThemisTec API
+  description: API para o sistema de gestão jurídica ThemisTec
+  version: "1.0.0"
+  contact:
+    name: Equipe ThemisTec (OrbitTech)
+
+servers:
+  - url: https://themistec.site/api
+    description: Produção
+  - url: http://localhost:3000/api
+    description: Desenvolvimento
+
+tags:
+  - name: Auth
+    description: Autenticação e gerenciamento de conta
+  - name: Clientes
+    description: Gestão de clientes
+  - name: Processos
+    description: Gestão de processos jurídicos
+
+paths:
+  # ═══════════════════════════════════════════
+  # AUTH (EP01)
+  # ═══════════════════════════════════════════
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login com e-mail e senha (US01)
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Bloqueado após 3 tentativas
+
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Criar conta de usuário (US02)
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Conta criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "409":
+          description: E-mail já cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+
+  /auth/reset-password:
+    post:
+      tags: [Auth]
+      summary: Solicitar recuperação de senha (US03)
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordRequest"
+      responses:
+        "200":
+          description: Link de recuperação enviado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: E-mail não encontrado
+
+  # ═══════════════════════════════════════════
+  # CLIENTES (EP02)
+  # ═══════════════════════════════════════════
+
+  /clientes:
+    get:
+      tags: [Clientes]
+      summary: Listar clientes com busca e paginação (US05)
+      operationId: listClientes
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          description: Busca por nome ou CPF
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Número da página
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          description: Itens por página
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 50
+      responses:
+        "200":
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteListResponse"
+        "401":
+          description: Não autenticado
+
+    post:
+      tags: [Clientes]
+      summary: Cadastrar novo cliente (US04)
+      operationId: createCliente
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClienteRequest"
+      responses:
+        "201":
+          description: Cliente criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+        "409":
+          description: CPF já cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+
+  /clientes/{id}:
+    get:
+      tags: [Clientes]
+      summary: Buscar cliente por ID
+      operationId: getCliente
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Dados do cliente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+        "404":
+          description: Cliente não encontrado
+
+    put:
+      tags: [Clientes]
+      summary: Editar dados do cliente (US06)
+      operationId: updateCliente
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClienteRequest"
+      responses:
+        "200":
+          description: Cliente atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+        "404":
+          description: Cliente não encontrado
+        "422":
+          description: Dados inválidos
+
+    delete:
+      tags: [Clientes]
+      summary: Excluir cliente (US06)
+      operationId: deleteCliente
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Cliente excluído
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: Cliente não encontrado
+
+  # ═══════════════════════════════════════════
+  # PROCESSOS (EP03)
+  # ═══════════════════════════════════════════
+
+  /processos:
+    get:
+      tags: [Processos]
+      summary: Listar processos com filtros e paginação (US08)
+      operationId: listProcessos
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: clienteId
+          in: query
+          description: Filtrar por cliente
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filtrar por status
+          schema:
+            type: string
+            enum: [em_andamento, concluido, arquivado]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 50
+      responses:
+        "200":
+          description: Lista de processos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProcessoListResponse"
+        "401":
+          description: Não autenticado
+
+    post:
+      tags: [Processos]
+      summary: Registrar novo processo (US07)
+      operationId: createProcesso
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProcessoRequest"
+      responses:
+        "201":
+          description: Processo criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Processo"
+        "409":
+          description: Número do processo já cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Dados inválidos
+
+  /processos/{id}:
+    get:
+      tags: [Processos]
+      summary: Buscar processo por ID
+      operationId: getProcesso
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Dados do processo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Processo"
+        "404":
+          description: Processo não encontrado
+
+    put:
+      tags: [Processos]
+      summary: Atualizar processo
+      operationId: updateProcesso
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProcessoRequest"
+      responses:
+        "200":
+          description: Processo atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Processo"
+        "404":
+          description: Processo não encontrado
+
+  /processos/{id}/documentos:
+    post:
+      tags: [Processos]
+      summary: Anexar PDF ao processo (US09)
+      operationId: uploadDocumento
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [arquivo]
+              properties:
+                arquivo:
+                  type: string
+                  format: binary
+                  description: "Arquivo PDF (máx. 10MB)"
+                descricao:
+                  type: string
+                  maxLength: 200
+      responses:
+        "201":
+          description: Documento anexado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Documento"
+        "400":
+          description: Formato inválido (apenas PDF) ou tamanho excedido (máx. 10MB)
+        "404":
+          description: Processo não encontrado
+
+# ═══════════════════════════════════════════
+# COMPONENTS
+# ═══════════════════════════════════════════
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT do Firebase Auth
+
+  schemas:
+    # --- AUTH ---
+    LoginRequest:
+      type: object
+      required: [email, senha]
+      properties:
+        email:
+          type: string
+          format: email
+          example: "advogado@email.com"
+        senha:
+          type: string
+          minLength: 8
+          example: "minhasenha123"
+
+    RegisterRequest:
+      type: object
+      required: [nome, email, senha]
+      properties:
+        nome:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: "Dr. Rafael Silva"
+        email:
+          type: string
+          format: email
+          example: "rafael@email.com"
+        senha:
+          type: string
+          minLength: 8
+          example: "senhasegura123"
+
+    ResetPasswordRequest:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT token
+        usuario:
+          type: object
+          properties:
+            id:
+              type: string
+            nome:
+              type: string
+            email:
+              type: string
+
+    # --- CLIENTES ---
+    Cliente:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        cpf:
+          type: string
+          pattern: "^\\d{11}$"
+        email:
+          type: string
+          format: email
+        telefone:
+          type: string
+        endereco:
+          type: string
+        observacoes:
+          type: string
+        criadoEm:
+          type: string
+          format: date-time
+        atualizadoEm:
+          type: string
+          format: date-time
+
+    CreateClienteRequest:
+      type: object
+      required: [nome, cpf]
+      properties:
+        nome:
+          type: string
+          minLength: 2
+          maxLength: 100
+        cpf:
+          type: string
+          pattern: "^\\d{11}$"
+          description: "CPF com 11 dígitos (apenas números)"
+        email:
+          type: string
+          format: email
+        telefone:
+          type: string
+        endereco:
+          type: string
+        observacoes:
+          type: string
+          maxLength: 500
+
+    UpdateClienteRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+          minLength: 2
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        telefone:
+          type: string
+        endereco:
+          type: string
+        observacoes:
+          type: string
+          maxLength: 500
+
+    ClienteListResponse:
+      type: object
+      properties:
+        dados:
+          type: array
+          items:
+            $ref: "#/components/schemas/Cliente"
+        paginacao:
+          $ref: "#/components/schemas/Paginacao"
+
+    # --- PROCESSOS ---
+    Processo:
+      type: object
+      properties:
+        id:
+          type: string
+        numero:
+          type: string
+          description: "Número único do processo"
+        tipo:
+          type: string
+          enum: [civil, criminal, trabalhista, tributario, administrativo, outro]
+        status:
+          type: string
+          enum: [em_andamento, concluido, arquivado]
+        descricao:
+          type: string
+        clienteId:
+          type: string
+        clienteNome:
+          type: string
+        dataAbertura:
+          type: string
+          format: date
+        documentos:
+          type: array
+          items:
+            $ref: "#/components/schemas/Documento"
+        criadoEm:
+          type: string
+          format: date-time
+        atualizadoEm:
+          type: string
+          format: date-time
+
+    CreateProcessoRequest:
+      type: object
+      required: [numero, tipo, clienteId, dataAbertura]
+      properties:
+        numero:
+          type: string
+          minLength: 1
+          description: "Número do processo (único)"
+        tipo:
+          type: string
+          enum: [civil, criminal, trabalhista, tributario, administrativo, outro]
+        status:
+          type: string
+          enum: [em_andamento, concluido, arquivado]
+          default: em_andamento
+        descricao:
+          type: string
+          maxLength: 1000
+        clienteId:
+          type: string
+          description: "ID do cliente vinculado (obrigatório)"
+        dataAbertura:
+          type: string
+          format: date
+
+    UpdateProcessoRequest:
+      type: object
+      properties:
+        tipo:
+          type: string
+          enum: [civil, criminal, trabalhista, tributario, administrativo, outro]
+        status:
+          type: string
+          enum: [em_andamento, concluido, arquivado]
+        descricao:
+          type: string
+          maxLength: 1000
+
+    Documento:
+      type: object
+      properties:
+        id:
+          type: string
+        nomeArquivo:
+          type: string
+        url:
+          type: string
+          format: uri
+        tamanho:
+          type: integer
+          description: "Tamanho em bytes (máx. 10MB = 10485760)"
+        descricao:
+          type: string
+        enviadoEm:
+          type: string
+          format: date-time
+
+    # --- COMPARTILHADOS ---
+    Paginacao:
+      type: object
+      properties:
+        pagina:
+          type: integer
+        limite:
+          type: integer
+        total:
+          type: integer
+        totalPaginas:
+          type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
+        erro:
+          type: string
+        mensagem:
+          type: string
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        erro:
+          type: string
+          example: "Dados inválidos"
+        campos:
+          type: array
+          items:
+            type: object
+            properties:
+              campo:
+                type: string
+              mensagem:
+                type: string
+
+    MessageResponse:
+      type: object
+      properties:
+        mensagem:
+          type: string
