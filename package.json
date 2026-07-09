@@ -17,10 +17,10 @@
     "harness": "npm run typecheck && npm run lint && npm run test"
   },
   "dependencies": {
-    "next": "16.3.0",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "firebase": "12.15.0",
+    "next": "16.2.10",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "firebase": "12.16.0",
     "zod": "3.25.67"
   },
   "devDependencies": {
@@ -29,7 +29,7 @@
     "@types/react-dom": "19.1.5",
     "typescript": "5.8.3",
     "eslint": "9.29.0",
-    "eslint-config-next": "16.3.0",
+    "eslint-config-next": "16.2.10",
     "@typescript-eslint/eslint-plugin": "8.34.0",
     "@typescript-eslint/parser": "8.34.0",
     "vitest": "3.2.4",
