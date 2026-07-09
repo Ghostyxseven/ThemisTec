@@ -1,0 +1,41 @@
+{
+  "name": "themistec",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma de gestão jurídica para advogados autônomos",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src/ --ext .ts,.tsx",
+    "lint:fix": "eslint src/ --ext .ts,.tsx --fix",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "validate": "npm run typecheck && npm run lint && npm run test",
+    "harness": "npm run typecheck && npm run lint && npm run test"
+  },
+  "dependencies": {
+    "next": "14.2.15",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "firebase": "10.14.1",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.10",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "typescript": "5.5.4",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.15",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "vitest": "2.0.5",
+    "@testing-library/react": "16.0.0",
+    "@testing-library/jest-dom": "6.4.8",
+    "@vitejs/plugin-react": "4.3.1",
+    "jsdom": "24.1.1"
+  }
+}
