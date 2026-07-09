@@ -199,3 +199,27 @@ O nome da branch deve seguir o padrão do `GIT_WORKFLOW.md`. Ao usar o botão "C
 | `src/specs/openapi.yaml` | Contratos das rotas da API |
 | `src/specs/schemas/` | Schemas Zod de validação |
 | `.github/pull_request_template.md` | Template de PR vinculado à issue |
+
+---
+
+## 11. Regra obrigatoria para IA: issue antes de PR
+
+Antes de criar qualquer Pull Request, a IA deve confirmar que existe uma issue relacionada.
+
+Fluxo obrigatorio:
+
+1. Procurar issue existente que corresponda ao trabalho.
+2. Se nao existir, criar a issue antes do PR.
+3. Abrir o PR somente depois da issue existir.
+4. Preencher o campo `Issue relacionada` no PR.
+5. Usar `Closes #<numero-da-issue>` quando o PR tiver como destino a branch padrao (`main`).
+
+Observacao importante: o fechamento automatico por `Closes #N` acontece quando o PR e mergeado na branch padrao do repositorio. Neste projeto, a branch padrao e `main`. Em PRs intermediarios para `develop`, a issue pode precisar ser fechada manualmente depois da validacao.
+
+A IA nao deve:
+
+- Criar PR sem issue.
+- Deixar `Closes #` sem numero.
+- Usar template vazio.
+- Deixar texto de exemplo no corpo do PR.
+- Fechar issue antes do trabalho estar mergeado e validado.

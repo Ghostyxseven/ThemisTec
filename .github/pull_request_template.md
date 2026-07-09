@@ -1,5 +1,5 @@
-> Antes de abrir o PR: apague todos os textos de exemplo e preencha com informacoes reais.
-> PR com template vazio, comentarios HTML ou caixas sem marcar deve ser devolvido para ajuste.
+> REGRA OBRIGATORIA: antes de abrir este PR, crie ou localize a issue relacionada.
+> PR sem issue, com template vazio, comentarios HTML ou caixas sem marcar deve ser devolvido para ajuste.
 
 ## Resumo
 
@@ -12,7 +12,8 @@ Este PR implementa o login com e-mail e senha usando Firebase Auth. A tela valid
 
 Closes #
 
-Se nao houver issue, explique o motivo:
+Se ainda nao houver issue, pare aqui, crie a issue primeiro e depois volte para abrir o PR.
+Se for tecnicamente impossivel vincular uma issue, explique o motivo e como o trabalho sera rastreado:
 
 ## Tipo de mudanca
 
