@@ -1,47 +1,78 @@
+> Antes de abrir o PR: apague todos os textos de exemplo e preencha com informacoes reais.
+> PR com template vazio, comentarios HTML ou caixas sem marcar deve ser devolvido para ajuste.
+
 ## Resumo
 
-<!-- Descreva em 1-2 frases o que este PR faz -->
+Explique em 1 ou 2 frases o que mudou e por que esta mudanca existe.
 
-## Tipo de mudança
+Exemplo:
+Este PR implementa o login com e-mail e senha usando Firebase Auth. A tela valida os dados com Zod, chama a camada de servico e redireciona o usuario autenticado para o dashboard.
 
-- [ ] `feat` — Nova funcionalidade
-- [ ] `fix` — Correção de bug
-- [ ] `docs` — Documentação
-- [ ] `config` — Configuração (ESLint, tsc, CI)
-- [ ] `refactor` — Refatoração (sem mudar comportamento)
-- [ ] `test` — Testes
+## Issue relacionada
+
+Closes #
+
+Se nao houver issue, explique o motivo:
+
+## Tipo de mudanca
+
+Marque uma ou mais opcoes:
+
+- [ ] `feat` - Nova funcionalidade
+- [ ] `fix` - Correcao de bug
+- [ ] `docs` - Documentacao
+- [ ] `config` - Configuracao (ESLint, tsc, CI)
+- [ ] `refactor` - Refatoracao sem mudar comportamento
+- [ ] `test` - Testes
 
 ## O que foi feito
 
-<!-- Liste as mudanças principais -->
+- 
+- 
 - 
 
-## User Stories relacionadas
+## User Stories afetadas
 
-<!-- Marque quais US foram implementadas/afetadas -->
+Marque somente as US realmente implementadas ou afetadas:
+
 - [ ] US01 - Login
 - [ ] US02 - Cadastro
-- [ ] US03 - Recuperação de senha
+- [ ] US03 - Recuperacao de senha
 - [ ] US04 - Cadastro de cliente
 - [ ] US05 - Consulta de clientes
-- [ ] US06 - Edição/exclusão de cliente
+- [ ] US06 - Edicao/exclusao de cliente
 - [ ] US07 - Registro de processo
 - [ ] US08 - Consulta de processos
 - [ ] US09 - Anexar PDF
+- [ ] Nao se aplica
+
+## Como testar
+
+Descreva o caminho manual para o revisor validar:
+
+1. 
+2. 
+3. 
 
 ## Checklist do Harness
 
-- [ ] `npm run typecheck` — sem erros
-- [ ] `npm run lint` — sem erros
-- [ ] `npm run test` — todos passando
-- [ ] Código respeita os schemas Zod (`src/specs/schemas/`)
-- [ ] Código segue o padrão MVVM (view → viewmodel → model)
+Preencha o resultado real. Se nao rodou, marque como nao executado e explique em "Observacoes".
+
+- [ ] `npm run typecheck` passou
+- [ ] `npm run lint` passou
+- [ ] `npm run test` passou
+- [ ] Codigo respeita os schemas Zod (`src/specs/schemas/`)
+- [ ] Codigo segue MVVM (`view -> viewmodel -> model`)
 - [ ] Commits seguem Conventional Commits
 
-## Screenshots (se aplicável)
+## Evidencias
 
-<!-- Cole prints da interface aqui -->
+Cole prints, logs curtos ou resultado dos comandos quando aplicavel.
 
-## Observações
+```text
 
-<!-- Algo que o revisor precisa saber? Decisões técnicas? -->
+```
+
+## Observacoes para o revisor
+
+- 
