@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentação de Issues (ISSUES_WORKFLOW.md)
+    url: https://github.com/ThemisTec/themistec/blob/main/docs/ISSUES_WORKFLOW.md
+    about: Leia o guia completo antes de abrir uma issue.
+  - name: PRD do Projeto
+    url: https://github.com/ThemisTec/themistec/blob/main/docs/PRD.md
+    about: Consulte os requisitos e user stories do MVP.
