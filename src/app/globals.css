@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #1a3c5e;
+  --color-primary-dark: #0f2540;
+  --color-accent: #c9a84c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
