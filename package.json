@@ -4,7 +4,7 @@
   "private": true,
   "description": "Plataforma de gestão jurídica para advogados autônomos",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint src/ --ext .ts,.tsx",
