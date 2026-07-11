@@ -1,5 +1,5 @@
 import { IClienteRepository } from "@/shared/interfaces/IClienteRepository";
-import { CreateClienteInput, Cliente, ListClientesQuery, ClienteListResponse } from "@/specs/schemas/cliente.schema";
+import { CreateClienteInput, Cliente, ListClientesQuery, ClienteListResponse, UpdateClienteInput } from "@/specs/schemas/cliente.schema";
 import { getFirebaseApp } from "./firebase.client";
 import {
   getFirestore,
@@ -9,6 +9,10 @@ import {
   query,
   where,
   Firestore,
+  doc as firestoreDoc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 export class FirestoreClienteAdapter implements IClienteRepository {
@@ -140,6 +144,76 @@ export class FirestoreClienteAdapter implements IClienteRepository {
       };
     } catch {
       throw new Error("Erro ao buscar a lista de clientes.");
+    }
+  }
+
+  public async buscarPorId(id: string, userId: string): Promise<Cliente | null> {
+    try {
+      const docRef = firestoreDoc(this.db, "clientes", id);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        return null;
+      }
+
+      const data = docSnap.data();
+      if (data["userId"] !== userId) {
+        return null;
+      }
+
+      return {
+        id: docSnap.id,
+        nome: data["nome"] as string,
+        cpf: data["cpf"] as string,
+        email: data["email"] as string | undefined,
+        telefone: data["telefone"] as string | undefined,
+        endereco: data["endereco"] as string | undefined,
+        observacoes: data["observacoes"] as string | undefined,
+        userId: data["userId"] as string,
+        criadoEm: data["criadoEm"] as string,
+        atualizadoEm: data["atualizadoEm"] as string,
+      } as Cliente;
+    } catch {
+      throw new Error("Erro ao buscar cliente.");
+    }
+  }
+
+  public async atualizar(id: string, dados: UpdateClienteInput, userId: string): Promise<Cliente> {
+    const clienteExistente = await this.buscarPorId(id, userId);
+    if (!clienteExistente) {
+      throw new Error("Cliente não encontrado.");
+    }
+
+    const agora = new Date().toISOString();
+    const dadosAtualizados = {
+      ...dados,
+      atualizadoEm: agora,
+    };
+
+    try {
+      const docRef = firestoreDoc(this.db, "clientes", id);
+      await updateDoc(docRef, dadosAtualizados);
+
+      return {
+        ...clienteExistente,
+        ...dadosAtualizados,
+      } as Cliente;
+    } catch {
+      throw new Error("Erro ao atualizar os dados do cliente.");
+    }
+  }
+
+  public async excluir(id: string, userId: string): Promise<void> {
+    const clienteExistente = await this.buscarPorId(id, userId);
+    if (!clienteExistente) {
+      throw new Error("Cliente não encontrado.");
+    }
+
+    try {
+      const docRef = firestoreDoc(this.db, "clientes", id);
+      await deleteDoc(docRef);
+    } catch {
+      throw new Error("Erro ao excluir o cliente.");
     }
   }
 }

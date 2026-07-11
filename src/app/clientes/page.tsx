@@ -32,7 +32,17 @@ export default function ClientesPage(): React.ReactNode {
     setSearch,
     page,
     setPage,
+    excluirCliente,
   } = useListClientes();
+
+  const handleExcluir = async (id: string, nome: string): Promise<void> => {
+    const confirmou = window.confirm(
+      `Tem certeza que deseja excluir o cliente "${nome}"? Esta ação não pode ser desfeita.`
+    );
+    if (confirmou) {
+      await excluirCliente(id);
+    }
+  };
 
   const [localSearch, setLocalSearch] = useState("");
 
@@ -188,17 +198,18 @@ export default function ClientesPage(): React.ReactNode {
                       <td className="px-6 py-4 whitespace-nowrap">{cliente.email || "-"}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
                         <div className="inline-flex gap-2">
-                          <button
-                            type="button"
+                          <Link
+                            href={`/clientes/edicao/${cliente.id}`}
                             className="
                               px-3 py-1.5 text-xs font-semibold text-[#1a3c5e] border border-[#1a3c5e]/30
-                              rounded-md hover:bg-[#1a3c5e]/5 transition-colors
+                              rounded-md hover:bg-[#1a3c5e]/5 transition-colors inline-block
                             "
                           >
                             Editar
-                          </button>
+                          </Link>
                           <button
                             type="button"
+                            onClick={() => { void handleExcluir(cliente.id, cliente.nome); }}
                             className="
                               px-3 py-1.5 text-xs font-semibold text-red-600 border border-red-200
                               rounded-md hover:bg-red-50 transition-colors

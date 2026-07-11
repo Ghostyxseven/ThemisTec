@@ -20,6 +20,7 @@ interface UseListClientesReturn {
   page: number;
   setPage: (p: number) => void;
   refetch: () => void;
+  excluirCliente: (id: string) => Promise<void>;
 }
 
 export function useListClientes(): UseListClientesReturn {
@@ -57,6 +58,26 @@ export function useListClientes(): UseListClientesReturn {
     }
   }, [search, page]);
 
+  const excluirCliente = async (id: string): Promise<void> => {
+    setIsLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const userId = authService.getCurrentUserId();
+      if (!userId) {
+        throw new Error("Você precisa estar autenticado para realizar esta ação.");
+      }
+
+      await clienteRepository.excluir(id, userId);
+      await fetchClientes();
+    } catch (erro) {
+      const msg = erro instanceof Error ? erro.message : "Erro ao excluir cliente.";
+      setErrorMessage(msg);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     let active = true;
 
@@ -84,5 +105,6 @@ export function useListClientes(): UseListClientesReturn {
     page,
     setPage,
     refetch: () => { void fetchClientes(); },
+    excluirCliente,
   };
 }
