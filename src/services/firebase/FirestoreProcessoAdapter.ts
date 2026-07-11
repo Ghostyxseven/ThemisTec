@@ -103,4 +103,17 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
       throw new Error("Erro ao buscar a lista de processos.");
     }
   }
+
+  public async adicionarDocumento(processoId: string, documento: Documento): Promise<void> {
+    try {
+      const { doc, updateDoc, arrayUnion } = await import("firebase/firestore");
+      const processoRef = doc(this.db, "processos", processoId);
+      await updateDoc(processoRef, {
+        documentos: arrayUnion(documento),
+        atualizadoEm: new Date().toISOString()
+      });
+    } catch {
+      throw new Error("Falha ao adicionar o documento ao processo no banco.");
+    }
+  }
 }
