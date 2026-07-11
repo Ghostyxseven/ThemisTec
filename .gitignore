@@ -4,6 +4,16 @@ design-artifacts/
 .agent/
 .kiro/
 .github/agents/
+.claude/
+.swarm/
+claude.md
+mcp.json
+claude-mcp.json
+.claude-flow
+.mcp.json
+.claude.md
+.model-router-state.json
+
 
 # Dependencies
 node_modules/

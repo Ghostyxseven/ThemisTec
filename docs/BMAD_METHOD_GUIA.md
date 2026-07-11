@@ -27,7 +27,7 @@ O **BMad Method** é um framework de desenvolvimento ágil orientado por IA. Ele
 
 - **Node.js** (v18+)
 - **Python UV** - instalar via: `pip install uv` ou [docs.astral.sh/uv](https://docs.astral.sh/uv/getting-started/installation/)
-- Uma IDE com suporte a agente IA (Kiro, Cursor, VS Code + Copilot, etc.)
+- Uma IDE com suporte a agente IA (Antigravity, Cursor, VS Code + Copilot, etc.)
 
 ### Passos
 
@@ -48,7 +48,7 @@ O **BMad Method** é um framework de desenvolvimento ágil orientado por IA. Ele
    - **Select official modules** → Selecione todos (ou pelo menos BMad Core + BMad Method)
    - **Community modules?** → No
    - **Ready to install?** → Yes
-   - **Integrate with** → Selecione sua IDE (Kiro, Cursor, etc.)
+   - **Integrate with** → Selecione sua IDE (Antigravity, Cursor, etc.)
    - **What should agents call you?** → ThemisTec
    - **Project name** → ThemisTec
    - **Language** → Português
@@ -72,7 +72,7 @@ ThemisTec/
 │   ├── C-UX-Scenarios/
 │   ├── D-Design-System/
 │   └── E-Development/
-├── .kiro/skills/             # Skills para o Kiro (NÃO commitar)
+├── .kiro/skills/             # Skills para o Antigravity (NÃO commitar)
 └── .agent/skills/            # Skills para outros agentes (NÃO commitar)
 ```
 

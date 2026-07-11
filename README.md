@@ -6,7 +6,7 @@
 
 Desenvolvido por **ThemisTec** · MVP em desenvolvimento ativo
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%7C%20Auth%20%7C%20Storage-orange?style=for-the-badge&logo=firebase)](https://firebase.google.com/)
 [![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/)
 [![License](https://img.shields.io/badge/Licença-MIT-blue?style=for-the-badge)](LICENSE)
@@ -78,7 +78,7 @@ src/
 ## 🚀 Como Rodar Localmente
 
 ### Pré-requisitos
-- [Node.js](https://nodejs.org/) v18+
+- [Node.js](https://nodejs.org/) v20+
 - [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
 - Conta no [Firebase](https://firebase.google.com/) com projeto configurado
 
@@ -113,16 +113,30 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
 NEXT_PUBLIC_FIREBASE_APP_ID=
 ```
 
+### Validar o Harness (Sensores de Qualidade)
+
+Para verificar se o código está em conformidade com todos os contratos e padrões do projeto:
+
+```bash
+# Executa typecheck + lint + testes em sequência (pipeline completo)
+npm run harness
+
+# Ou individualmente:
+npm run typecheck   # Verificação de tipos TypeScript (strict mode)
+npm run lint        # ESLint com regras do projeto
+npm run test        # 36 testes de contrato (Auth, Clientes, Processos)
+```
+
 ---
 
 ## 👥 Equipe
 
 | Papel | Nome |
 |---|---|
-| 🎯 Líder de Projeto / Scrum Master | Marcos Vinícius de Oliveira Teixeira |
+| 🎯 Líder de Projeto / Scrum Master / PO | Marcos Vinícius de Oliveira Teixeira |
 | 🛢️ Dev Backend / DBA | Micael Cardoso Reis |
 | 🎨 Dev Frontend / Designer | Josiane Amorim Mendes |
-| 📋 Product Owner (PO) | Gisele Dias Plácido |
+| 📋 Product Owner (PO) | Gisele Dias Plácido, Marcos Vinícius de Oliveira Teixeira |
 
 ---
 
@@ -155,15 +169,21 @@ git push -u origin feature/nome-da-feature
 
 ## 📂 Documentação
 
-A documentação técnica fica na pasta `docs/`:
+### Artefatos Obrigatórios da Entrega (ES2)
+
+| # | Artefato | Localização | Status |
+|---|----------|-------------|--------|
+| 1 | **PRD** — Requisitos do Produto | [`docs/PRD.md`](docs/PRD.md) | ✅ Completo |
+| 2 | **Specs** — OpenAPI + Schemas Zod | [`src/specs/`](src/specs/) | ✅ Completo |
+| 3 | **AI Harness** — Harness Engineering | [`docs/AI_Harness.md`](docs/AI_Harness.md) | ✅ Completo |
+| 4 | **MVP Funcional** — Código-fonte da aplicação | [`src/`](src/) | 🔧 Em desenvolvimento |
+
+### Documentação Complementar
 
 | Documento | O que é |
 |-----------|---------|
-| [`docs/PRD.md`](docs/PRD.md) | Requisitos do Produto (Artefato 1) |
-| [`docs/AI_Harness.md`](docs/AI_Harness.md) | Harness Engineering (Artefato 3) |
 | [`docs/GIT_WORKFLOW.md`](docs/GIT_WORKFLOW.md) | Padrão de branches, commits e responsabilidades |
 | [`docs/BMAD_METHOD_GUIA.md`](docs/BMAD_METHOD_GUIA.md) | Como usar o BMad Method |
-| [`src/specs/`](src/specs/) | Contratos OpenAPI + Schemas Zod (Artefato 2) |
 
 ### ADRs (Architecture Decision Records)
 
@@ -174,6 +194,7 @@ A documentação técnica fica na pasta `docs/`:
 - [ADR-0005](docs/architecture/decisions/0005-hospedagem-e-infraestrutura.md) · Hospedagem e Infraestrutura
 - [ADR-0006](docs/architecture/decisions/0006-armazenamento-de-arquivos.md) · Armazenamento de Arquivos
 - [ADR-0007](docs/architecture/decisions/0007-adocao-do-mvvm.md) · Adoção do Padrão MVVM
+- [ADR-0008](docs/architecture/decisions/0008-padroes-de-projeto-gof.md) · Padrões de Projeto GoF
 
 ---
 

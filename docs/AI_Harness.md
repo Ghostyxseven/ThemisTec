@@ -181,9 +181,9 @@ npm run harness
 
 ---
 
-## 5. Integração com o Agente IA (Kiro)
+## 5. Integração com o Agente IA (Antigravity)
 
-O Kiro IDE foi configurado com:
+O Antigravity IDE foi configurado com:
 
 1. **Skills do BMad Method** (87 skills em `.kiro/skills/`) — guiam o agente nos fluxos de trabalho
 2. **Steering files** — injetam contexto automático (specs, ADRs, padrões)
@@ -209,7 +209,7 @@ O Kiro IDE foi configurado com:
 | Feedback | ESLint | 8.57.0 | Linter e formatador |
 | Feedback | TypeScript (tsc) | 5.5.4 | Checagem estrita de tipos |
 | Feedback | Vitest | 2.0.5 | Testes automatizados |
-| IDE | Kiro | - | Agente IA com hooks e steering |
+| IDE | Antigravity | - | Agente IA com hooks e steering |
 
 ---
 
