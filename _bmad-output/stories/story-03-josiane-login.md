@@ -1,7 +1,7 @@
 # Story 03: Implementação Visual da Tela de Login (Front-end)
 
 **Responsável:** Josiane  
-**Status:** To Do  
+**Status:** review  
 **Épico Relacionado:** Épico 01 - Autenticação  
 
 ## 1. Contexto e Objetivo
@@ -33,6 +33,6 @@ A Josiane deverá implementar no arquivo `src/app/login/page.tsx`:
 
 ## 4. Harness Engineering (Regras de Entrega)
 Antes de enviar o código, a Josiane deve garantir que os sensores automáticos (Feedback Loop) estejam verdes:
-- [ ] O código não pode acusar nenhum erro no TypeScript (`npm run typecheck`).
-- [ ] O código não pode acusar avisos no Linter (`npm run lint`).
+- [x] O código não pode acusar nenhum erro no TypeScript (`npm run typecheck`).
+- [x] O código não pode acusar avisos no Linter (`npm run lint`).
 - [ ] **REGRA DE OURO:** Nenhum Pull Request pode ser criado no Github sem antes criar uma **Issue**. O PR deve obrigatoriamente conter a frase `Closes #N` onde N é o número da Issue criada.
