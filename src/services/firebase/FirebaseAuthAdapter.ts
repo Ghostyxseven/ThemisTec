@@ -58,6 +58,10 @@ export class FirebaseAuthAdapter implements IAuthService {
     await this.auth.signOut();
   }
 
+  public getCurrentUserId(): string | null {
+    return this.auth.currentUser?.uid ?? null;
+  }
+
   private handleAuthError(error: FirebaseError): never {
     if (
       error.code === "auth/user-not-found" ||
