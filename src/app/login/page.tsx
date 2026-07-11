@@ -13,36 +13,30 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useLogin } from "./useLogin";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema } from "@/specs/schemas/auth.schema";
 import type { LoginInput } from "@/specs/schemas/auth.schema";
+import { useLogin } from "./useLogin";
 
 export default function LoginPage(): React.ReactNode {
-  const { isLoading, errorMessage, handleSubmit } = useLogin();
+  const { login, isLoading, errorMessage } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [form, setForm] = useState<LoginInput>({ email: "", senha: "" });
-  const [fieldErrors, setFieldErrors] = useState<Partial<LoginInput>>({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: "",
+      senha: "",
+    },
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    // Limpa o erro do campo ao digitar
-    setFieldErrors((prev) => ({ ...prev, [name]: undefined }));
-  };
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-
-    // Validação inline para feedback imediato nos campos
-    const erros: Partial<LoginInput> = {};
-    if (!form.email) erros.email = "E-mail obrigatório";
-    if (!form.senha) erros.senha = "Senha obrigatória";
-
-    if (Object.keys(erros).length > 0) {
-      setFieldErrors(erros);
-      return;
-    }
-
-    await handleSubmit(form);
+  const onSubmit = async (data: LoginInput): Promise<void> => {
+    await login(data);
   };
 
   return (
@@ -71,7 +65,7 @@ export default function LoginPage(): React.ReactNode {
             </div>
           )}
 
-          <form onSubmit={(e) => { void onSubmit(e); }} noValidate className="space-y-5">
+          <form onSubmit={(e) => { void handleSubmit(onSubmit)(e); }} noValidate className="space-y-5">
 
             {/* Campo E-mail */}
             <div>
@@ -83,26 +77,25 @@ export default function LoginPage(): React.ReactNode {
               </label>
               <input
                 id="email"
-                name="email"
                 type="email"
+                inputMode="email"
                 autoComplete="email"
-                value={form.email}
-                onChange={handleChange}
+                {...register("email")}
                 disabled={isLoading}
-                aria-describedby={fieldErrors.email ? "email-error" : undefined}
-                aria-invalid={fieldErrors.email !== undefined}
+                aria-describedby={errors.email ? "email-error" : undefined}
+                aria-invalid={errors.email !== undefined}
                 placeholder="seu@email.com"
                 className={`
                   w-full rounded-lg border px-4 py-2.5 text-sm
                   outline-none transition-colors
                   focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
                   disabled:cursor-not-allowed disabled:bg-gray-100
-                  ${fieldErrors.email ? "border-red-400 bg-red-50" : "border-gray-300"}
+                  ${errors.email ? "border-red-400 bg-red-50" : "border-gray-300"}
                 `}
               />
-              {fieldErrors.email !== undefined && (
-                <p id="email-error" className="mt-1 text-xs text-red-600">
-                  {fieldErrors.email}
+              {errors.email?.message !== undefined && (
+                <p id="email-error" className="mt-1 text-sm text-red-500">
+                  {errors.email.message}
                 </p>
               )}
             </div>
@@ -123,28 +116,35 @@ export default function LoginPage(): React.ReactNode {
                   Esqueceu a senha?
                 </Link>
               </div>
-              <input
-                id="senha"
-                name="senha"
-                type="password"
-                autoComplete="current-password"
-                value={form.senha}
-                onChange={handleChange}
-                disabled={isLoading}
-                aria-describedby={fieldErrors.senha ? "senha-error" : undefined}
-                aria-invalid={fieldErrors.senha !== undefined}
-                placeholder="Mínimo 8 caracteres"
-                className={`
-                  w-full rounded-lg border px-4 py-2.5 text-sm
-                  outline-none transition-colors
-                  focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
-                  disabled:cursor-not-allowed disabled:bg-gray-100
-                  ${fieldErrors.senha ? "border-red-400 bg-red-50" : "border-gray-300"}
-                `}
-              />
-              {fieldErrors.senha !== undefined && (
-                <p id="senha-error" className="mt-1 text-xs text-red-600">
-                  {fieldErrors.senha}
+              <div className="relative">
+                <input
+                  id="senha"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  {...register("senha")}
+                  disabled={isLoading}
+                  aria-describedby={errors.senha ? "senha-error" : undefined}
+                  aria-invalid={errors.senha !== undefined}
+                  placeholder="Mínimo 8 caracteres"
+                  className={`
+                    w-full rounded-lg border pl-4 pr-12 py-2.5 text-sm
+                    outline-none transition-colors
+                    focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
+                    disabled:cursor-not-allowed disabled:bg-gray-100
+                    ${errors.senha ? "border-red-400 bg-red-50" : "border-gray-300"}
+                  `}
+                />
+                <button
+                  type="button"
+                  onClick={() => { setShowPassword(!showPassword); }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+              </div>
+              {errors.senha?.message !== undefined && (
+                <p id="senha-error" className="mt-1 text-sm text-red-500">
+                  {errors.senha.message}
                 </p>
               )}
             </div>
@@ -161,7 +161,7 @@ export default function LoginPage(): React.ReactNode {
                 disabled:cursor-not-allowed disabled:opacity-60
               "
             >
-              {isLoading ? "Entrando…" : "Entrar"}
+              {isLoading ? "Carregando..." : "Entrar"}
             </button>
           </form>
 

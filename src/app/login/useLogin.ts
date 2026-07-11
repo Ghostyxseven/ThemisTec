@@ -4,9 +4,8 @@
  * useLogin — ViewModel (ADR-0007: MVVM)
  *
  * Responsabilidades:
- * - Gerenciar estado do formulário de login
- * - Validar entrada com LoginSchema (Zod) antes de chamar o serviço
- * - Expor estado de loading, erro e a função de submit para a View
+ * - Gerenciar estado da chamada de login
+ * - Expor estado de loading, erro e a função login para a View
  *
  * A View (login/page.tsx) NÃO conhece Firebase diretamente —
  * apenas consome este hook.
@@ -14,7 +13,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LoginSchema } from "@/specs/schemas/auth.schema";
 import type { LoginInput } from "@/specs/schemas/auth.schema";
 import { IAuthService } from "@/shared/interfaces/IAuthService";
 import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
@@ -25,7 +23,7 @@ const authService: IAuthService = new FirebaseAuthAdapter();
 interface UseLoginReturn {
   isLoading: boolean;
   errorMessage: string | null;
-  handleSubmit: (dados: LoginInput) => Promise<void>;
+  login: (dados: LoginInput) => Promise<void>;
 }
 
 export function useLogin(): UseLoginReturn {
@@ -33,17 +31,8 @@ export function useLogin(): UseLoginReturn {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleSubmit = async (dados: LoginInput): Promise<void> => {
+  const login = async (dados: LoginInput): Promise<void> => {
     setErrorMessage(null);
-
-    // Validação Zod na fronteira de entrada
-    const resultado = LoginSchema.safeParse(dados);
-    if (!resultado.success) {
-      const primeiroErro = resultado.error.errors[0];
-      setErrorMessage(primeiroErro?.message ?? "Dados inválidos.");
-      return;
-    }
-
     setIsLoading(true);
     try {
       // Delega a chamada para o Firebase ao Adapter de Autenticação
@@ -58,5 +47,5 @@ export function useLogin(): UseLoginReturn {
     }
   };
 
-  return { isLoading, errorMessage, handleSubmit };
+  return { isLoading, errorMessage, login };
 }
