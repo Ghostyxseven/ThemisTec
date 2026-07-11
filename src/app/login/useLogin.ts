@@ -16,6 +16,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoginSchema } from "@/specs/schemas/auth.schema";
 import type { LoginInput } from "@/specs/schemas/auth.schema";
+import { IAuthService } from "@/shared/interfaces/IAuthService";
+import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
+
+// Instanciando o serviço (Padrão Adapter / POO) criado pelo Micael
+const authService: IAuthService = new FirebaseAuthAdapter();
 
 interface UseLoginReturn {
   isLoading: boolean;
@@ -31,7 +36,7 @@ export function useLogin(): UseLoginReturn {
   const handleSubmit = async (dados: LoginInput): Promise<void> => {
     setErrorMessage(null);
 
-    // Validação Zod na fronteira de entrada (Harness: contrato obrigatório)
+    // Validação Zod na fronteira de entrada
     const resultado = LoginSchema.safeParse(dados);
     if (!resultado.success) {
       const primeiroErro = resultado.error.errors[0];
@@ -41,11 +46,8 @@ export function useLogin(): UseLoginReturn {
 
     setIsLoading(true);
     try {
-      /**
-       * TODO (Micael): substituir pelo FirebaseAuthAdapter quando implementado.
-       * Por ora, simula o fluxo para desenvolvimento do layout.
-       */
-      await new Promise<void>((resolve) => setTimeout(resolve, 800));
+      // Delega a chamada para o Firebase ao Adapter de Autenticação
+      await authService.login(dados);
       router.push("/dashboard");
     } catch (erro) {
       const mensagem =
