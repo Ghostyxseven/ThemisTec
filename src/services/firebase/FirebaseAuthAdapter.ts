@@ -1,5 +1,6 @@
 import { IAuthService } from "@/shared/interfaces/IAuthService";
-import { LoginInput, RegisterInput } from "@/specs/schemas/auth.schema";
+import { FirebaseError } from "firebase/app";
+import { LoginInput, RegisterInput, ResetPasswordInput } from "@/specs/schemas/auth.schema";
 import { getFirebaseApp } from "./firebase.client";
 import {
   getAuth,
@@ -7,6 +8,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   sendEmailVerification,
+  sendPasswordResetEmail,
   Auth,
 } from "firebase/auth";
 
@@ -21,8 +23,8 @@ export class FirebaseAuthAdapter implements IAuthService {
   public async login(dados: LoginInput): Promise<void> {
     try {
       await signInWithEmailAndPassword(this.auth, dados.email, dados.senha);
-    } catch (error: any) {
-      this.handleAuthError(error);
+    } catch (error: unknown) {
+      this.handleAuthError(error as FirebaseError);
     }
   }
 
@@ -39,8 +41,16 @@ export class FirebaseAuthAdapter implements IAuthService {
       });
 
       await sendEmailVerification(userCredential.user);
-    } catch (error: any) {
-      this.handleAuthError(error);
+    } catch (error: unknown) {
+      this.handleAuthError(error as FirebaseError);
+    }
+  }
+
+  public async resetPassword(dados: ResetPasswordInput): Promise<void> {
+    try {
+      await sendPasswordResetEmail(this.auth, dados.email);
+    } catch (error: unknown) {
+      this.handleAuthError(error as FirebaseError);
     }
   }
 
@@ -48,7 +58,7 @@ export class FirebaseAuthAdapter implements IAuthService {
     await this.auth.signOut();
   }
 
-  private handleAuthError(error: any): never {
+  private handleAuthError(error: FirebaseError): never {
     if (
       error.code === "auth/user-not-found" ||
       error.code === "auth/wrong-password" ||
