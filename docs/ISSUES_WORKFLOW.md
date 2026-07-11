@@ -1,7 +1,7 @@
 # Issues Workflow - ThemisTec
 
 > Guia de criação, uso e ciclo de vida das issues no projeto  
-> Referência para a equipe e para o agente IA (Kiro)
+> Referência para a equipe e para o agente IA (Antigravity)
 
 ---
 
@@ -151,7 +151,7 @@ O nome da branch deve seguir o padrão do `GIT_WORKFLOW.md`. Ao usar o botão "C
 
 ---
 
-## 8. Como a IA (Kiro) deve usar as Issues
+## 8. Como a IA (Antigravity) deve usar as Issues
 
 ### Ao receber uma tarefa de implementação:
 
