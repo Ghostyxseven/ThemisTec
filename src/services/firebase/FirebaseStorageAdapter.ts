@@ -1,6 +1,6 @@
 import { IStorageService } from "@/shared/interfaces/IStorageService";
 import { getFirebaseApp } from "./firebase.client";
-import { getStorage, ref, uploadBytes, getDownloadURL, FirebaseStorage } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, FirebaseStorage } from "firebase/storage";
 
 export class FirebaseStorageAdapter implements IStorageService {
   private storage: FirebaseStorage;
@@ -18,6 +18,20 @@ export class FirebaseStorageAdapter implements IStorageService {
       return downloadUrl;
     } catch {
       throw new Error("Falha ao fazer upload do arquivo. Tente novamente mais tarde.");
+    }
+  }
+
+  public async deleteFile(path: string): Promise<void> {
+    const storageRef = ref(this.storage, path);
+    try {
+      await deleteObject(storageRef);
+    } catch (error: unknown) {
+      const err = error as { code?: string; message?: string };
+      if (err.code === 'storage/object-not-found') {
+        // Ignora se o arquivo já não existir
+        return;
+      }
+      throw new Error(`Erro ao deletar arquivo: ${err.message || "Erro desconhecido"}`);
     }
   }
 }
