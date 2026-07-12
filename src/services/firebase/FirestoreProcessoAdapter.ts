@@ -9,6 +9,10 @@ import {
   getDocs,
   query,
   where,
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 
 export class FirestoreProcessoAdapter implements IProcessoRepository {
@@ -101,6 +105,58 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
       };
     } catch {
       throw new Error("Erro ao buscar a lista de processos.");
+    }
+  }
+
+  public async buscarPorId(id: string, userId: string): Promise<Processo> {
+    try {
+      const docRef = doc(this.db, "processos", id);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        throw new Error("Processo não encontrado.");
+      }
+
+      const data = docSnap.data();
+      if (data["userId"] !== userId) {
+        throw new Error("Acesso não autorizado a este processo.");
+      }
+
+      return {
+        id: docSnap.id,
+        numero: data["numero"] as string,
+        tipo: data["tipo"] as TipoProcesso,
+        status: data["status"] as StatusProcesso,
+        descricao: data["descricao"] as string | undefined,
+        clienteId: data["clienteId"] as string,
+        clienteNome: data["clienteNome"] as string,
+        dataAbertura: data["dataAbertura"] as string,
+        documentos: (data["documentos"] as Documento[] | undefined) || [],
+        userId: data["userId"] as string,
+        criadoEm: data["criadoEm"] as string,
+        atualizadoEm: data["atualizadoEm"] as string,
+      } as Processo;
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error("Falha ao buscar detalhes do processo.");
+    }
+  }
+
+  public async adicionarDocumento(processoId: string, documento: Documento, userId: string): Promise<void> {
+    try {
+      // Primeiro valida se o processo existe e pertence ao usuário
+      await this.buscarPorId(processoId, userId);
+
+      const docRef = doc(this.db, "processos", processoId);
+      const agora = new Date().toISOString();
+
+      await updateDoc(docRef, {
+        documentos: arrayUnion(documento),
+        atualizadoEm: agora,
+      });
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error("Falha ao anexar documento ao processo.");
     }
   }
 }
