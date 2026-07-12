@@ -20,7 +20,7 @@ describe("Processo Schemas - Contratos de Entrada", () => {
       expect(result.success).toBe(true);
     });
 
-    it("deve aplicar status padrão 'em_andamento'", () => {
+    it("deve aplicar status e valores financeiros padrão", () => {
       const input = {
         numero: "0001234-56.2026.8.01.0001",
         tipo: "criminal",
@@ -31,6 +31,25 @@ describe("Processo Schemas - Contratos de Entrada", () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data.status).toBe("em_andamento");
+        expect(result.data.valorHonorarios).toBe(0);
+        expect(result.data.statusPagamento).toBe("PENDENTE");
+      }
+    });
+
+    it("deve aceitar valores financeiros customizados", () => {
+      const input = {
+        numero: "0001234-56.2026.8.01.0001",
+        tipo: "civil",
+        clienteId: "abc123",
+        dataAbertura: "2026-06-01",
+        valorHonorarios: 5000,
+        statusPagamento: "PAGO",
+      };
+      const result = CreateProcessoSchema.safeParse(input);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.valorHonorarios).toBe(5000);
+        expect(result.data.statusPagamento).toBe("PAGO");
       }
     });
 
