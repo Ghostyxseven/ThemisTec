@@ -1,5 +1,5 @@
 import { IProcessoRepository } from "@/shared/interfaces/IProcessoRepository";
-import { CreateProcessoInput, Processo, ListProcessosQuery, ProcessoListResponse, TipoProcesso, StatusProcesso, Documento } from "@/specs/schemas/processo.schema";
+import { CreateProcessoInput, Processo, ListProcessosQuery, ProcessoListResponse, TipoProcesso, StatusProcesso, StatusPagamento, Documento, UpdateProcessoInput } from "@/specs/schemas/processo.schema";
 import { getFirebaseApp } from "./firebase.client";
 import {
   getFirestore,
@@ -27,6 +27,8 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
     const agora = new Date().toISOString();
     const novoProcessoData = {
       ...dados,
+      valorHonorarios: dados.valorHonorarios ?? 0,
+      statusPagamento: dados.statusPagamento ?? "PENDENTE",
       clienteNome,
       userId,
       documentos: [],
@@ -65,6 +67,8 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
           clienteId: data["clienteId"] as string,
           clienteNome: data["clienteNome"] as string,
           dataAbertura: data["dataAbertura"] as string,
+          valorHonorarios: (data["valorHonorarios"] as number) || 0,
+          statusPagamento: (data["statusPagamento"] as StatusPagamento) || "PENDENTE",
           documentos: (data["documentos"] as Documento[] | undefined) || [],
           userId: data["userId"] as string,
           criadoEm: data["criadoEm"] as string,
@@ -131,6 +135,8 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
         clienteId: data["clienteId"] as string,
         clienteNome: data["clienteNome"] as string,
         dataAbertura: data["dataAbertura"] as string,
+        valorHonorarios: (data["valorHonorarios"] as number) || 0,
+        statusPagamento: (data["statusPagamento"] as StatusPagamento) || "PENDENTE",
         documentos: (data["documentos"] as Documento[] | undefined) || [],
         userId: data["userId"] as string,
         criadoEm: data["criadoEm"] as string,
@@ -157,6 +163,31 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
     } catch (error) {
       if (error instanceof Error) throw error;
       throw new Error("Falha ao anexar documento ao processo.");
+    }
+  }
+
+  public async atualizar(id: string, dados: UpdateProcessoInput, userId: string): Promise<Processo> {
+    const processoExistente = await this.buscarPorId(id, userId);
+    if (!processoExistente) {
+      throw new Error("Processo não encontrado.");
+    }
+
+    const agora = new Date().toISOString();
+    const dadosAtualizados = {
+      ...dados,
+      atualizadoEm: agora,
+    };
+
+    try {
+      const docRef = doc(this.db, "processos", id);
+      await updateDoc(docRef, dadosAtualizados);
+
+      return {
+        ...processoExistente,
+        ...dadosAtualizados,
+      } as Processo;
+    } catch {
+      throw new Error("Erro ao atualizar os dados do processo.");
     }
   }
 }
