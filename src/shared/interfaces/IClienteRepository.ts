@@ -7,4 +7,5 @@ export interface IClienteRepository {
   buscarPorId(id: string, userId: string): Promise<Cliente | null>;
   atualizar(id: string, dados: UpdateClienteInput, userId: string): Promise<Cliente>;
   excluir(id: string, userId: string): Promise<void>;
+  contarClientes(userId: string): Promise<number>;
 }

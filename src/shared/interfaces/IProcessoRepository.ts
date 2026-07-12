@@ -5,4 +5,6 @@ export interface IProcessoRepository {
   listar(params: ListProcessosQuery, userId: string): Promise<ProcessoListResponse>;
   adicionarDocumento(processoId: string, documento: Documento, userId: string): Promise<void>;
   buscarPorId(id: string, userId: string): Promise<Processo>;
+  contarProcessos(userId: string): Promise<number>;
+  contarProcessosAtivos(userId: string): Promise<number>;
 }
