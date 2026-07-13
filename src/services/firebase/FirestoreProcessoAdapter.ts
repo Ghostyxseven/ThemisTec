@@ -12,6 +12,7 @@ import {
   getDoc,
   updateDoc,
   arrayUnion,
+  getCountFromServer,
 } from "firebase/firestore";
 
 export class FirestoreProcessoAdapter implements IProcessoRepository {
@@ -161,6 +162,28 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
     } catch (error) {
       if (error instanceof Error) throw error;
       throw new Error("Falha ao anexar documento ao processo.");
+    }
+  }
+
+  public async contarProcessos(userId: string): Promise<number> {
+    try {
+      const processosRef = collection(this.db, "processos");
+      const q = query(processosRef, where("userId", "==", userId));
+      const snapshot = await getCountFromServer(q);
+      return snapshot.data().count;
+    } catch {
+      throw new Error("Erro ao contar processos.");
+    }
+  }
+
+  public async contarProcessosAtivos(userId: string): Promise<number> {
+    try {
+      const processosRef = collection(this.db, "processos");
+      const q = query(processosRef, where("userId", "==", userId), where("status", "==", "ATIVO"));
+      const snapshot = await getCountFromServer(q);
+      return snapshot.data().count;
+    } catch {
+      throw new Error("Erro ao contar processos ativos.");
     }
   }
 

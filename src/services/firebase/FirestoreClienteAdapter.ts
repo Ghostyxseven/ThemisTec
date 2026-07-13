@@ -12,6 +12,7 @@ import {
   getDoc,
   updateDoc,
   deleteDoc,
+  getCountFromServer,
 } from "firebase/firestore";
 
 export class FirestoreClienteAdapter implements IClienteRepository {
@@ -212,6 +213,17 @@ export class FirestoreClienteAdapter implements IClienteRepository {
       await deleteDoc(docRef);
     } catch {
       throw new Error("Erro ao excluir o cliente.");
+    }
+  }
+
+  public async contarClientes(userId: string): Promise<number> {
+    try {
+      const clientesRef = collection(this.db, "clientes");
+      const q = query(clientesRef, where("userId", "==", userId));
+      const snapshot = await getCountFromServer(q);
+      return snapshot.data().count;
+    } catch {
+      throw new Error("Erro ao contar clientes.");
     }
   }
 }
