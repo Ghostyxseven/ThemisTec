@@ -1,55 +1,186 @@
 ---
-title: ThemisTec Epics and Requirements
-status: requirements_extracted
-inputDocuments: 
-  - docs/PRD.md
-stepsCompleted:
-  - step-01-validate-prerequisites
+stepsCompleted: ["Step 1", "Step 2"]
+inputDocuments: ["docs/PRD.md", "docs/architecture/decisions/"]
 ---
 
-# ThemisTec Epics and Stories
+# ThemisTec - Divisão de Épicos
 
-## 1. Functional Requirements (FRs)
+## Visão Geral
 
-FR1: Login com e-mail e senha (Firebase Auth)
-FR2: Cadastro de conta com confirmação por e-mail
-FR3: Recuperação de senha via link por e-mail
+Este documento fornece a estrutura completa de épicos e histórias para o ThemisTec, decompondo os requisitos do PRD, Design UX (se existir) e requisitos de Arquitetura em histórias implementáveis.
 
-## 2. Non-Functional Requirements (NFRs)
+## Inventário de Requisitos
 
-NFR1: Segurança - Dados acessíveis apenas por usuários autenticados (JWT)
-NFR2: Proteção de Dados - Conformidade com LGPD (coleta mínima, sem compartilhamento)
-NFR3: Responsividade - Funcional em desktop e mobile
+### Requisitos Funcionais
 
-## 3. Additional Technical Requirements
+FR1: O sistema deve exibir um Dashboard gerencial com o totalizador de processos e clientes ativos.
+FR2: O sistema deve permitir o registro e atualização de dados financeiros no Processo (valor de honorários e status de pagamento: PAGO, PENDENTE, ATRASADO).
+FR3: O sistema deve possuir uma interface (UI) no formulário do Processo para editar as informações financeiras (FR2).
+FR4: O sistema deve permitir a exportação da lista de processos para o formato CSV.
+FR5: O sistema deve possuir um botão na interface do Dashboard para disparar a ação de exportação de processos.
+FR6: O aplicativo deve ser configurável como um PWA (Progressive Web App) através de um Service Worker, para funcionar off-line no dispositivo do usuário.
+FR7: O sistema deve garantir persistência local de dados (cache offline) para que seja possível ler e modificar informações enquanto não há conexão.
 
-- Padrão Arquitetural: MVVM (Model-View-ViewModel) com Monolito Modular
-- Padrão de Projeto: Adapter (isolamento dos SDKs do Firebase)
-- Validação Estrita: Uso de Zod schema (auth.schema.ts)
+### Requisitos Não-Funcionais
 
-## 4. Requirements Coverage Map
+NFR1: As funções de exportação devem rodar 100% no Client-Side (Client SDK), devido à arquitetura de autenticação.
+NFR2: O formato CSV exportado deve ser compatível nativamente com o Microsoft Excel versão PT-BR (uso de ponto e vírgula como separador).
+NFR3: A persistência offline do Firestore deve utilizar a API V9 persistentLocalCache suportando o gerenciador de múltiplas abas (persistentMultipleTabManager), já que enableIndexedDbPersistence foi descontinuada.
+NFR4: Todo o código do projeto deve seguir rigorosamente a arquitetura MVVM, utilizando Adapters.
 
-| Requirement | Epic/Story |
-|-------------|------------|
-| FR1 | Epic 1 / Story 1.1, Story 1.3 |
-| FR2 | Epic 1 / Story 1.1 |
-| FR3 | Epic 1 / Story 1.1 |
-| NFR1 | Epic 1 / Story 1.1, Story 1.3 |
-| NFR3 | Epic 1 / Story 1.2 |
+### Requisitos Adicionais
 
-## 5. Epics List
+- O backend de exportação e a injeção do persistência offline são responsabilidades do Micael.
+- As interfaces de Dashboard, Botão de Exportação e configuração do manifest/PWA são responsabilidades da Josiane.
 
-### Epic 1: Autenticação
+### Requisitos de Design UX
 
-**Story 1.1: Motor de Autenticação com Firebase (Backend/Model)**
-- *FRs*: FR1, FR2, FR3
-- *NFRs*: NFR1
-- *Responsável*: Micael
+N/A
 
-**Story 1.2: Setup Inicial do Front-end e Roteamento Base**
-- *NFRs*: NFR3
-- *Responsável*: Josiane
+### Mapa de Cobertura de Requisitos
 
-**Story 1.3: Implementação Visual da Tela de Login (Front-end)**
-- *FRs*: FR1
-- *Responsável*: Josiane
+FR1: Épico 1 - Dashboard gerencial
+FR2: Épico 2 - Campos financeiros no backend do Processo
+FR3: Épico 2 - UI financeira na edição do Processo
+FR4: Épico 3 - Backend exportação CSV
+FR5: Épico 3 - Botão de exportação no Frontend
+FR6: Épico 4 - Service Worker (PWA)
+FR7: Épico 4 - Persistência Firestore
+
+## Lista de Épicos
+
+### Épico 1: Acompanhamento Gerencial
+O advogado ganha uma visão macro do seu escritório através de um Dashboard, não precisando mais contar os registros manualmente para saber o volume de trabalho.
+**FRs cobertos:** FR1
+
+### Épico 2: Gestão Financeira de Honorários
+O advogado pode acompanhar o valor recebido por processo e saber rapidamente quem está devendo ou está com o pagamento em dia.
+**FRs cobertos:** FR2, FR3
+
+### Épico 3: Exportação e Backup Local
+O usuário consegue gerar planilhas (CSV compatível com Excel PT-BR) de todos os seus processos para fazer cruzamento de dados externo ou enviar para a contabilidade.
+**FRs cobertos:** FR4, FR5
+
+### Épico 4: Mobilidade e Acesso Offline
+O advogado pode instalar o sistema como um aplicativo (PWA) e consultá-lo/editá-lo em fóruns sem depender de sinal 4G. Quando a internet voltar, tudo sincroniza automaticamente.
+**FRs cobertos:** FR6, FR7
+
+## Épico 1: Acompanhamento Gerencial
+
+O advogado ganha uma visão macro do seu escritório através de um Dashboard, não precisando mais contar os registros manualmente para saber o volume de trabalho.
+
+### História 1.1: Consultar Estatísticas Gerais (Backend)
+
+**Como** Desenvolvedor Backend (Micael),
+**Eu quero** recuperar o total de processos e clientes diretamente pelo Firebase,
+**Para que** o Frontend possa construir os cards gerenciais de forma instantânea sem precisar baixar todos os documentos.
+
+**Critérios de Aceite:**
+
+- **Dado** um usuário logado
+- **Quando** a camada de repositório (FirestoreAdapter) for acionada
+- **Então** deve utilizar o método `getCountFromServer` nativo do Firebase V9+
+- **E** retornar inteiros precisos e otimizados sobre os quantitativos
+
+### História 1.2: Construir Interface do Dashboard (Frontend)
+
+**Como** Desenvolvedor Frontend (Josiane),
+**Eu quero** criar cards visuais modernos de Dashboard,
+**Para que** o usuário ao entrar no sistema tenha o resumo das métricas na tela inicial.
+
+**Critérios de Aceite:**
+
+- **Dado** a tela inicial (`/dashboard`)
+- **Quando** o componente carregar
+- **Então** os repositórios injetados do ViewModel devem ser chamados
+- **E** os totais devem ser exibidos em caixas com ícones e labels legíveis
+
+## Épico 2: Gestão Financeira de Honorários
+
+O advogado pode acompanhar o valor recebido por processo e saber rapidamente quem está devendo ou está com o pagamento em dia.
+
+### História 2.1: Estrutura Financeira no Banco de Dados (Backend)
+
+**Como** Desenvolvedor Backend (Micael),
+**Eu quero** atualizar os esquemas de validação (Zod) e as rotinas de persistência do Firestore,
+**Para que** seja possível gravar atributos monetários de cada processo.
+
+**Critérios de Aceite:**
+
+- **Dado** o Schema de Processos
+- **Quando** um novo processo é salvo ou atualizado
+- **Então** os campos numéricos de honorários e enum de status devem ser aceitos e tipados
+- **E** o Adapter do Firestore deve persistí-los corretamente
+
+### História 2.2: UI de Edição e Visualização Financeira (Frontend)
+
+**Como** Desenvolvedor Frontend (Josiane),
+**Eu quero** incluir campos na interface de formulário e detalhes de Processos,
+**Para que** o advogado possa imputar o valor financeiro do contrato visualmente.
+
+**Critérios de Aceite:**
+
+- **Dado** o painel de criação/edição de um processo
+- **Quando** a usuária interagir com as informações financeiras
+- **Então** o frontend deve disponibilizar um campo de input monetário e um select de status de pagamento
+- **E** os dados preenchidos devem compor o payload a ser enviado para o ViewModel
+
+## Épico 3: Exportação e Backup Local
+
+O usuário consegue gerar planilhas (CSV compatível com Excel PT-BR) de todos os seus processos para fazer cruzamento de dados externo ou enviar para a contabilidade.
+
+### História 3.1: Serviço de Exportação CSV/PDF (Backend)
+
+**Como** Desenvolvedor Backend (Micael),
+**Eu quero** implementar um parser em typescript rodando no browser (ExportService),
+**Para que** ele leia os objetos recebidos do repositório e devolva um arquivo bruto pronto para download.
+
+**Critérios de Aceite:**
+
+- **Dado** a lista de processos na memória do client
+- **Quando** a exportação for acionada
+- **Então** o formato de saída deve usar ponto-e-vírgula (;)
+- **E** os dados monetários devem estar formatados em decimal brasileiro (,)
+
+### História 3.2: Botão e Fluxo de Exportação (Frontend)
+
+**Como** Desenvolvedor Frontend (Josiane),
+**Eu quero** dispor botões interativos na tela e lidar com Blob downloads,
+**Para que** o navegador instancie o arquivo CSV fisicamente para a pasta de downloads do usuário.
+
+**Critérios de Aceite:**
+
+- **Dado** o Dashboard ou a lista de Processos
+- **Quando** o usuário clicar no botão "Exportar para CSV"
+- **Então** a UI deve chamar o ExportService injetado do MVVM
+- **E** fornecer feedback visual (loading/toast) enquanto o download processa
+
+## Épico 4: Mobilidade e Acesso Offline
+
+O advogado pode instalar o sistema como um aplicativo (PWA) e consultá-lo/editá-lo em fóruns sem depender de sinal 4G. Quando a internet voltar, tudo sincroniza automaticamente.
+
+### História 4.1: Persistência Offline do Firestore (Backend/Config)
+
+**Como** Desenvolvedor Backend (Micael),
+**Eu quero** configurar a propriedade localCache na instância do Firebase no Next.js,
+**Para que** as gravações e leituras possam ser enfileiradas de forma offline-first.
+
+**Critérios de Aceite:**
+
+- **Dado** o bootstrapping da aplicação cliente
+- **Quando** a função de obter o Firestore é invocada
+- **Então** deve ser chamado o método `initializeFirestore` com suporte nativo de Múltiplas Abas
+- **E** tratar os fallbacks e falhas silenciosamente caso o navegador não dê suporte
+
+### História 4.2: Configuração do Service Worker e Cache (Frontend)
+
+**Como** Desenvolvedor Frontend (Josiane),
+**Eu quero** instalar os manifestos web e os scripts de Service Worker via Vite PWA (ou next-pwa),
+**Para que** os recursos estáticos (CSS, JS) sejam cacheados pelo browser e o ícone fique instalável no celular.
+
+**Critérios de Aceite:**
+
+- **Dado** um acesso no celular sem acesso 4G (modo avião)
+- **Quando** a página do ThemisTec for acessada após a primeira vez
+- **Então** os assets devem carregar diretamente pelo ServiceWorker (rede local)
+- **E** apresentar um modal padrão de instalação (Add to Home Screen) quando aplicável

@@ -1,14 +1,13 @@
 import { IClienteRepository } from "@/shared/interfaces/IClienteRepository";
 import { CreateClienteInput, Cliente, ListClientesQuery, ClienteListResponse, UpdateClienteInput } from "@/specs/schemas/cliente.schema";
-import { getFirebaseApp } from "./firebase.client";
+import { getFirestoreDb } from "./firebase.client";
 import {
-  getFirestore,
   collection,
   addDoc,
+  Firestore,
   getDocs,
   query,
   where,
-  Firestore,
   doc as firestoreDoc,
   getDoc,
   updateDoc,
@@ -20,8 +19,7 @@ export class FirestoreClienteAdapter implements IClienteRepository {
   private db: Firestore;
 
   constructor() {
-    const app = getFirebaseApp();
-    this.db = getFirestore(app);
+    this.db = getFirestoreDb();
   }
 
   public async buscarPorCpf(cpf: string, userId: string): Promise<Cliente | null> {
