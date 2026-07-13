@@ -44,6 +44,8 @@ export default function CadastroProcessoPage(): React.ReactNode {
       descricao: "",
       clienteId: "",
       dataAbertura: "",
+      valorHonorarios: 0,
+      statusPagamento: "PENDENTE",
     },
   });
 
@@ -228,6 +230,57 @@ export default function CadastroProcessoPage(): React.ReactNode {
                       {errors.dataAbertura.message}
                     </p>
                   )}
+                </div>
+
+                {/* Campo Valor de Honorários */}
+                <div>
+                  <label htmlFor="valorHonorarios" className="mb-1 block text-sm font-medium text-gray-700">
+                    Valor de Honorários (R$)
+                  </label>
+                  <input
+                    id="valorHonorarios"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    {...register("valorHonorarios", { valueAsNumber: true })}
+                    disabled={isSaving}
+                    aria-describedby={errors.valorHonorarios ? "valorHonorarios-error" : undefined}
+                    aria-invalid={errors.valorHonorarios !== undefined}
+                    className={`
+                      w-full rounded-lg border px-4 py-2.5 text-sm
+                      outline-none transition-colors
+                      focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
+                      disabled:cursor-not-allowed disabled:bg-gray-100
+                      ${errors.valorHonorarios ? "border-red-400 bg-red-50" : "border-gray-300"}
+                    `}
+                  />
+                  {errors.valorHonorarios?.message !== undefined && (
+                    <p id="valorHonorarios-error" className="mt-1 text-sm text-red-500">
+                      {errors.valorHonorarios.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Campo Status de Pagamento */}
+                <div>
+                  <label htmlFor="statusPagamento" className="mb-1 block text-sm font-medium text-gray-700">
+                    Status de Pagamento
+                  </label>
+                  <select
+                    id="statusPagamento"
+                    {...register("statusPagamento")}
+                    disabled={isSaving}
+                    className="
+                      w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm
+                      outline-none transition-colors
+                      focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
+                      disabled:cursor-not-allowed disabled:bg-gray-100
+                    "
+                  >
+                    <option value="PENDENTE">Pendente</option>
+                    <option value="ATRASADO">Atrasado</option>
+                    <option value="PAGO">Pago</option>
+                  </select>
                 </div>
 
               </div>
