@@ -9,6 +9,9 @@ import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
 
 const clienteRepository: IClienteRepository = new FirestoreClienteAdapter();
 const authService: IAuthService = new FirebaseAuthAdapter();
+import { ExportService } from "@/services/export/ExportService";
+
+const exportService = new ExportService();
 
 interface UseListClientesReturn {
   isLoading: boolean;
@@ -21,6 +24,8 @@ interface UseListClientesReturn {
   setPage: (p: number) => void;
   refetch: () => void;
   excluirCliente: (id: string) => Promise<void>;
+  isExporting: boolean;
+  exportarCsv: () => Promise<void>;
 }
 
 export function useListClientes(): UseListClientesReturn {
@@ -30,6 +35,7 @@ export function useListClientes(): UseListClientesReturn {
   const [paginacao, setPaginacao] = useState<ClienteListResponse["paginacao"] | null>(null);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [isExporting, setIsExporting] = useState(false);
 
   const fetchClientes = useCallback(async (): Promise<void> => {
     setIsLoading(true);
@@ -78,6 +84,33 @@ export function useListClientes(): UseListClientesReturn {
     }
   };
 
+  const exportarCsv = async (): Promise<void> => {
+    setIsExporting(true);
+    setErrorMessage(null);
+    try {
+      const userId = authService.getCurrentUserId();
+      if (!userId) throw new Error("Usuário não autenticado.");
+
+      const response = await clienteRepository.listar({ limit: 9999, page: 1 }, userId);
+      const csvString = exportService.gerarCsvClientes(response.dados);
+
+      const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "clientes.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (erro) {
+      const msg = erro instanceof Error ? erro.message : "Erro ao exportar CSV.";
+      setErrorMessage(msg);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   useEffect(() => {
     let active = true;
 
@@ -106,5 +139,7 @@ export function useListClientes(): UseListClientesReturn {
     setPage,
     refetch: () => { void fetchClientes(); },
     excluirCliente,
+    isExporting,
+    exportarCsv,
   };
 }
