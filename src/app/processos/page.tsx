@@ -212,6 +212,7 @@ export default function ProcessosPage(): React.ReactNode {
                       <th className="px-6 py-4">Tipo</th>
                       <th className="px-6 py-4 text-center">Status</th>
                       <th className="px-6 py-4">Abertura</th>
+                      <th className="px-6 py-4 text-center">Pagamento</th>
                       <th className="px-6 py-4 text-right">Ações</th>
                     </tr>
                   </thead>
@@ -249,6 +250,26 @@ export default function ProcessosPage(): React.ReactNode {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {formatDate(processo.dataAbertura)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                          <span
+                            className={`
+                              inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold border
+                              ${
+                                processo.statusPagamento === "PAGO"
+                                  ? "bg-green-50 text-green-700 border-green-200"
+                                  : processo.statusPagamento === "ATRASADO"
+                                  ? "bg-red-50 text-red-700 border-red-200"
+                                  : "bg-yellow-50 text-yellow-700 border-yellow-200"
+                              }
+                            `}
+                          >
+                            {processo.statusPagamento === "PAGO"
+                              ? "Pago"
+                              : processo.statusPagamento === "ATRASADO"
+                              ? "Atrasado"
+                              : "Pendente"}
+                          </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right">
                           <div className="inline-flex gap-2">
