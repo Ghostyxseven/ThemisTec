@@ -184,3 +184,46 @@ O advogado pode instalar o sistema como um aplicativo (PWA) e consultá-lo/edit�
 - **Quando** a página do ThemisTec for acessada após a primeira vez
 - **Então** os assets devem carregar diretamente pelo ServiceWorker (rede local)
 - **E** apresentar um modal padrão de instalação (Add to Home Screen) quando aplicável
+
+## Épico 5: Revitalização de UI/UX
+
+Como a base de dados e regras de negócio foram estruturadas, o advogado precisa que o sistema pareça profissional, com um layout de navegação claro e componentes estilizados para que a usabilidade seja agradável e não aparente estar incompleto ("tela branca").
+
+### História 5.1: Layout Principal e Navegação (Sidebar e Header)
+
+**Como** Desenvolvedor Frontend (Josiane),
+**Eu quero** criar uma estrutura de Shell (Sidebar e Header),
+**Para que** o usuário consiga navegar facilmente entre Dashboard, Clientes e Processos sem perder o contexto.
+
+**Critérios de Aceite:**
+
+- **Dado** que o usuário está autenticado
+- **Quando** acessar qualquer página interna
+- **Então** um menu lateral esquerdo escuro (Sidebar) e um header com seus dados devem estar visíveis
+- **E** o layout deve ser responsivo (Sidebar recolhe ou vira menu hambúrguer no celular)
+
+### História 5.2: Identidade Visual da Autenticação (Login/Cadastro)
+
+**Como** Desenvolvedor Frontend (Josiane),
+**Eu quero** estilizar a página de login e cadastro com Tailwind,
+**Para que** a primeira impressão do usuário ao abrir o sistema seja de um software seguro e premium.
+
+**Critérios de Aceite:**
+
+- **Dado** um usuário deslogado
+- **Quando** acessar a página inicial
+- **Então** deve ver um formulário centralizado com estilo de "card", sombras suaves e background
+- **E** deve receber feedbacks de erro claros (toasts ou texto vermelho) caso erre a senha
+
+### História 5.3: Estilização de Tabelas, Cards e Empty States
+
+**Como** Desenvolvedor Frontend (Josiane),
+**Eu quero** refatorar as listas de dados cruas para componentes visuais avançados,
+**Para que** seja fácil visualizar o status financeiro de um processo ou identificar quando não há registros cadastrados.
+
+**Critérios de Aceite:**
+
+- **Dado** as páginas de listar Clientes, Processos ou Dashboard
+- **Quando** existirem dados
+- **Então** eles devem ser exibidos em tabelas formatadas com "Badges" coloridas para os status
+- **E Quando** a lista for vazia, deve-se mostrar uma ilustração amigável de "Nenhum registro encontrado" em vez de uma tela vazia
