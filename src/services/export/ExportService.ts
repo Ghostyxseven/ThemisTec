@@ -1,4 +1,5 @@
 import { Processo } from "@/specs/schemas/processo.schema";
+import { Cliente } from "@/specs/schemas/cliente.schema";
 import { IExportService } from "@/shared/interfaces/IExportService";
 
 export class ExportService implements IExportService {
@@ -17,6 +18,22 @@ export class ExportService implements IExportService {
       const statusPagamento = `"${p.statusPagamento}"`;
 
       return `${numero};${tipo};${status};${clienteNome};${dataAbertura};${valorHonorarios};${statusPagamento}`;
+    });
+
+    return cabecalho + linhas.join("\n");
+  }
+
+  public gerarCsvClientes(clientes: Cliente[]): string {
+    const cabecalho = "Nome;CPF;Telefone;E-mail;Criado Em\n";
+    
+    const linhas = clientes.map((c) => {
+      const nome = `"${c.nome}"`;
+      const cpf = `"${c.cpf}"`;
+      const telefone = `"${c.telefone || ""}"`;
+      const email = `"${c.email || ""}"`;
+      const criadoEm = `"${c.criadoEm}"`;
+
+      return `${nome};${cpf};${telefone};${email};${criadoEm}`;
     });
 
     return cabecalho + linhas.join("\n");

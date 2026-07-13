@@ -13,6 +13,9 @@ import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
 const processoRepository: IProcessoRepository = new FirestoreProcessoAdapter();
 const clienteRepository: IClienteRepository = new FirestoreClienteAdapter();
 const authService: IAuthService = new FirebaseAuthAdapter();
+import { ExportService } from "@/services/export/ExportService";
+
+const exportService = new ExportService();
 
 interface UseListProcessosReturn {
   isLoading: boolean;
@@ -28,6 +31,8 @@ interface UseListProcessosReturn {
   clientes: Cliente[];
   loadClientes: () => Promise<void>;
   refetch: () => void;
+  isExporting: boolean;
+  exportarCsv: () => Promise<void>;
 }
 
 export function useListProcessos(): UseListProcessosReturn {
@@ -39,6 +44,7 @@ export function useListProcessos(): UseListProcessosReturn {
   const [filtroStatus, setFiltroStatus] = useState("");
   const [page, setPage] = useState(1);
   const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
 
   const loadClientes = useCallback(async (): Promise<void> => {
     try {
@@ -81,6 +87,41 @@ export function useListProcessos(): UseListProcessosReturn {
     }
   }, [filtroClienteId, filtroStatus, page]);
 
+  const exportarCsv = async (): Promise<void> => {
+    setIsExporting(true);
+    setErrorMessage(null);
+    try {
+      const userId = authService.getCurrentUserId();
+      if (!userId) throw new Error("Usuário não autenticado.");
+
+      const response = await processoRepository.listar(
+        {
+          clienteId: filtroClienteId || undefined,
+          status: (filtroStatus || undefined) as StatusProcesso | undefined,
+          limit: 9999,
+          page: 1,
+        },
+        userId
+      );
+      const csvString = exportService.gerarCsvProcessos(response.dados);
+
+      const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "processos.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (erro) {
+      const msg = erro instanceof Error ? erro.message : "Erro ao exportar CSV.";
+      setErrorMessage(msg);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   useEffect(() => {
     let active = true;
 
@@ -112,5 +153,7 @@ export function useListProcessos(): UseListProcessosReturn {
     clientes,
     loadClientes,
     refetch: () => { void fetchProcessos(); },
+    isExporting,
+    exportarCsv,
   };
 }
