@@ -190,18 +190,22 @@ export default function ProcessosPage(): React.ReactNode {
         )}
 
         {/* Tabela de Listagem */}
-        <div className="overflow-hidden rounded-2xl bg-white shadow-md border border-gray-100">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-sm border border-gray-100">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-[#1a3c5e]"></div>
+            <div className="flex flex-col items-center justify-center py-24">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-100 border-t-[#1a3c5e]"></div>
               <p className="mt-4 text-sm text-gray-500 font-medium">Buscando processos...</p>
             </div>
           ) : dados.length === 0 ? (
             /* Estado Vazio (Empty State) */
             <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
-              <span className="text-5xl">folder_open</span>
-              <h3 className="mt-4 text-lg font-bold text-gray-700">Nenhum processo encontrado</h3>
-              <p className="mt-1 text-sm text-gray-400 max-w-sm">
+              <div className="rounded-full bg-purple-50 p-5 mb-5 ring-1 ring-purple-100/50">
+                <svg className="h-10 w-10 text-purple-500" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-gray-900">Nenhum processo encontrado</h3>
+              <p className="mt-2 text-sm text-gray-500 max-w-sm">
                 Não existem processos cadastrados para os filtros aplicados no momento.
               </p>
               {filtroClienteId || filtroStatus ? (
@@ -212,16 +216,19 @@ export default function ProcessosPage(): React.ReactNode {
                     setFiltroStatus("");
                     setPage(1);
                   }}
-                  className="mt-6 text-sm font-semibold text-[#1a3c5e] hover:underline"
+                  className="mt-6 text-sm font-semibold text-[#1a3c5e] hover:text-[#0f2540] transition-colors hover:underline"
                 >
                   Limpar filtros de busca
                 </button>
               ) : (
                 <Link
                   href="/processos/cadastro"
-                  className="mt-6 text-sm font-semibold text-[#1a3c5e] hover:underline"
+                  className="
+                    mt-8 inline-flex items-center justify-center rounded-lg bg-[#1a3c5e] px-5 py-2.5
+                    text-sm font-semibold text-white hover:bg-[#0f2540] transition-colors shadow-sm
+                  "
                 >
-                  Cadastrar seu primeiro processo
+                  + Cadastrar Primeiro Processo
                 </Link>
               )}
             </div>
@@ -229,7 +236,7 @@ export default function ProcessosPage(): React.ReactNode {
             <>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-100 text-left text-sm">
-                  <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <thead className="bg-gray-50/80 text-xs font-bold uppercase tracking-wider text-gray-500">
                     <tr>
                       <th className="px-6 py-4">Número do Processo</th>
                       <th className="px-6 py-4">Cliente Vinculado</th>
@@ -240,31 +247,37 @@ export default function ProcessosPage(): React.ReactNode {
                       <th className="px-6 py-4 text-right">Ações</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100 bg-white text-gray-700">
+                  <tbody className="divide-y divide-gray-50 bg-white text-gray-600">
                     {dados.map((processo) => (
-                      <tr key={processo.id} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-4 font-mono font-medium text-gray-900">
+                      <tr key={processo.id} className="hover:bg-purple-50/30 transition-colors group">
+                        <td className="px-6 py-5 font-mono font-medium text-gray-900">
                           {formatProcessoNum(processo.numero)}
                         </td>
-                        <td className="px-6 py-4 font-semibold text-[#1a3c5e]">
+                        <td className="px-6 py-5 font-semibold text-[#1a3c5e]">
                           {processo.clienteNome}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-5 whitespace-nowrap">
                           {translateTipo(processo.tipo)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <td className="px-6 py-5 whitespace-nowrap text-center">
                           <span
                             className={`
-                              inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold border
+                              inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold
                               ${
                                 processo.status === "em_andamento"
-                                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                  ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20"
                                   : processo.status === "concluido"
-                                  ? "bg-blue-50 text-blue-700 border-blue-200"
-                                  : "bg-gray-100 text-gray-600 border-gray-200"
+                                  ? "bg-blue-50 text-blue-700 ring-1 ring-blue-600/20"
+                                  : "bg-gray-50 text-gray-600 ring-1 ring-gray-500/20"
                               }
                             `}
                           >
+                            <svg className={`h-1.5 w-1.5 ${
+                              processo.status === "em_andamento" ? "fill-emerald-500" :
+                              processo.status === "concluido" ? "fill-blue-500" : "fill-gray-400"
+                            }`} viewBox="0 0 6 6" aria-hidden="true">
+                              <circle cx="3" cy="3" r="3" />
+                            </svg>
                             {processo.status === "em_andamento"
                               ? "Em Andamento"
                               : processo.status === "concluido"
@@ -272,22 +285,28 @@ export default function ProcessosPage(): React.ReactNode {
                               : "Arquivado"}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-5 whitespace-nowrap">
                           {formatDate(processo.dataAbertura)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <td className="px-6 py-5 whitespace-nowrap text-center">
                           <span
                             className={`
-                              inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold border
+                              inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold
                               ${
                                 processo.statusPagamento === "PAGO"
-                                  ? "bg-green-50 text-green-700 border-green-200"
+                                  ? "bg-green-50 text-green-700 ring-1 ring-green-600/20"
                                   : processo.statusPagamento === "ATRASADO"
-                                  ? "bg-red-50 text-red-700 border-red-200"
-                                  : "bg-yellow-50 text-yellow-700 border-yellow-200"
+                                  ? "bg-red-50 text-red-700 ring-1 ring-red-600/20"
+                                  : "bg-yellow-50 text-yellow-700 ring-1 ring-yellow-600/20"
                               }
                             `}
                           >
+                            <svg className={`h-1.5 w-1.5 ${
+                              processo.statusPagamento === "PAGO" ? "fill-green-500" :
+                              processo.statusPagamento === "ATRASADO" ? "fill-red-500" : "fill-yellow-500"
+                            }`} viewBox="0 0 6 6" aria-hidden="true">
+                              <circle cx="3" cy="3" r="3" />
+                            </svg>
                             {processo.statusPagamento === "PAGO"
                               ? "Pago"
                               : processo.statusPagamento === "ATRASADO"
@@ -295,19 +314,19 @@ export default function ProcessosPage(): React.ReactNode {
                               : "Pendente"}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right">
-                          <div className="inline-flex gap-2">
-                            {/* Link para visualização/documentos de anexo (Story 09) */}
-                            <Link
-                              href={`/processos/documentos/${processo.id}`}
-                              className="
-                                px-3 py-1.5 text-xs font-semibold text-[#1a3c5e] border border-[#1a3c5e]/30
-                                rounded-md hover:bg-[#1a3c5e]/5 transition-colors inline-block
-                              "
-                            >
-                              Anexos ({processo.documentos.length})
-                            </Link>
-                          </div>
+                        <td className="px-6 py-5 whitespace-nowrap text-right">
+                          <Link
+                            href={`/processos/documentos/${processo.id}`}
+                            className="
+                              inline-flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-[#1a3c5e]
+                              hover:bg-[#1a3c5e]/5 rounded-lg transition-colors opacity-80 group-hover:opacity-100
+                            "
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
+                            </svg>
+                            Anexos ({processo.documentos.length})
+                          </Link>
                         </td>
                       </tr>
                     ))}

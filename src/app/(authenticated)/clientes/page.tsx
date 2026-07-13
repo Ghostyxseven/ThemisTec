@@ -164,89 +164,89 @@ export default function ClientesPage(): React.ReactNode {
         )}
 
         {/* Container da Tabela */}
-        <div className="overflow-hidden rounded-2xl bg-white shadow-md border border-gray-100">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-sm border border-gray-100">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-[#1a3c5e]"></div>
+            <div className="flex flex-col items-center justify-center py-24">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-100 border-t-[#1a3c5e]"></div>
               <p className="mt-4 text-sm text-gray-500 font-medium">Buscando informações...</p>
             </div>
           ) : dados.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-              <div className="rounded-full bg-gray-100 p-4 mb-4">
-                <svg
-                  className="h-8 w-8 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
+            <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
+              <div className="rounded-full bg-blue-50 p-5 mb-5 ring-1 ring-blue-100/50">
+                <svg className="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-800">Nenhum cliente cadastrado</h3>
-              <p className="mt-1 text-sm text-gray-500 max-w-sm">
-                Não localizamos nenhum cliente correspondente à sua busca. Comece cadastrando um novo cliente.
+              <h3 className="text-lg font-bold text-gray-900">Nenhum cliente cadastrado</h3>
+              <p className="mt-2 text-sm text-gray-500 max-w-sm">
+                Sua base de clientes está vazia ou a busca não encontrou resultados. Cadastre um novo cliente para começar.
               </p>
-              <div className="mt-6">
+              <div className="mt-8">
                 <Link
                   href="/clientes/cadastro"
                   className="
-                    inline-flex items-center justify-center rounded-lg bg-gray-100 px-4 py-2
-                    text-sm font-semibold text-gray-700 hover:bg-gray-200 transition-colors
+                    inline-flex items-center justify-center rounded-lg bg-[#1a3c5e] px-5 py-2.5
+                    text-sm font-semibold text-white hover:bg-[#0f2540] transition-colors shadow-sm
                   "
                 >
-                  Cadastrar Cliente
+                  + Cadastrar Primeiro Cliente
                 </Link>
               </div>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full table-auto border-collapse text-left">
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100 text-xs font-semibold uppercase tracking-wider text-gray-500">
-                    <th className="px-6 py-4">Nome</th>
+              <table className="min-w-full divide-y divide-gray-100 text-left">
+                <thead className="bg-gray-50/80">
+                  <tr className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                    <th className="px-6 py-4">Nome do Cliente</th>
                     <th className="px-6 py-4">CPF</th>
                     <th className="px-6 py-4">Telefone</th>
                     <th className="px-6 py-4">E-mail</th>
                     <th className="px-6 py-4 text-center">Ações</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 text-sm text-gray-600">
-                  {dados.map((cliente) => (
-                    <tr key={cliente.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-6 py-4 font-semibold text-gray-800">{cliente.nome}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{formatCpf(cliente.cpf)}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{cliente.telefone || "-"}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{cliente.email || "-"}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <div className="inline-flex gap-2">
-                          <Link
-                            href={`/clientes/edicao/${cliente.id}`}
-                            className="
-                              px-3 py-1.5 text-xs font-semibold text-[#1a3c5e] border border-[#1a3c5e]/30
-                              rounded-md hover:bg-[#1a3c5e]/5 transition-colors inline-block
-                            "
-                          >
-                            Editar
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => { void handleExcluir(cliente.id, cliente.nome); }}
-                            className="
-                              px-3 py-1.5 text-xs font-semibold text-red-600 border border-red-200
-                              rounded-md hover:bg-red-50 transition-colors
-                            "
-                          >
-                            Excluir
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                <tbody className="divide-y divide-gray-50 text-sm text-gray-600 bg-white">
+                  {dados.map((cliente) => {
+                    const avatarLetter = cliente.nome.charAt(0).toUpperCase();
+                    return (
+                      <tr key={cliente.id} className="hover:bg-blue-50/30 transition-colors group">
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100/80 text-blue-700 font-bold text-sm ring-1 ring-blue-200/50">
+                              {avatarLetter}
+                            </div>
+                            <span className="font-semibold text-gray-900">{cliente.nome}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5 whitespace-nowrap text-gray-700 font-medium">{formatCpf(cliente.cpf)}</td>
+                        <td className="px-6 py-5 whitespace-nowrap">{cliente.telefone || <span className="text-gray-400 italic">Não informado</span>}</td>
+                        <td className="px-6 py-5 whitespace-nowrap">{cliente.email || <span className="text-gray-400 italic">Não informado</span>}</td>
+                        <td className="px-6 py-5 whitespace-nowrap text-center">
+                          <div className="inline-flex gap-3 items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
+                            <Link
+                              href={`/clientes/edicao/${cliente.id}`}
+                              className="text-blue-600 hover:text-blue-900 transition-colors p-1"
+                              title="Editar"
+                            >
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.89 1.14l-2.815.93a.75.75 0 01-.95-.95l.93-2.815a4.5 4.5 0 011.14-1.89l13.43-13.43z" />
+                              </svg>
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => { void handleExcluir(cliente.id, cliente.nome); }}
+                              className="text-red-500 hover:text-red-700 transition-colors p-1"
+                              title="Excluir"
+                            >
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                              </svg>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
 
