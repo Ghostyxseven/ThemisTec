@@ -1,16 +1,5 @@
 "use client";
 
-/**
- * LoginPage — View (ADR-0007: MVVM)
- *
- * Responsabilidades:
- * - Renderizar o formulário de login (US01)
- * - Delegar lógica e estado ao hook useLogin (ViewModel)
- * - Exibir erros de validação e estado de carregamento
- *
- * NÃO contém lógica de negócio nem chamadas ao Firebase.
- */
-
 import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -29,10 +18,7 @@ export default function LoginPage(): React.ReactNode {
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(LoginSchema),
-    defaultValues: {
-      email: "",
-      senha: "",
-    },
+    defaultValues: { email: "", senha: "" },
   });
 
   const onSubmit = async (data: LoginInput): Promise<void> => {
@@ -40,148 +26,148 @@ export default function LoginPage(): React.ReactNode {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
-      <div className="w-full max-w-md">
-
-        {/* Logo / Cabeçalho */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-[#1a3c5e]">ThemisTec</h1>
-          <p className="mt-2 text-sm text-gray-500">
-            Gestão jurídica para advogados autônomos
+    <main className="min-h-screen lg:grid lg:grid-cols-2">
+      {/* Branding Panel (Desktop Only) */}
+      <div className="hidden lg:flex lg:flex-col lg:justify-center lg:items-center bg-gradient-to-br from-[#1a3c5e] to-[#0f2540] text-white p-12">
+        <div className="max-w-md text-center">
+          <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-white/10 p-4 shadow-lg ring-1 ring-white/20">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 text-white">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+            </svg>
+          </div>
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-white drop-shadow-sm">ThemisTec</h1>
+          <p className="text-lg leading-relaxed text-blue-100/90 font-light">
+            A revolução digital na gestão do seu escritório de advocacia. Segurança, rapidez e inteligência para sua rotina jurídica.
           </p>
         </div>
+      </div>
 
-        {/* Card do formulário */}
-        <div className="rounded-2xl bg-white px-8 py-10 shadow-md">
-          <h2 className="mb-6 text-xl font-semibold text-gray-800">Entrar na sua conta</h2>
+      {/* Form Panel */}
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 lg:min-h-full lg:px-8">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center lg:text-left">
+            <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">Entrar na sua conta</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Ou{" "}
+              <Link href="/register" className="font-semibold text-[#1a3c5e] hover:text-[#0f2540] transition-colors">
+                crie uma nova conta grátis
+              </Link>
+            </p>
+          </div>
 
-          {/* Erro geral (vindo do ViewModel) */}
-          {errorMessage !== null && (
-            <div
-              role="alert"
-              className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-            >
-              {errorMessage}
-            </div>
-          )}
-
-          <form onSubmit={(e) => { void handleSubmit(onSubmit)(e); }} noValidate className="space-y-5">
-
-            {/* Campo E-mail */}
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-1 block text-sm font-medium text-gray-700"
-              >
-                E-mail
-              </label>
-              <input
-                id="email"
-                type="email"
-                inputMode="email"
-                autoComplete="email"
-                {...register("email")}
-                disabled={isLoading}
-                aria-describedby={errors.email ? "email-error" : undefined}
-                aria-invalid={errors.email !== undefined}
-                placeholder="seu@email.com"
-                className={`
-                  w-full rounded-lg border px-4 py-2.5 text-sm
-                  outline-none transition-colors
-                  focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
-                  disabled:cursor-not-allowed disabled:bg-gray-100
-                  ${errors.email ? "border-red-400 bg-red-50" : "border-gray-300"}
-                `}
-              />
-              {errors.email?.message !== undefined && (
-                <p id="email-error" className="mt-1 text-sm text-red-500">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
-
-            {/* Campo Senha */}
-            <div>
-              <div className="mb-1 flex items-center justify-between">
-                <label
-                  htmlFor="senha"
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Senha
-                </label>
-                <Link
-                  href="/reset-password"
-                  className="text-xs text-[#1a3c5e] hover:underline"
-                >
-                  Esqueceu a senha?
-                </Link>
+          <div className="mt-8 bg-white py-8 px-4 shadow-xl shadow-gray-200/50 sm:rounded-2xl sm:px-10 border border-gray-100">
+            {errorMessage !== null && (
+              <div role="alert" className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+                <div className="flex">
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">Falha ao entrar</h3>
+                    <div className="mt-1 text-sm text-red-700">
+                      <p>{errorMessage}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="relative">
-                <input
-                  id="senha"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  {...register("senha")}
-                  disabled={isLoading}
-                  aria-describedby={errors.senha ? "senha-error" : undefined}
-                  aria-invalid={errors.senha !== undefined}
-                  placeholder="Mínimo 8 caracteres"
-                  className={`
-                    w-full rounded-lg border pl-4 pr-12 py-2.5 text-sm
-                    outline-none transition-colors
-                    focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
-                    disabled:cursor-not-allowed disabled:bg-gray-100
-                    ${errors.senha ? "border-red-400 bg-red-50" : "border-gray-300"}
-                  `}
-                />
+            )}
+
+            <form onSubmit={(e) => { void handleSubmit(onSubmit)(e); }} noValidate className="space-y-6">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                  E-mail
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="email"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    {...register("email")}
+                    disabled={isLoading}
+                    aria-describedby={errors.email ? "email-error" : undefined}
+                    aria-invalid={errors.email !== undefined}
+                    placeholder="seu@email.com"
+                    className={`
+                      block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
+                      placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1a3c5e] sm:text-sm sm:leading-6
+                      transition-all disabled:cursor-not-allowed disabled:bg-gray-50
+                      ${errors.email ? "ring-red-300 focus:ring-red-500" : ""}
+                    `}
+                  />
+                  {errors.email?.message !== undefined && (
+                    <p id="email-error" className="mt-2 text-sm text-red-600">{errors.email.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between">
+                  <label htmlFor="senha" className="block text-sm font-medium leading-6 text-gray-900">
+                    Senha
+                  </label>
+                  <div className="text-sm">
+                    <Link href="/reset-password" className="font-semibold text-[#1a3c5e] hover:text-[#0f2540] transition-colors">
+                      Esqueceu a senha?
+                    </Link>
+                  </div>
+                </div>
+                <div className="relative mt-2">
+                  <input
+                    id="senha"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    {...register("senha")}
+                    disabled={isLoading}
+                    aria-describedby={errors.senha ? "senha-error" : undefined}
+                    aria-invalid={errors.senha !== undefined}
+                    placeholder="Mínimo 8 caracteres"
+                    className={`
+                      block w-full rounded-lg border-0 py-2.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
+                      placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1a3c5e] sm:text-sm sm:leading-6
+                      transition-all disabled:cursor-not-allowed disabled:bg-gray-50
+                      ${errors.senha ? "ring-red-300 focus:ring-red-500" : ""}
+                    `}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => { setShowPassword(!showPassword); }}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+                  >
+                    {showPassword ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                {errors.senha?.message !== undefined && (
+                  <p id="senha-error" className="mt-2 text-sm text-red-600">{errors.senha.message}</p>
+                )}
+              </div>
+
+              <div className="pt-2">
                 <button
-                  type="button"
-                  onClick={() => { setShowPassword(!showPassword); }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  type="submit"
+                  disabled={isLoading}
+                  className="
+                    flex w-full justify-center rounded-lg bg-[#1a3c5e] px-3 py-3 text-sm font-semibold leading-6 text-white shadow-md
+                    hover:bg-[#0f2540] hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1a3c5e]
+                    transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none
+                  "
                 >
-                  {showPassword ? "🙈" : "👁️"}
+                  {isLoading ? "Entrando..." : "Entrar na plataforma"}
                 </button>
               </div>
-              {errors.senha?.message !== undefined && (
-                <p id="senha-error" className="mt-1 text-sm text-red-500">
-                  {errors.senha.message}
-                </p>
-              )}
-            </div>
-
-            {/* Botão de submit */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="
-                mt-2 w-full rounded-lg bg-[#1a3c5e] px-4 py-3
-                text-sm font-semibold text-white
-                transition-colors hover:bg-[#0f2540]
-                focus:outline-none focus:ring-2 focus:ring-[#1a3c5e] focus:ring-offset-2
-                disabled:cursor-not-allowed disabled:opacity-60
-              "
-            >
-              {isLoading ? "Carregando..." : "Entrar"}
-            </button>
-          </form>
-
-          {/* Rodapé do card */}
-          <p className="mt-6 text-center text-sm text-gray-500">
-            Não tem uma conta?{" "}
-            <Link
-              href="/register"
-              className="font-medium text-[#1a3c5e] hover:underline"
-            >
-              Criar conta
-            </Link>
+            </form>
+          </div>
+          
+          <p className="text-center text-xs leading-5 text-gray-400">
+            © {new Date().getFullYear()} ThemisTec. Todos os direitos reservados.
           </p>
         </div>
-
-        {/* Footer */}
-        <p className="mt-8 text-center text-xs text-gray-400">
-          © {new Date().getFullYear()} ThemisTec · Todos os direitos reservados
-        </p>
-
       </div>
     </main>
   );
