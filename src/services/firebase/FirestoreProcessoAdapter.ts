@@ -1,8 +1,7 @@
 import { IProcessoRepository } from "@/shared/interfaces/IProcessoRepository";
 import { CreateProcessoInput, Processo, ListProcessosQuery, ProcessoListResponse, TipoProcesso, StatusProcesso, StatusPagamento, Documento, UpdateProcessoInput } from "@/specs/schemas/processo.schema";
-import { getFirebaseApp } from "./firebase.client";
+import { getFirestoreDb } from "./firebase.client";
 import {
-  getFirestore,
   collection,
   addDoc,
   Firestore,
@@ -19,8 +18,7 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
   private db: Firestore;
 
   constructor() {
-    const app = getFirebaseApp();
-    this.db = getFirestore(app);
+    this.db = getFirestoreDb();
   }
 
   public async criar(dados: CreateProcessoInput, clienteNome: string, userId: string): Promise<Processo> {
