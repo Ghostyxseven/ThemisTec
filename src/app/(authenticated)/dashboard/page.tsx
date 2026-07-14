@@ -48,82 +48,76 @@ export default function DashboardPage(): React.ReactElement {
       {/* Cards Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
         {/* Card Clientes */}
-        <div className="bg-white overflow-hidden shadow-sm hover:shadow-lg rounded-2xl border border-gray-100 transition-all duration-300 transform hover:-translate-y-1">
-          <div className="p-6">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-blue-50/50 ring-1 ring-blue-100 rounded-full p-4">
-                <svg className="h-7 w-7 text-blue-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                </svg>
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate uppercase tracking-wider">Total de Clientes</dt>
-                  <dd className="flex items-baseline mt-1">
-                    <div className="text-4xl font-bold tracking-tight text-gray-900">
-                      {isLoading ? (
-                        <div className="h-10 w-16 bg-gray-200 rounded animate-pulse"></div>
-                      ) : (
-                        estatisticas?.totalClientes ?? 0
-                      )}
-                    </div>
-                  </dd>
-                </dl>
-              </div>
+        <div className="bg-white shadow-sm rounded-xl border border-gray-100 p-6 transition-all hover:shadow-md">
+          <div className="flex items-center">
+            <div className="flex-shrink-0 bg-blue-50/50 ring-1 ring-blue-100 rounded-full p-4">
+              <svg className="h-7 w-7 text-blue-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+              </svg>
+            </div>
+            <div className="ml-5 w-0 flex-1">
+              <dl>
+                <dt className="text-sm font-medium text-gray-500 truncate uppercase tracking-wider">Total de Clientes</dt>
+                <dd className="flex items-baseline mt-1">
+                  <div className="text-4xl font-bold tracking-tight text-gray-900">
+                    {isLoading ? (
+                      <div className="h-10 w-16 bg-gray-200 rounded animate-pulse"></div>
+                    ) : (
+                      estatisticas?.totalClientes ?? 0
+                    )}
+                  </div>
+                </dd>
+              </dl>
             </div>
           </div>
         </div>
 
         {/* Card Processos Totais */}
-        <div className="bg-white overflow-hidden shadow-sm hover:shadow-lg rounded-2xl border border-gray-100 transition-all duration-300 transform hover:-translate-y-1">
-          <div className="p-6">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-purple-50/50 ring-1 ring-purple-100 rounded-full p-4">
-                <svg className="h-7 w-7 text-purple-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                </svg>
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate uppercase tracking-wider">Total de Processos</dt>
-                  <dd className="flex items-baseline mt-1">
-                    <div className="text-4xl font-bold tracking-tight text-gray-900">
-                      {isLoading ? (
-                        <div className="h-10 w-16 bg-gray-200 rounded animate-pulse"></div>
-                      ) : (
-                        estatisticas?.totalProcessos ?? 0
-                      )}
-                    </div>
-                  </dd>
-                </dl>
-              </div>
+        <div className="bg-white shadow-sm rounded-xl border border-gray-100 p-6 transition-all hover:shadow-md">
+          <div className="flex items-center">
+            <div className="flex-shrink-0 bg-purple-50/50 ring-1 ring-purple-100 rounded-full p-4">
+              <svg className="h-7 w-7 text-purple-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+              </svg>
+            </div>
+            <div className="ml-5 w-0 flex-1">
+              <dl>
+                <dt className="text-sm font-medium text-gray-500 truncate uppercase tracking-wider">Total de Processos</dt>
+                <dd className="flex items-baseline mt-1">
+                  <div className="text-4xl font-bold tracking-tight text-gray-900">
+                    {isLoading ? (
+                      <div className="h-10 w-16 bg-gray-200 rounded animate-pulse"></div>
+                    ) : (
+                      estatisticas?.totalProcessos ?? 0
+                    )}
+                  </div>
+                </dd>
+              </dl>
             </div>
           </div>
         </div>
 
         {/* Card Processos Ativos */}
-        <div className="bg-white overflow-hidden shadow-sm hover:shadow-lg rounded-2xl border border-gray-100 transition-all duration-300 transform hover:-translate-y-1">
-          <div className="p-6">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-emerald-50/50 ring-1 ring-emerald-100 rounded-full p-4">
-                <svg className="h-7 w-7 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate uppercase tracking-wider">Processos Ativos</dt>
-                  <dd className="flex items-baseline mt-1">
-                    <div className="text-4xl font-bold tracking-tight text-gray-900">
-                      {isLoading ? (
-                        <div className="h-10 w-16 bg-gray-200 rounded animate-pulse"></div>
-                      ) : (
-                        estatisticas?.ativosProcessos ?? 0
-                      )}
-                    </div>
-                  </dd>
-                </dl>
-              </div>
+        <div className="bg-white shadow-sm rounded-xl border border-gray-100 p-6 transition-all hover:shadow-md">
+          <div className="flex items-center">
+            <div className="flex-shrink-0 bg-emerald-50/50 ring-1 ring-emerald-100 rounded-full p-4">
+              <svg className="h-7 w-7 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="ml-5 w-0 flex-1">
+              <dl>
+                <dt className="text-sm font-medium text-gray-500 truncate uppercase tracking-wider">Processos Ativos</dt>
+                <dd className="flex items-baseline mt-1">
+                  <div className="text-4xl font-bold tracking-tight text-gray-900">
+                    {isLoading ? (
+                      <div className="h-10 w-16 bg-gray-200 rounded animate-pulse"></div>
+                    ) : (
+                      estatisticas?.ativosProcessos ?? 0
+                    )}
+                  </div>
+                </dd>
+              </dl>
             </div>
           </div>
         </div>
