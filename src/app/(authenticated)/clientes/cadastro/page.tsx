@@ -14,6 +14,7 @@
 
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { UserPlus, ArrowLeft } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateClienteSchema } from "@/specs/schemas/cliente.schema";
 import type { CreateClienteInput } from "@/specs/schemas/cliente.schema";
@@ -61,30 +62,36 @@ export default function CadastroClientePage(): React.ReactNode {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-gray-50 px-4 py-12 md:px-8">
+    <main className="flex min-h-screen flex-col items-center bg-background px-4 py-12 md:px-8">
       <div className="w-full max-w-2xl">
         
         {/* Link para voltar */}
         <div className="mb-6">
           <Link
             href="/clientes"
-            className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-primary transition-colors"
           >
-            ← Voltar para listagem
+            <ArrowLeft className="h-4 w-4" />
+            Voltar para listagem
           </Link>
         </div>
 
         {/* Cabeçalho */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1a3c5e]">Novo Cliente</h1>
-          <p className="mt-2 text-sm text-gray-500">
-            Cadastre os dados pessoais do cliente para vinculação de processos.
-          </p>
+        <div className="mb-8 flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light/10">
+            <UserPlus className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Novo <span className="text-primary">Cliente</span></h1>
+            <p className="text-sm text-slate-500">
+              Cadastre os dados pessoais do cliente para vinculação de processos.
+            </p>
+          </div>
         </div>
 
         {/* Card do formulário */}
-        <div className="rounded-2xl bg-white px-8 py-10 shadow-md">
-          <h2 className="mb-6 text-xl font-semibold text-gray-800">Dados do Cliente</h2>
+        <div className="rounded-2xl bg-white px-8 py-10 shadow-soft border border-slate-100">
+          <h2 className="mb-6 text-lg font-semibold text-foreground border-b border-slate-100 pb-4">Dados Cadastrais</h2>
 
           {/* Erro geral (vindo do ViewModel) */}
           {errorMessage !== null && (
@@ -114,9 +121,7 @@ export default function CadastroClientePage(): React.ReactNode {
                   aria-describedby={errors.nome ? "nome-error" : undefined}
                   aria-invalid={errors.nome !== undefined}
                   className={`
-                    w-full rounded-lg border px-4 py-2.5 text-sm
-                    outline-none transition-colors
-                    focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
+                      block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
                     disabled:cursor-not-allowed disabled:bg-gray-100
                     ${errors.nome ? "border-red-400 bg-red-50" : "border-gray-300"}
                   `}
@@ -146,9 +151,7 @@ export default function CadastroClientePage(): React.ReactNode {
                   aria-describedby={errors.cpf ? "cpf-error" : undefined}
                   aria-invalid={errors.cpf !== undefined}
                   className={`
-                    w-full rounded-lg border px-4 py-2.5 text-sm
-                    outline-none transition-colors
-                    focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
+                      block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
                     disabled:cursor-not-allowed disabled:bg-gray-100
                     ${errors.cpf ? "border-red-400 bg-red-50" : "border-gray-300"}
                   `}
@@ -175,9 +178,7 @@ export default function CadastroClientePage(): React.ReactNode {
                   aria-describedby={errors.email ? "email-error" : undefined}
                   aria-invalid={errors.email !== undefined}
                   className={`
-                    w-full rounded-lg border px-4 py-2.5 text-sm
-                    outline-none transition-colors
-                    focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
+                      block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
                     disabled:cursor-not-allowed disabled:bg-gray-100
                     ${errors.email ? "border-red-400 bg-red-50" : "border-gray-300"}
                   `}
@@ -201,9 +202,7 @@ export default function CadastroClientePage(): React.ReactNode {
                   {...register("telefone")}
                   disabled={isLoading}
                   className="
-                    w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm
-                    outline-none transition-colors
-                    focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
+                      block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
                     disabled:cursor-not-allowed disabled:bg-gray-100
                   "
                 />
@@ -223,9 +222,7 @@ export default function CadastroClientePage(): React.ReactNode {
                 {...register("endereco")}
                 disabled={isLoading}
                 className="
-                  w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm
-                  outline-none transition-colors
-                  focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
+                      block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
                   disabled:cursor-not-allowed disabled:bg-gray-100
                 "
               />
@@ -245,9 +242,7 @@ export default function CadastroClientePage(): React.ReactNode {
                 aria-describedby={errors.observacoes ? "observacoes-error" : undefined}
                 aria-invalid={errors.observacoes !== undefined}
                 className={`
-                  w-full rounded-lg border px-4 py-2.5 text-sm
-                  outline-none transition-colors resize-none
-                  focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
+                      block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
                   disabled:cursor-not-allowed disabled:bg-gray-100
                   ${errors.observacoes ? "border-red-400 bg-red-50" : "border-gray-300"}
                 `}
@@ -274,11 +269,11 @@ export default function CadastroClientePage(): React.ReactNode {
                 type="submit"
                 disabled={isLoading}
                 className="
-                  rounded-lg bg-[#1a3c5e] px-6 py-2.5
+                  rounded-lg bg-primary px-6 py-2.5
                   text-sm font-semibold text-white
-                  transition-colors hover:bg-[#0f2540]
-                  focus:outline-none focus:ring-2 focus:ring-[#1a3c5e] focus:ring-offset-2
-                  disabled:cursor-not-allowed disabled:opacity-60
+                  transition-all duration-200 hover:bg-primary-dark
+                  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                  disabled:cursor-not-allowed disabled:opacity-60 active:scale-95
                 "
               >
                 {isLoading ? "Salvando..." : "Salvar Cliente"}

@@ -30,7 +30,7 @@ export default function RegisterPage(): React.ReactNode {
   return (
     <main className="min-h-screen lg:grid lg:grid-cols-2">
       {/* Branding Panel (Desktop Only) */}
-      <div className="hidden lg:flex lg:flex-col lg:justify-center lg:items-center bg-gradient-to-br from-[#1a3c5e] to-[#0f2540] text-white p-12">
+      <div className="hidden lg:flex lg:flex-col lg:justify-center lg:items-center bg-gradient-to-br from-primary to-primary-dark text-white p-12">
         <div className="max-w-md text-center">
           <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-white/10 p-4 shadow-lg ring-1 ring-white/20">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 text-white">
@@ -51,7 +51,7 @@ export default function RegisterPage(): React.ReactNode {
             <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">Criar sua conta</h2>
             <p className="mt-2 text-sm text-gray-600">
               Ou{" "}
-              <Link href="/login" className="font-semibold text-[#1a3c5e] hover:text-[#0f2540] transition-colors">
+              <Link href="/login" className="font-semibold text-primary hover:text-primary-dark transition-colors">
                 faça login se já possui cadastro
               </Link>
             </p>
@@ -84,8 +84,8 @@ export default function RegisterPage(): React.ReactNode {
                 <Link
                   href="/login"
                   className="
-                    flex w-full justify-center rounded-lg bg-[#1a3c5e] px-3 py-3 text-sm font-semibold leading-6 text-white shadow-md
-                    hover:bg-[#0f2540] hover:shadow-lg transition-all duration-200
+                    flex w-full justify-center rounded-lg bg-primary px-3 py-3 text-sm font-semibold leading-6 text-white shadow-md
+                    hover:bg-primary-dark hover:shadow-lg transition-all duration-200
                   "
                 >
                   Ir para o Login
@@ -109,7 +109,7 @@ export default function RegisterPage(): React.ReactNode {
                       placeholder="Dr(a). Seu Nome"
                       className={`
                         block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
-                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1a3c5e] sm:text-sm sm:leading-6
+                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6
                         transition-all disabled:cursor-not-allowed disabled:bg-gray-50
                         ${errors.nome ? "ring-red-300 focus:ring-red-500" : ""}
                       `}
@@ -137,7 +137,7 @@ export default function RegisterPage(): React.ReactNode {
                       placeholder="seu@email.com"
                       className={`
                         block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
-                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1a3c5e] sm:text-sm sm:leading-6
+                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6
                         transition-all disabled:cursor-not-allowed disabled:bg-gray-50
                         ${errors.email ? "ring-red-300 focus:ring-red-500" : ""}
                       `}
@@ -164,7 +164,7 @@ export default function RegisterPage(): React.ReactNode {
                       placeholder="Mínimo 8 caracteres"
                       className={`
                         block w-full rounded-lg border-0 py-2.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
-                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1a3c5e] sm:text-sm sm:leading-6
+                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6
                         transition-all disabled:cursor-not-allowed disabled:bg-gray-50
                         ${errors.senha ? "ring-red-300 focus:ring-red-500" : ""}
                       `}
@@ -196,9 +196,9 @@ export default function RegisterPage(): React.ReactNode {
                     type="submit"
                     disabled={isLoading}
                     className="
-                      flex w-full justify-center rounded-lg bg-[#1a3c5e] px-3 py-3 text-sm font-semibold leading-6 text-white shadow-md
-                      hover:bg-[#0f2540] hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1a3c5e]
-                      transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none
+                      flex w-full justify-center rounded-lg bg-primary px-3 py-3 text-sm font-semibold leading-6 text-white shadow-md
+                      hover:bg-primary-dark hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+                      transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none active:scale-[0.98]
                     "
                   >
                     {isLoading ? "Criando conta..." : "Criar Conta Agora"}

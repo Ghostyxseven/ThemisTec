@@ -14,6 +14,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useListClientes } from "./useListClientes";
+import { Users, UserCheck, UserPlus, TrendingUp, Search, SlidersHorizontal, Download } from "lucide-react";
 
 const formatCpf = (value: string): string => {
   const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -74,120 +75,142 @@ export default function ClientesPage(): React.ReactNode {
     }
   };
 
+  const totalClientes = paginacao?.total ?? 0;
+
   return (
-    <main className="flex min-h-screen flex-col items-center bg-gray-50 px-4 py-12 md:px-8">
-      <div className="w-full max-w-5xl">
-        
-        {/* Topo / Título & CTA */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-[#1a3c5e]">Gestão de Clientes</h1>
-            <p className="mt-2 text-sm text-gray-500">
-              Gerencie os dados e visualize o cadastro de clientes ativos no sistema.
-            </p>
+    <main className="flex-1 px-4 py-8 md:px-8 lg:px-10">
+      <div className="max-w-7xl mx-auto space-y-6">
+
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light/10">
+              <Users className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">
+                Gestão de <span className="text-primary">Clientes</span>
+              </h1>
+              <p className="text-sm text-slate-500">
+                Gerencie os dados e visualize o cadastro de clientes ativos no sistema.
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => { void exportarCsv(); }}
               disabled={isExporting}
-              className="
-                inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5
-                text-sm font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-50
-                focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2
-                disabled:opacity-50 disabled:cursor-not-allowed
-              "
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:bg-slate-50 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isExporting ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Exportando...
-                </>
-              ) : (
-                "Exportar CSV"
-              )}
+              <Download className="h-4 w-4" />
+              {isExporting ? "Exportando..." : "Exportar CSV"}
             </button>
             <Link
               href="/clientes/cadastro"
-              className="
-                inline-flex items-center justify-center rounded-lg bg-[#1a3c5e] px-5 py-2.5
-                text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#0f2540]
-                focus:outline-none focus:ring-2 focus:ring-[#1a3c5e] focus:ring-offset-2
-              "
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all duration-200 hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 active:scale-95"
             >
               + Novo Cliente
             </Link>
           </div>
         </div>
 
-        {/* Barra de Busca e Filtros */}
-        <div className="mb-6 flex gap-4">
+        {/* Search Bar */}
+        <div className="flex gap-3">
           <div className="relative flex-1">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <svg
-                className="h-5 w-5 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+              <Search className="h-4 w-4 text-slate-400" />
             </div>
             <input
               type="text"
               value={localSearch}
               onChange={handleSearchChange}
               placeholder="Buscar cliente por nome ou CPF..."
-              className="
-                w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-4 text-sm
-                outline-none transition-colors focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
-              "
+              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md"
             />
           </div>
+          <button className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 shadow-sm hover:bg-slate-50 hover:shadow-md transition-all">
+            <SlidersHorizontal className="h-4 w-4 text-slate-500" />
+          </button>
         </div>
 
-        {/* Erro */}
+        {/* Error */}
         {errorMessage !== null && (
           <div
             role="alert"
-            className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
           >
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-red-100">
+              <svg className="h-3.5 w-3.5 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/></svg>
+            </div>
             {errorMessage}
           </div>
         )}
 
-        {/* Container da Tabela */}
-        <div className="overflow-hidden rounded-2xl bg-white shadow-sm border border-gray-100">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="flex items-center gap-4 rounded-2xl bg-white p-5 border border-slate-100 shadow-soft transition-all hover:shadow-card">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50">
+              <Users className="h-5 w-5 text-blue-500" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-blue-500 uppercase tracking-wider">Total de Clientes</p>
+              <p className="text-xl font-bold text-foreground">{isLoading ? "..." : totalClientes}</p>
+              <p className="text-[11px] text-slate-400">{totalClientes === 0 ? "Nenhum cadastro ainda" : `${totalClientes} cadastrado(s)`}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 rounded-2xl bg-white p-5 border border-slate-100 shadow-soft transition-all hover:shadow-card">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50">
+              <UserCheck className="h-5 w-5 text-emerald-500" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-emerald-500 uppercase tracking-wider">Clientes Ativos</p>
+              <p className="text-xl font-bold text-foreground">{isLoading ? "..." : totalClientes}</p>
+              <p className="text-[11px] text-slate-400">{totalClientes === 0 ? "Nenhum ativo" : "Ativos no sistema"}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 rounded-2xl bg-white p-5 border border-slate-100 shadow-soft transition-all hover:shadow-card">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50">
+              <UserPlus className="h-5 w-5 text-purple-500" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-purple-500 uppercase tracking-wider">Novos (este mês)</p>
+              <p className="text-xl font-bold text-foreground">0</p>
+              <p className="text-[11px] text-slate-400">Nenhum novo cliente</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 rounded-2xl bg-white p-5 border border-slate-100 shadow-soft transition-all hover:shadow-card">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50">
+              <TrendingUp className="h-5 w-5 text-amber-500" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-amber-500 uppercase tracking-wider">Taxa de Conversão</p>
+              <p className="text-xl font-bold text-foreground">0%</p>
+              <p className="text-[11px] text-slate-400">Sem dados ainda</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Table Container */}
+        <div className="overflow-hidden rounded-2xl bg-white shadow-soft border border-slate-100">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-24">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-100 border-t-[#1a3c5e]"></div>
-              <p className="mt-4 text-sm text-gray-500 font-medium">Buscando informações...</p>
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-100 border-t-primary"></div>
+              <p className="mt-4 text-sm text-slate-500 font-medium">Buscando informações...</p>
             </div>
           ) : dados.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-              <div className="rounded-full bg-blue-50 p-5 mb-5 ring-1 ring-blue-100/50">
-                <svg className="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                </svg>
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary-light/10 mb-5">
+                <Users className="h-10 w-10 text-primary-light/60" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900">Nenhum cliente cadastrado</h3>
-              <p className="mt-2 text-sm text-gray-500 max-w-sm">
-                Sua base de clientes está vazia ou a busca não encontrou resultados. Cadastre um novo cliente para começar.
+              <h3 className="text-lg font-bold text-foreground">Nenhum cliente cadastrado</h3>
+              <p className="mt-2 text-sm text-slate-500 max-w-sm">
+                Sua base de clientes está vazia ou a busca não encontrou resultados.
+                Cadastre um novo cliente para começar.
               </p>
               <div className="mt-8">
                 <Link
                   href="/clientes/cadastro"
-                  className="
-                    inline-flex items-center justify-center rounded-lg bg-[#1a3c5e] px-5 py-2.5
-                    text-sm font-semibold text-white hover:bg-[#0f2540] transition-colors shadow-sm
-                  "
+                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary-dark active:scale-95"
                 >
                   + Cadastrar Primeiro Cliente
                 </Link>
@@ -195,9 +218,9 @@ export default function ClientesPage(): React.ReactNode {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-100 text-left">
-                <thead className="bg-gray-50/80">
-                  <tr className="text-xs font-bold uppercase tracking-wider text-gray-500">
+              <table className="min-w-full divide-y divide-slate-100 text-left">
+                <thead className="bg-slate-50/80">
+                  <tr className="text-xs font-bold uppercase tracking-wider text-slate-400">
                     <th className="px-6 py-4">Nome do Cliente</th>
                     <th className="px-6 py-4">CPF</th>
                     <th className="px-6 py-4">Telefone</th>
@@ -205,27 +228,27 @@ export default function ClientesPage(): React.ReactNode {
                     <th className="px-6 py-4 text-center">Ações</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50 text-sm text-gray-600 bg-white">
+                <tbody className="divide-y divide-slate-50 text-sm text-slate-600 bg-white">
                   {dados.map((cliente) => {
                     const avatarLetter = cliente.nome.charAt(0).toUpperCase();
                     return (
-                      <tr key={cliente.id} className="hover:bg-blue-50/30 transition-colors group">
+                      <tr key={cliente.id} className="hover:bg-primary/[0.02] transition-colors group">
                         <td className="px-6 py-5">
                           <div className="flex items-center gap-3">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100/80 text-blue-700 font-bold text-sm ring-1 ring-blue-200/50">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-light/10 text-primary font-bold text-sm">
                               {avatarLetter}
                             </div>
-                            <span className="font-semibold text-gray-900">{cliente.nome}</span>
+                            <span className="font-semibold text-foreground">{cliente.nome}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-5 whitespace-nowrap text-gray-700 font-medium">{formatCpf(cliente.cpf)}</td>
-                        <td className="px-6 py-5 whitespace-nowrap">{cliente.telefone || <span className="text-gray-400 italic">Não informado</span>}</td>
-                        <td className="px-6 py-5 whitespace-nowrap">{cliente.email || <span className="text-gray-400 italic">Não informado</span>}</td>
+                        <td className="px-6 py-5 whitespace-nowrap text-slate-700 font-medium font-mono text-xs">{formatCpf(cliente.cpf)}</td>
+                        <td className="px-6 py-5 whitespace-nowrap">{cliente.telefone || <span className="text-slate-300 italic">Não informado</span>}</td>
+                        <td className="px-6 py-5 whitespace-nowrap">{cliente.email || <span className="text-slate-300 italic">Não informado</span>}</td>
                         <td className="px-6 py-5 whitespace-nowrap text-center">
-                          <div className="inline-flex gap-4 items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
+                          <div className="inline-flex gap-4 items-center justify-center opacity-60 group-hover:opacity-100 transition-opacity">
                             <Link
                               href={`/clientes/edicao/${cliente.id}`}
-                              className="text-sm font-medium text-blue-600 hover:text-blue-900 transition-colors"
+                              className="text-sm font-medium text-primary hover:text-primary-dark transition-colors"
                               title="Editar"
                             >
                               Editar
@@ -233,7 +256,7 @@ export default function ClientesPage(): React.ReactNode {
                             <button
                               type="button"
                               onClick={() => { void handleExcluir(cliente.id, cliente.nome); }}
-                              className="text-sm font-medium text-red-500 hover:text-red-700 transition-colors"
+                              className="text-sm font-medium text-red-400 hover:text-red-600 transition-colors"
                               title="Excluir"
                             >
                               Excluir
@@ -248,8 +271,8 @@ export default function ClientesPage(): React.ReactNode {
 
               {/* Paginação */}
               {paginacao && paginacao.totalPaginas > 1 && (
-                <div className="flex items-center justify-between border-t border-gray-100 bg-white px-6 py-4">
-                  <div className="text-sm text-gray-500">
+                <div className="flex items-center justify-between border-t border-slate-100 bg-white px-6 py-4">
+                  <div className="text-sm text-slate-500">
                     Página <span className="font-medium">{page}</span> de{" "}
                     <span className="font-medium">{paginacao.totalPaginas}</span> (Total: {paginacao.total} clientes)
                   </div>
@@ -258,10 +281,7 @@ export default function ClientesPage(): React.ReactNode {
                       type="button"
                       onClick={handlePrevPage}
                       disabled={page === 1}
-                      className="
-                        rounded-lg border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-600
-                        transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50
-                      "
+                      className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       Anterior
                     </button>
@@ -269,10 +289,7 @@ export default function ClientesPage(): React.ReactNode {
                       type="button"
                       onClick={handleNextPage}
                       disabled={page >= paginacao.totalPaginas}
-                      className="
-                        rounded-lg border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-600
-                        transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50
-                      "
+                      className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       Próximo
                     </button>

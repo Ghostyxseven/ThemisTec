@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
 import { IAuthService } from "@/shared/interfaces/IAuthService";
+import { Menu, Bell, LogOut } from "lucide-react";
 
 const authService: IAuthService = new FirebaseAuthAdapter();
 
@@ -23,33 +24,36 @@ export function Header({ onOpenSidebar }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-x-4 border-b border-slate-200/60 bg-white/90 backdrop-blur-md px-4 sm:px-6 lg:px-8">
       {/* Mobile Menu Button */}
       <button
         type="button"
-        className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+        className="p-2 text-slate-500 hover:text-primary hover:bg-primary/5 rounded-xl transition-all lg:hidden"
         onClick={onOpenSidebar}
       >
         <span className="sr-only">Abrir sidebar</span>
-        <svg
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-        </svg>
+        <Menu className="h-5 w-5" />
       </button>
 
       {/* Separator for mobile */}
-      <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
+      <div className="h-6 w-px bg-slate-200 lg:hidden" aria-hidden="true" />
 
-      <div className="flex flex-1 items-center justify-end gap-x-4 lg:gap-x-6">
+      <div className="flex flex-1 items-center justify-end gap-x-3">
+        {/* Notification Bell */}
+        <button
+          type="button"
+          className="relative p-2.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
+        >
+          <Bell className="h-5 w-5" />
+          <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary-light ring-2 ring-white"></span>
+        </button>
+
+        {/* Logout */}
         <button
           onClick={() => { void handleLogout(); }}
-          className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200"
+          className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all duration-200 hover:bg-slate-50 hover:border-slate-300 hover:shadow-md active:scale-95"
         >
+          <LogOut className="h-4 w-4" />
           Sair
         </button>
       </div>
