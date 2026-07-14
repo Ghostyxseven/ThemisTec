@@ -1,6 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "ThemisTec — Gestão Jurídica",
@@ -10,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1a3c5e",
+  themeColor: "#4338ca",
 };
 
 interface RootLayoutProps {
@@ -19,8 +26,8 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps): ReactNode {
   return (
-    <html lang="pt-BR">
-      <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
+    <html lang="pt-BR" className={inter.variable}>
+      <body className="min-h-screen bg-background text-foreground antialiased font-sans">
         {children}
       </body>
     </html>

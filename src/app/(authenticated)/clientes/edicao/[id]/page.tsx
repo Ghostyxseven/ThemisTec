@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { UserCheck, ArrowLeft } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdateClienteSchema } from "@/specs/schemas/cliente.schema";
 import type { UpdateClienteInput } from "@/specs/schemas/cliente.schema";
@@ -56,14 +57,12 @@ export default function EdicaoClientePage(): React.ReactNode {
     },
   });
 
-  // Carrega o cliente ao montar a página
   useEffect(() => {
     if (id) {
       void loadCliente(id);
     }
   }, [id, loadCliente]);
 
-  // Reseta os valores do formulário com os dados carregados
   useEffect(() => {
     if (cliente) {
       reset({
@@ -82,231 +81,218 @@ export default function EdicaoClientePage(): React.ReactNode {
     }
   };
 
-  const onSubmitForm = (e: React.FormEvent<HTMLFormElement>): void => {
-    void handleSubmit(onSubmit)(e);
-  };
-
   return (
-    <main className="flex min-h-screen flex-col items-center bg-gray-50 px-4 py-12 md:px-8">
-      <div className="w-full max-w-2xl">
+    <main className="flex-1 px-4 py-8 md:px-8 lg:px-10 bg-background">
+      <div className="w-full max-w-2xl mx-auto">
         
         {/* Link de volta */}
         <div className="mb-6">
           <Link
             href="/clientes"
-            className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-primary transition-colors"
           >
-            ← Cancelar e voltar
+            <ArrowLeft className="h-4 w-4" />
+            Cancelar e voltar
           </Link>
         </div>
 
         {/* Cabeçalho */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1a3c5e]">Editar Cliente</h1>
-          <p className="mt-2 text-sm text-gray-500">
-            Atualize as informações cadastrais do cliente selecionado.
-          </p>
+        <div className="mb-8 flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light/10">
+            <UserCheck className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Editar <span className="text-primary">Cliente</span></h1>
+            <p className="text-sm text-slate-500">
+              Atualize as informações cadastrais do cliente selecionado.
+            </p>
+          </div>
         </div>
 
         {/* Card do formulário */}
-        <div className="rounded-2xl bg-white px-8 py-10 shadow-md">
-          <h2 className="mb-6 text-xl font-semibold text-gray-800">Dados do Cliente</h2>
-
-          {/* Erro geral (vindo do ViewModel) */}
-          {errorMessage !== null && (
-            <div
-              role="alert"
-              className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-            >
-              {errorMessage}
-            </div>
-          )}
-
+        <div className="rounded-2xl bg-white px-8 py-10 shadow-soft border border-slate-100">
+          
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-[#1a3c5e]"></div>
-              <p className="mt-4 text-sm text-gray-500 font-medium">Buscando dados do cliente...</p>
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-primary"></div>
+              <p className="mt-4 text-sm text-slate-500 font-medium">Buscando dados do cliente...</p>
             </div>
           ) : (
-            <form onSubmit={onSubmitForm} noValidate className="space-y-6">
-              
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <>
+              <h2 className="mb-6 text-lg font-semibold text-foreground border-b border-slate-100 pb-4">Dados Cadastrais</h2>
+
+              {/* Erro geral */}
+              {errorMessage !== null && (
+                <div
+                  role="alert"
+                  className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                >
+                  {errorMessage}
+                </div>
+              )}
+
+              <form onSubmit={(e) => { void handleSubmit(onSubmit)(e); }} noValidate className="space-y-6">
                 
-                {/* Campo Nome */}
-                <div>
-                  <label htmlFor="nome" className="mb-1 block text-sm font-medium text-gray-700">
-                    Nome Completo *
-                  </label>
-                  <input
-                    id="nome"
-                    type="text"
-                    {...register("nome")}
-                    disabled={isSaving}
-                    placeholder="Nome do cliente"
-                    aria-describedby={errors.nome ? "nome-error" : undefined}
-                    aria-invalid={errors.nome !== undefined}
-                    className={`
-                      w-full rounded-lg border px-4 py-2.5 text-sm
-                      outline-none transition-colors
-                      focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
-                      disabled:cursor-not-allowed disabled:bg-gray-100
-                      ${errors.nome ? "border-red-400 bg-red-50" : "border-gray-300"}
-                    `}
-                  />
-                  {errors.nome?.message !== undefined && (
-                    <p id="nome-error" className="mt-1 text-sm text-red-500">
-                      {errors.nome.message}
-                    </p>
-                  )}
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  
+                  {/* Campo Nome */}
+                  <div>
+                    <label htmlFor="nome" className="mb-1 block text-sm font-medium text-slate-700">
+                      Nome Completo *
+                    </label>
+                    <input
+                      id="nome"
+                      type="text"
+                      {...register("nome")}
+                      disabled={isSaving}
+                      placeholder="Nome do cliente"
+                      aria-describedby={errors.nome ? "nome-error" : undefined}
+                      aria-invalid={errors.nome !== undefined}
+                      className={`
+                        block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
+                        disabled:cursor-not-allowed disabled:bg-slate-50
+                        ${errors.nome ? "border-red-400 bg-red-50" : ""}
+                      `}
+                    />
+                    {errors.nome?.message !== undefined && (
+                      <p id="nome-error" className="mt-1 text-sm text-red-500">
+                        {errors.nome.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Campo CPF (Somente Leitura) */}
+                  <div>
+                    <label htmlFor="cpf-disabled" className="mb-1 block text-sm font-medium text-slate-500">
+                      CPF (Não editável)
+                    </label>
+                    <input
+                      id="cpf-disabled"
+                      type="text"
+                      disabled
+                      value={cliente ? formatCpf(cliente.cpf) : ""}
+                      className="
+                        block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none bg-slate-50 text-slate-500 cursor-not-allowed
+                      "
+                    />
+                  </div>
+
+                  {/* Campo E-mail */}
+                  <div>
+                    <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">
+                      E-mail
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      inputMode="email"
+                      placeholder="exemplo@email.com"
+                      {...register("email")}
+                      disabled={isSaving}
+                      aria-describedby={errors.email ? "email-error" : undefined}
+                      aria-invalid={errors.email !== undefined}
+                      className={`
+                        block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
+                        disabled:cursor-not-allowed disabled:bg-slate-50
+                        ${errors.email ? "border-red-400 bg-red-50" : ""}
+                      `}
+                    />
+                    {errors.email?.message !== undefined && (
+                      <p id="email-error" className="mt-1 text-sm text-red-500">
+                        {errors.email.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Campo Telefone */}
+                  <div>
+                    <label htmlFor="telefone" className="mb-1 block text-sm font-medium text-slate-700">
+                      Telefone
+                    </label>
+                    <input
+                      id="telefone"
+                      type="text"
+                      placeholder="(00) 00000-0000"
+                      {...register("telefone")}
+                      disabled={isSaving}
+                      className="
+                        block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
+                        disabled:cursor-not-allowed disabled:bg-slate-50
+                      "
+                    />
+                  </div>
+
                 </div>
 
-                {/* Campo CPF (Somente Leitura) */}
+                {/* Campo Endereço */}
                 <div>
-                  <label htmlFor="cpf-disabled" className="mb-1 block text-sm font-medium text-gray-500">
-                    CPF (Não editável)
+                  <label htmlFor="endereco" className="mb-1 block text-sm font-medium text-slate-700">
+                    Endereço Residencial
                   </label>
                   <input
-                    id="cpf-disabled"
+                    id="endereco"
                     type="text"
-                    disabled
-                    value={cliente ? formatCpf(cliente.cpf) : ""}
+                    placeholder="Rua, número, bairro, cidade - UF"
+                    {...register("endereco")}
+                    disabled={isSaving}
                     className="
-                      w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
-                      text-gray-500 cursor-not-allowed outline-none
+                      block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
+                      disabled:cursor-not-allowed disabled:bg-slate-50
                     "
                   />
                 </div>
 
-                {/* Campo E-mail */}
+                {/* Campo Observações */}
                 <div>
-                  <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
-                    E-mail
+                  <label htmlFor="observacoes" className="mb-1 block text-sm font-medium text-slate-700">
+                    Observações Adicionais
                   </label>
-                  <input
-                    id="email"
-                    type="email"
-                    inputMode="email"
-                    placeholder="exemplo@email.com"
-                    {...register("email")}
+                  <textarea
+                    id="observacoes"
+                    rows={4}
+                    placeholder="Detalhes ou anotações sobre o cliente"
+                    {...register("observacoes")}
                     disabled={isSaving}
-                    aria-describedby={errors.email ? "email-error" : undefined}
-                    aria-invalid={errors.email !== undefined}
+                    aria-describedby={errors.observacoes ? "observacoes-error" : undefined}
+                    aria-invalid={errors.observacoes !== undefined}
                     className={`
-                      w-full rounded-lg border px-4 py-2.5 text-sm
-                      outline-none transition-colors
-                      focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
-                      disabled:cursor-not-allowed disabled:bg-gray-100
-                      ${errors.email ? "border-red-400 bg-red-50" : "border-gray-300"}
+                      block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md resize-none
+                      disabled:cursor-not-allowed disabled:bg-slate-50
+                      ${errors.observacoes ? "border-red-400 bg-red-50" : ""}
                     `}
                   />
-                  {errors.email?.message !== undefined && (
-                    <p id="email-error" className="mt-1 text-sm text-red-500">
-                      {errors.email.message}
+                  {errors.observacoes?.message !== undefined && (
+                    <p id="observacoes-error" className="mt-1 text-sm text-red-500">
+                      {errors.observacoes.message}
                     </p>
                   )}
                 </div>
 
-                {/* Campo Telefone */}
-                <div>
-                  <label htmlFor="telefone" className="mb-1 block text-sm font-medium text-gray-700">
-                    Telefone
-                  </label>
-                  <input
-                    id="telefone"
-                    type="text"
-                    placeholder="(00) 00000-0000"
-                    {...register("telefone")}
+                {/* Ações */}
+                <div className="flex items-center justify-end space-x-4 pt-4 border-t border-slate-100">
+                  <Link
+                    href="/clientes"
+                    className="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-800 transition-colors rounded-xl border border-slate-200 hover:bg-slate-50"
+                  >
+                    Cancelar
+                  </Link>
+                  <button
+                    type="submit"
                     disabled={isSaving}
                     className="
-                      w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm
-                      outline-none transition-colors
-                      focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
-                      disabled:cursor-not-allowed disabled:bg-gray-100
+                      rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white
+                      transition-all duration-200 hover:bg-primary-dark shadow-lg shadow-primary/25
+                      focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                      disabled:cursor-not-allowed disabled:opacity-60 active:scale-95
                     "
-                  />
+                  >
+                    {isSaving ? "Salvando..." : "Salvar Alterações"}
+                  </button>
                 </div>
-
-              </div>
-
-              {/* Campo Endereço */}
-              <div>
-                <label htmlFor="endereco" className="mb-1 block text-sm font-medium text-gray-700">
-                  Endereço Residencial
-                </label>
-                <input
-                  id="endereco"
-                  type="text"
-                  placeholder="Rua, número, bairro, cidade - UF"
-                  {...register("endereco")}
-                  disabled={isSaving}
-                  className="
-                    w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm
-                    outline-none transition-colors
-                    focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
-                    disabled:cursor-not-allowed disabled:bg-gray-100
-                  "
-                />
-              </div>
-
-              {/* Campo Observações */}
-              <div>
-                <label htmlFor="observacoes" className="mb-1 block text-sm font-medium text-gray-700">
-                  Observações Adicionais
-                </label>
-                <textarea
-                  id="observacoes"
-                  rows={4}
-                  placeholder="Detalhes ou anotações sobre o cliente"
-                  {...register("observacoes")}
-                  disabled={isSaving}
-                  aria-describedby={errors.observacoes ? "observacoes-error" : undefined}
-                  aria-invalid={errors.observacoes !== undefined}
-                  className={`
-                    w-full rounded-lg border px-4 py-2.5 text-sm
-                    outline-none transition-colors resize-none
-                    focus:border-[#1a3c5e] focus:ring-2 focus:ring-[#1a3c5e]/20
-                    disabled:cursor-not-allowed disabled:bg-gray-100
-                    ${errors.observacoes ? "border-red-400 bg-red-50" : "border-gray-300"}
-                  `}
-                />
-                {errors.observacoes?.message !== undefined && (
-                  <p id="observacoes-error" className="mt-1 text-sm text-red-500">
-                    {errors.observacoes.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Ações */}
-              <div className="flex items-center justify-end space-x-4 pt-4 border-t">
-                <Link
-                  href="/clientes"
-                  className="
-                    px-5 py-2.5 text-sm font-semibold text-gray-600 hover:text-gray-800
-                    transition-colors rounded-lg border border-gray-300 hover:bg-gray-50
-                  "
-                >
-                  Cancelar
-                </Link>
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="
-                    rounded-lg bg-[#1a3c5e] px-6 py-2.5
-                    text-sm font-semibold text-white
-                    transition-colors hover:bg-[#0f2540]
-                    focus:outline-none focus:ring-2 focus:ring-[#1a3c5e] focus:ring-offset-2
-                    disabled:cursor-not-allowed disabled:opacity-60
-                  "
-                >
-                  {isSaving ? "Salvando..." : "Salvar Alterações"}
-                </button>
-              </div>
-
-            </form>
+              </form>
+            </>
           )}
-
         </div>
-
       </div>
     </main>
   );
