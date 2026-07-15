@@ -95,6 +95,6 @@ describe("useListPrazos Hook", () => {
     });
 
     expect(prazoRepository.marcarConcluido).toHaveBeenCalledWith("user-123", "p1");
-    expect(result.current.dados[0].status).toBe("CONCLUIDO");
+    expect(result.current.dados[0]?.status).toBe("CONCLUIDO");
   });
 });

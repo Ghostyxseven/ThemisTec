@@ -166,7 +166,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   Meu Perfil
                 </Link>
                 <button 
-                  onClick={(e) => { void handleLogout(); }}
+                  onClick={() => { void handleLogout(); }}
                   className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-colors"
                 >
                   <LogOut className="h-4 w-4" />
