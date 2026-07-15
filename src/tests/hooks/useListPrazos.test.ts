@@ -18,10 +18,12 @@ vi.mock("firebase/auth", () => ({
 vi.mock("@/services", () => ({
   authService: {
     getCurrentUserId: vi.fn(() => "user-123"),
+    waitForAuth: vi.fn().mockResolvedValue("user-123"),
   },
   prazoRepository: {
     listarPorUsuario: vi.fn(),
     marcarConcluido: vi.fn(),
+    excluir: vi.fn(),
   }
 }));
 
@@ -43,7 +45,7 @@ describe("useListPrazos Hook", () => {
       { id: "p1", titulo: "Prazo 1" },
       { id: "p2", titulo: "Prazo 2" },
     ];
-    vi.mocked(prazoRepository.listarPorUsuario).mockResolvedValueOnce(mockPrazos as any);
+    vi.mocked(prazoRepository.listarPorUsuario).mockResolvedValue(mockPrazos as any);
 
     const { result } = renderHook(() => useListPrazos());
 
@@ -58,7 +60,7 @@ describe("useListPrazos Hook", () => {
   });
 
   it("deve tratar erro ao carregar prazos", async () => {
-    vi.mocked(prazoRepository.listarPorUsuario).mockRejectedValueOnce(new Error("Erro simulado"));
+    vi.mocked(prazoRepository.listarPorUsuario).mockRejectedValue(new Error("Erro simulado"));
 
     const { result } = renderHook(() => useListPrazos());
 
@@ -74,7 +76,12 @@ describe("useListPrazos Hook", () => {
   it("deve marcar prazo como concluido com sucesso", async () => {
     // Configura prazos iniciais
     const mockPrazos = [{ id: "p1", titulo: "Prazo 1" }];
-    vi.mocked(prazoRepository.listarPorUsuario).mockResolvedValueOnce(mockPrazos as any);
+    const mockPrazosConcluidos = [{ id: "p1", titulo: "Prazo 1", status: "CONCLUIDO" }];
+
+    vi.mocked(prazoRepository.listarPorUsuario)
+      .mockResolvedValueOnce(mockPrazos as any)
+      .mockResolvedValueOnce(mockPrazos as any)
+      .mockResolvedValueOnce(mockPrazosConcluidos as any);
     
     // O repository de concluir resolve sem erro
     vi.mocked(prazoRepository.marcarConcluido).mockResolvedValueOnce();
@@ -85,10 +92,6 @@ describe("useListPrazos Hook", () => {
     await act(async () => {
       await result.current.carregarPrazos();
     });
-
-    // Depois conclui e simula que o listar de novo trará o item como concluído
-    const mockPrazosConcluidos = [{ id: "p1", titulo: "Prazo 1", status: "CONCLUIDO" }];
-    vi.mocked(prazoRepository.listarPorUsuario).mockResolvedValueOnce(mockPrazosConcluidos as any);
 
     await act(async () => {
       await result.current.concluirPrazo("p1");
