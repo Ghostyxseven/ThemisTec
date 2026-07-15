@@ -3,16 +3,7 @@
 import { useState, useCallback } from "react";
 import type { Processo, Documento } from "@/specs/schemas/processo.schema";
 import { TAMANHO_MAXIMO_ARQUIVO } from "@/specs/schemas/processo.schema";
-import { IProcessoRepository } from "@/shared/interfaces/IProcessoRepository";
-import { FirestoreProcessoAdapter } from "@/services/firebase/FirestoreProcessoAdapter";
-import { IStorageService } from "@/shared/interfaces/IStorageService";
-import { FirebaseStorageAdapter } from "@/services/firebase/FirebaseStorageAdapter";
-import { IAuthService } from "@/shared/interfaces/IAuthService";
-import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
-
-const processoRepository: IProcessoRepository = new FirestoreProcessoAdapter();
-const storageService: IStorageService = new FirebaseStorageAdapter();
-const authService: IAuthService = new FirebaseAuthAdapter();
+import { authService, processoRepository, storageService } from "@/services";
 
 interface UseDocumentosProcessoReturn {
   processo: Processo | null;
@@ -90,8 +81,14 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
         enviadoEm: new Date().toISOString(),
       };
 
-      // Registrar referência no Firestore
-      await processoRepository.adicionarDocumento(processoId, novoDocumento, userId);
+      try {
+        // Registrar referência no Firestore
+        await processoRepository.adicionarDocumento(processoId, novoDocumento, userId);
+      } catch (firestoreError) {
+        // Compensação (Rollback): Ocorreu um erro no banco, então deleta o PDF que acabou de subir
+        await storageService.deleteFile(filePath);
+        throw firestoreError; // Repassa o erro para o catch principal
+      }
 
       setSuccessMessage("Documento anexado com sucesso!");
       

@@ -1,16 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { IAuthService } from "@/shared/interfaces/IAuthService";
-import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
-import { IClienteRepository } from "@/shared/interfaces/IClienteRepository";
-import { FirestoreClienteAdapter } from "@/services/firebase/FirestoreClienteAdapter";
-import { IProcessoRepository } from "@/shared/interfaces/IProcessoRepository";
-import { FirestoreProcessoAdapter } from "@/services/firebase/FirestoreProcessoAdapter";
-
-const authService: IAuthService = new FirebaseAuthAdapter();
-const clienteRepository: IClienteRepository = new FirestoreClienteAdapter();
-const processoRepository: IProcessoRepository = new FirestoreProcessoAdapter();
+import { authService, clienteRepository, processoRepository } from "@/services";
 
 interface Estatisticas {
   totalClientes: number;

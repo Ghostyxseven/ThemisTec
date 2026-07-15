@@ -14,11 +14,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { LoginInput } from "@/specs/schemas/auth.schema";
-import { IAuthService } from "@/shared/interfaces/IAuthService";
-import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
-
-// Instanciando o serviço (Padrão Adapter / POO) criado pelo Micael
-const authService: IAuthService = new FirebaseAuthAdapter();
+import { authService } from "@/services";
 
 interface UseLoginReturn {
   isLoading: boolean;

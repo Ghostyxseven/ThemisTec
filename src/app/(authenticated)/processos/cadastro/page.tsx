@@ -208,6 +208,63 @@ export default function CadastroProcessoPage(): React.ReactNode {
                       </p>
                     )}
                   </div>
+
+                  {/* Campo Valor Honorários */}
+                  <div>
+                    <label htmlFor="valorHonorarios" className="mb-1 block text-sm font-medium text-slate-700">
+                      Valor dos Honorários (R$)
+                    </label>
+                    <input
+                      id="valorHonorarios"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      {...register("valorHonorarios", { valueAsNumber: true })}
+                      disabled={isSaving}
+                      placeholder="Ex: 5000.00"
+                      aria-describedby={errors.valorHonorarios ? "valorHonorarios-error" : undefined}
+                      aria-invalid={errors.valorHonorarios !== undefined}
+                      className={`
+                        block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
+                        disabled:cursor-not-allowed disabled:bg-slate-50
+                        ${errors.valorHonorarios ? "border-red-400 bg-red-50" : ""}
+                      `}
+                    />
+                    {errors.valorHonorarios?.message !== undefined && (
+                      <p id="valorHonorarios-error" className="mt-1 text-sm text-red-500">
+                        {errors.valorHonorarios.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Campo Status do Pagamento */}
+                  <div>
+                    <label htmlFor="statusPagamento" className="mb-1 block text-sm font-medium text-slate-700">
+                      Status do Pagamento
+                    </label>
+                    <select
+                      id="statusPagamento"
+                      {...register("statusPagamento")}
+                      disabled={isSaving}
+                      aria-describedby={errors.statusPagamento ? "statusPagamento-error" : undefined}
+                      aria-invalid={errors.statusPagamento !== undefined}
+                      className={`
+                        block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
+                        disabled:cursor-not-allowed disabled:bg-slate-50
+                        ${errors.statusPagamento ? "border-red-400 bg-red-50" : ""}
+                      `}
+                    >
+                      <option value="PENDENTE">Pendente</option>
+                      <option value="PARCIAL">Parcial</option>
+                      <option value="PAGO">Pago</option>
+                      <option value="ATRASADO">Atrasado</option>
+                    </select>
+                    {errors.statusPagamento?.message !== undefined && (
+                      <p id="statusPagamento-error" className="mt-1 text-sm text-red-500">
+                        {errors.statusPagamento.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Campo Descrição (Opcional) */}
