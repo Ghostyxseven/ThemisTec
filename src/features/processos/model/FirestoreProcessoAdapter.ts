@@ -13,6 +13,8 @@ import {
   updateDoc,
   arrayUnion,
   getCountFromServer,
+  getAggregateFromServer,
+  sum,
   deleteDoc,
 } from "firebase/firestore";
 
@@ -198,11 +200,30 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
   public async contarProcessosAtivos(userId: string): Promise<number> {
     try {
       const processosRef = collection(this.db, "processos");
-      const q = query(processosRef, where("userId", "==", userId), where("status", "==", "ATIVO"));
+      const q = query(processosRef, where("userId", "==", userId), where("status", "==", "em_andamento"));
       const snapshot = await getCountFromServer(q);
       return snapshot.data().count;
     } catch {
       throw new Error("Erro ao contar processos ativos.");
+    }
+  }
+
+  public async somarHonorariosAReceber(userId: string): Promise<number> {
+    try {
+      const processosRef = collection(this.db, "processos");
+      // Não podemos usar != "PAGO" com getAggregateFromServer facilmente em algumas versões se não tiver índice,
+      // então vamos buscar os pendentes e atrasados.
+      const qPendente = query(processosRef, where("userId", "==", userId), where("statusPagamento", "==", "PENDENTE"));
+      const qAtrasado = query(processosRef, where("userId", "==", userId), where("statusPagamento", "==", "ATRASADO"));
+      
+      const [snapPendente, snapAtrasado] = await Promise.all([
+        getAggregateFromServer(qPendente, { total: sum("valorHonorarios") }),
+        getAggregateFromServer(qAtrasado, { total: sum("valorHonorarios") })
+      ]);
+      
+      return (snapPendente.data().total || 0) + (snapAtrasado.data().total || 0);
+    } catch {
+      throw new Error("Erro ao somar honorários a receber.");
     }
   }
 
