@@ -1,11 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
-import { IAuthService } from "@/shared/interfaces/IAuthService";
-import { Menu, Bell, LogOut } from "lucide-react";
-
-const authService: IAuthService = new FirebaseAuthAdapter();
+import { authService } from "@/services";
+import { Menu, LogOut } from "lucide-react";
+import { NotificationBell } from "./NotificationBell";
 
 interface HeaderProps {
   onOpenSidebar: () => void;
@@ -39,14 +37,7 @@ export function Header({ onOpenSidebar }: HeaderProps) {
       <div className="h-6 w-px bg-slate-200 lg:hidden" aria-hidden="true" />
 
       <div className="flex flex-1 items-center justify-end gap-x-3">
-        {/* Notification Bell */}
-        <button
-          type="button"
-          className="relative p-2.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
-        >
-          <Bell className="h-5 w-5" />
-          <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary-light ring-2 ring-white"></span>
-        </button>
+        <NotificationBell />
 
         {/* Logout */}
         <button
