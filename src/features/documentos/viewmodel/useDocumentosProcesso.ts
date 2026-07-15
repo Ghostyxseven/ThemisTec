@@ -30,7 +30,7 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Usuário não autenticado.");
       }
@@ -50,7 +50,7 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
     setSuccessMessage(null);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Usuário não autenticado.");
       }
@@ -127,7 +127,7 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
     setSuccessMessage(null);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Usuário não autenticado.");
       }

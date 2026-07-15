@@ -16,7 +16,7 @@ export function useCreatePrazo() {
     try {
       setIsLoading(true);
       setErrorMessage(null);
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) throw new Error("Usuário não autenticado");
       const data = await processoRepository.listar({ limit: 1000, page: 1 }, userId);
       setProcessos(data.dados);
@@ -32,7 +32,7 @@ export function useCreatePrazo() {
     try {
       setIsSaving(true);
       setErrorMessage(null);
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) throw new Error("Usuário não autenticado");
       await prazoRepository.criar(userId, data);
       router.push("/prazos");

@@ -1,20 +1,18 @@
 import { useState, useCallback, useEffect } from "react";
 import { authService, prazoRepository } from "@/services";
 import { Prazo } from "@/specs/schemas/prazo.schema";
-import { getAuth } from "firebase/auth";
-import { getFirebaseApp } from "@/services/firebase/firebase.client";
 
 export function useListPrazos() {
   const [dados, setDados] = useState<Prazo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const carregarPrazos = useCallback(async (userId?: string) => {
+  const carregarPrazos = useCallback(async () => {
     try {
       setIsLoading(true);
       setErrorMessage(null);
       
-      const uid = userId || authService.getCurrentUserId();
+      const uid = await authService.waitForAuth();
       if (!uid) throw new Error("Usuário não autenticado");
       
       const prazos = await prazoRepository.listarPorUsuario(uid);
@@ -28,22 +26,12 @@ export function useListPrazos() {
   }, []);
 
   useEffect(() => {
-    const auth = getAuth(getFirebaseApp());
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        void carregarPrazos(user.uid);
-      } else {
-        setErrorMessage("Usuário não autenticado");
-        setIsLoading(false);
-      }
-    });
-
-    return () => unsubscribe();
+    void carregarPrazos();
   }, [carregarPrazos]);
 
   const concluirPrazo = async (prazoId: string) => {
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) throw new Error("Usuário não autenticado");
       await prazoRepository.marcarConcluido(userId, prazoId);
       await carregarPrazos();
