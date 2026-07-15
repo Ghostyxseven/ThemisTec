@@ -1,5 +1,5 @@
 import { IStorageService } from "@/shared/interfaces/IStorageService";
-import { getFirebaseApp } from "./firebase.client";
+import { getFirebaseApp } from "@/services/firebase/firebase.client";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, FirebaseStorage } from "firebase/storage";
 
 export class FirebaseStorageAdapter implements IStorageService {

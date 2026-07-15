@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useListPrazos } from "@/app/(authenticated)/prazos/useListPrazos";
+import { useListPrazos } from "@/features/prazos/viewmodel/useListPrazos";
 import { prazoRepository } from "@/services";
 
 // Mock do auth para simular usuário logado

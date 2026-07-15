@@ -1,7 +1,7 @@
 import { collection, doc, setDoc, getDocs, query, where, orderBy, updateDoc, getDoc, Firestore } from "firebase/firestore";
-import { getFirestoreDb } from "./firebase.client";
+import { getFirestoreDb } from "@/services/firebase/firebase.client";
 import { IPrazoRepository } from "@/shared/interfaces/IPrazoRepository";
-import { Prazo, CreatePrazoInput } from "../../specs/schemas/prazo.schema";
+import { Prazo, CreatePrazoInput } from "@/specs/schemas/prazo.schema";
 
 export class FirestorePrazoAdapter implements IPrazoRepository {
   private readonly collectionName = "prazos";
