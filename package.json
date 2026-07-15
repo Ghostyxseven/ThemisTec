@@ -2,6 +2,7 @@
   "name": "themistec",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Plataforma de gestão jurídica para advogados autônomos",
   "scripts": {
     "dev": "next dev --webpack",
@@ -19,6 +20,7 @@
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
     "@hookform/resolvers": "^5.4.0",
+    "@supabase/supabase-js": "^2.110.5",
     "firebase": "12.16.0",
     "lucide-react": "^1.24.0",
     "next": "16.2.10",
