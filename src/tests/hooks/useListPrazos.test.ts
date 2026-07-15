@@ -3,11 +3,13 @@ import { renderHook, act } from "@testing-library/react";
 import { useListPrazos } from "@/features/prazos/viewmodel/useListPrazos";
 import { prazoRepository } from "@/services";
 
+import { Prazo } from "@/specs/schemas/prazo.schema";
+
 // Mock do auth para simular usuário logado
 vi.mock("firebase/auth", () => ({
   getAuth: vi.fn(() => ({
     currentUser: { uid: "user-123" },
-    onAuthStateChanged: vi.fn((callback) => {
+    onAuthStateChanged: vi.fn((callback: (user: { uid: string } | null) => void) => {
       callback({ uid: "user-123" });
       return vi.fn(); // unsubscribe
     })
@@ -45,7 +47,7 @@ describe("useListPrazos Hook", () => {
       { id: "p1", titulo: "Prazo 1" },
       { id: "p2", titulo: "Prazo 2" },
     ];
-    vi.mocked(prazoRepository.listarPorUsuario).mockResolvedValue(mockPrazos as any);
+    vi.mocked(prazoRepository.listarPorUsuario).mockResolvedValue(mockPrazos as unknown as Prazo[]);
 
     const { result } = renderHook(() => useListPrazos());
 
@@ -79,9 +81,9 @@ describe("useListPrazos Hook", () => {
     const mockPrazosConcluidos = [{ id: "p1", titulo: "Prazo 1", status: "CONCLUIDO" }];
 
     vi.mocked(prazoRepository.listarPorUsuario)
-      .mockResolvedValueOnce(mockPrazos as any)
-      .mockResolvedValueOnce(mockPrazos as any)
-      .mockResolvedValueOnce(mockPrazosConcluidos as any);
+      .mockResolvedValueOnce(mockPrazos as unknown as Prazo[])
+      .mockResolvedValueOnce(mockPrazos as unknown as Prazo[])
+      .mockResolvedValueOnce(mockPrazosConcluidos as unknown as Prazo[]);
     
     // O repository de concluir resolve sem erro
     vi.mocked(prazoRepository.marcarConcluido).mockResolvedValueOnce();
