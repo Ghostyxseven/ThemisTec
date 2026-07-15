@@ -9,5 +9,6 @@ export interface IProcessoRepository {
   buscarPorId(id: string, userId: string): Promise<Processo>;
   contarProcessos(userId: string): Promise<number>;
   contarProcessosAtivos(userId: string): Promise<number>;
+  somarHonorariosAReceber(userId: string): Promise<number>;
   excluir(id: string, userId: string): Promise<void>;
 }
