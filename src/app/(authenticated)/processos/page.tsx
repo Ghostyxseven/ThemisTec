@@ -14,7 +14,8 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useListProcessos } from "./useListProcessos";
-import { Scale, Search, Download, FileText, CheckCircle2, Clock } from "lucide-react";
+import { Scale, Search, Download, FileText, CheckCircle2, Clock, Pencil, Trash2, X, AlertTriangle } from "lucide-react";
+import { useState } from "react";
 
 const translateTipo = (tipo: string): string => {
   const map: Record<string, string> = {
@@ -29,7 +30,14 @@ const translateTipo = (tipo: string): string => {
 };
 
 const formatProcessoNum = (value: string): string => {
-  return value;
+  if (!value) return value;
+  // Remove tudo que não for número (limpa as vírgulas estranhas que vieram no cadastro)
+  const digits = value.replace(/\D/g, "");
+  // Formato Padrão CNJ: 0000000-00.0000.0.00.0000 (20 dígitos)
+  if (digits.length === 20) {
+    return digits.replace(/(\d{7})(\d{2})(\d{4})(\d{1})(\d{2})(\d{4})/, "$1-$2.$3.$4.$5.$6");
+  }
+  return value; // Retorna como está se não for padrão CNJ, mas poderia apenas retornar os digits
 };
 
 const formatDate = (isoString: string): string => {
@@ -60,7 +68,11 @@ export default function ProcessosPage(): React.ReactNode {
     loadClientes,
     isExporting,
     exportarCsv,
+    excluirProcesso,
   } = useListProcessos();
+
+  const [processoParaExcluir, setProcessoParaExcluir] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     void loadClientes();
@@ -74,6 +86,19 @@ export default function ProcessosPage(): React.ReactNode {
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setFiltroStatus(e.target.value);
     setPage(1);
+  };
+
+  const confirmarExclusao = async () => {
+    if (!processoParaExcluir) return;
+    try {
+      setIsDeleting(true);
+      await excluirProcesso(processoParaExcluir);
+      setProcessoParaExcluir(null);
+    } catch {
+      // erro tratado no hook
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const totalProcessos = paginacao?.total ?? 0;
@@ -314,16 +339,39 @@ export default function ProcessosPage(): React.ReactNode {
                           </span>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap text-right">
-                          <Link
-                            href={`/processos/documentos/${processo.id}`}
-                            className="
-                              inline-flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-primary
-                              hover:bg-primary/5 rounded-lg transition-colors opacity-80 group-hover:opacity-100
-                            "
-                          >
-                            <FileText className="h-4 w-4" />
-                            Anexos ({processo.documentos.length})
-                          </Link>
+                          <div className="flex items-center justify-end gap-2">
+                            <Link
+                              href={`/processos/documentos/${processo.id}`}
+                              title="Anexos"
+                              className="
+                                inline-flex items-center justify-center h-8 w-8 text-slate-400 hover:text-primary
+                                hover:bg-primary/10 rounded-lg transition-colors
+                              "
+                            >
+                              <FileText className="h-4 w-4" />
+                            </Link>
+                            <Link
+                              href={`/processos/editar/${processo.id}`}
+                              title="Editar"
+                              className="
+                                inline-flex items-center justify-center h-8 w-8 text-slate-400 hover:text-primary
+                                hover:bg-primary/10 rounded-lg transition-colors
+                              "
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Link>
+                            <button
+                              type="button"
+                              title="Excluir"
+                              onClick={() => setProcessoParaExcluir(processo.id)}
+                              className="
+                                inline-flex items-center justify-center h-8 w-8 text-slate-400 hover:text-red-500
+                                hover:bg-red-50 rounded-lg transition-colors
+                              "
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -361,6 +409,50 @@ export default function ProcessosPage(): React.ReactNode {
             </>
           )}
         </div>
+
+        {/* Modal de Exclusão */}
+        {processoParaExcluir && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setProcessoParaExcluir(null)} />
+            <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+              <button
+                onClick={() => setProcessoParaExcluir(null)}
+                className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              
+              <div className="mb-6 flex flex-col items-center text-center">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
+                  <AlertTriangle className="h-7 w-7 text-red-500" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-800">Excluir Processo</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  Tem certeza que deseja excluir este processo permanentemente? Esta ação não poderá ser desfeita.
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setProcessoParaExcluir(null)}
+                  disabled={isDeleting}
+                  className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { void confirmarExclusao(); }}
+                  disabled={isDeleting}
+                  className="flex-1 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-600 transition-colors disabled:opacity-50"
+                >
+                  {isDeleting ? "Excluindo..." : "Sim, Excluir"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
     </main>

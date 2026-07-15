@@ -13,6 +13,7 @@ import {
   updateDoc,
   arrayUnion,
   getCountFromServer,
+  deleteDoc,
 } from "firebase/firestore";
 
 export class FirestoreProcessoAdapter implements IProcessoRepository {
@@ -209,6 +210,20 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
       } as Processo;
     } catch {
       throw new Error("Erro ao atualizar os dados do processo.");
+    }
+  }
+
+  public async excluir(id: string, userId: string): Promise<void> {
+    const processoExistente = await this.buscarPorId(id, userId);
+    if (!processoExistente) {
+      throw new Error("Processo não encontrado.");
+    }
+
+    try {
+      const docRef = doc(this.db, "processos", id);
+      await deleteDoc(docRef);
+    } catch {
+      throw new Error("Erro ao excluir o processo.");
     }
   }
 }
