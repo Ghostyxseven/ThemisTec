@@ -84,8 +84,8 @@ export default function DocumentosProcessoPage({ params }: { params: Promise<{ i
         setSelectedFile(null);
         return;
       }
-      if (file.size > 10 * 1024 * 1024) {
-        setFileError("O arquivo excede o limite máximo de 10 MB.");
+      if (file.size > 5 * 1024 * 1024) {
+        setFileError("O arquivo excede o limite máximo de 5 MB.");
         setSelectedFile(null);
         return;
       }
@@ -215,7 +215,7 @@ export default function DocumentosProcessoPage({ params }: { params: Promise<{ i
                           <span className="block text-xs font-semibold text-[#1a3c5e] hover:underline">
                             {selectedFile ? selectedFile.name : "Clique para escolher"}
                           </span>
-                          <span className="block text-[10px] text-gray-400">PDF de até 10MB</span>
+                          <span className="block text-[10px] text-gray-400">PDF de até 5MB</span>
                         </div>
                       </div>
                       {fileError && <p className="mt-1.5 text-xs font-medium text-red-500">{fileError}</p>}

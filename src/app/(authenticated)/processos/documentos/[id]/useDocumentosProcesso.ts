@@ -95,7 +95,7 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
         nomeArquivo: file.name,
         url: downloadUrl,
         tamanho: file.size,
-        descricao: descricao || undefined,
+        ...(descricao ? { descricao } : {}),
         enviadoEm: new Date().toISOString(),
       };
 
