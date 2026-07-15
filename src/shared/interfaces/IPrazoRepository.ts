@@ -5,4 +5,5 @@ export interface IPrazoRepository {
   listarPorUsuario(userId: string): Promise<Prazo[]>;
   contarPrazosDaSemana(userId: string): Promise<number>;
   marcarConcluido(userId: string, prazoId: string): Promise<void>;
+  excluir(userId: string, prazoId: string): Promise<void>;
 }

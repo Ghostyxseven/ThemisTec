@@ -1,4 +1,4 @@
-import { collection, doc, setDoc, getDocs, query, where, orderBy, updateDoc, getDoc, Firestore, getCountFromServer } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, query, where, orderBy, updateDoc, getDoc, Firestore, getCountFromServer, deleteDoc } from "firebase/firestore";
 import { getFirestoreDb } from "@/services/firebase/firebase.client";
 import { IPrazoRepository } from "@/shared/interfaces/IPrazoRepository";
 import { Prazo, CreatePrazoInput } from "@/specs/schemas/prazo.schema";
@@ -86,5 +86,17 @@ export class FirestorePrazoAdapter implements IPrazoRepository {
 
     const snapshot = await getCountFromServer(q);
     return snapshot.data().count;
+  }
+
+  async excluir(userId: string, prazoId: string): Promise<void> {
+    const docRef = doc(this.db, this.collectionName, prazoId);
+    
+    // Auth check
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists() || docSnap.data().userId !== userId) {
+      throw new Error("Prazo não encontrado ou sem permissão.");
+    }
+
+    await deleteDoc(docRef);
   }
 }

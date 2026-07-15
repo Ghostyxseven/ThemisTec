@@ -37,7 +37,19 @@ export function useListPrazos() {
       await carregarPrazos();
     } catch (err: unknown) {
       const error = err as Error;
-      alert(error.message || "Erro ao concluir prazo.");
+      setErrorMessage(error.message || "Erro ao concluir prazo.");
+    }
+  };
+
+  const excluirPrazo = async (prazoId: string) => {
+    try {
+      const userId = await authService.waitForAuth();
+      if (!userId) throw new Error("Usuário não autenticado");
+      await prazoRepository.excluir(userId, prazoId);
+      await carregarPrazos();
+    } catch (err: unknown) {
+      const error = err as Error;
+      setErrorMessage(error.message || "Erro ao excluir prazo.");
     }
   };
 
@@ -46,6 +58,7 @@ export function useListPrazos() {
     isLoading,
     errorMessage,
     carregarPrazos,
-    concluirPrazo
+    concluirPrazo,
+    excluirPrazo
   };
 }
