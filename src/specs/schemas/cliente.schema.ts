@@ -4,10 +4,11 @@ import { z } from "zod";
 // CLIENTE SCHEMAS (EP02 - Gestão de Clientes)
 // ═══════════════════════════════════════════
 
-/** Validação de CPF (11 dígitos numéricos) */
+/** Validação de CPF (11 dígitos numéricos, ignorando pontuação) */
 const cpfSchema = z
   .string()
-  .regex(/^\d{11}$/, "CPF deve conter exatamente 11 dígitos numéricos");
+  .transform((val) => val.replace(/[^\d]/g, ""))
+  .refine((val) => val.length === 11, "CPF deve conter exatamente 11 dígitos numéricos");
 
 /** US04 - Cadastrar cliente */
 export const CreateClienteSchema = z.object({

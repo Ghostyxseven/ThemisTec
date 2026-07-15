@@ -18,11 +18,7 @@ const isToday = (dataISO: string) => {
 };
 
 export default function PrazosPage() {
-  const { dados, isLoading, errorMessage, carregarPrazos, concluirPrazo } = useListPrazos();
-
-  useEffect(() => {
-    void carregarPrazos();
-  }, [carregarPrazos]);
+  const { dados, isLoading, errorMessage, concluirPrazo } = useListPrazos();
 
   return (
     <main className="flex-1 px-4 py-8 md:px-8 lg:px-10">
