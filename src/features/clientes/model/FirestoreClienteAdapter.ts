@@ -1,6 +1,6 @@
 import { IClienteRepository } from "@/shared/interfaces/IClienteRepository";
 import { CreateClienteInput, Cliente, ListClientesQuery, ClienteListResponse, UpdateClienteInput } from "@/specs/schemas/cliente.schema";
-import { getFirestoreDb } from "./firebase.client";
+import { getFirestoreDb } from "@/services/firebase/firebase.client";
 import {
   collection,
   addDoc,

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../setup/firebaseMock"; // Importa o mock ANTES do adapter
-import { FirestorePrazoAdapter } from "@/services/firebase/FirestorePrazoAdapter";
+import { FirestorePrazoAdapter } from "@/features/prazos/model/FirestorePrazoAdapter";
 import { setDoc, getDocs, updateDoc, getDoc } from "firebase/firestore";
 
 describe("FirestorePrazoAdapter", () => {
