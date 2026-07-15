@@ -25,6 +25,7 @@ describe("FirestorePrazoAdapter", () => {
         titulo: "Audiência Trabalhista",
         dataVencimento: "2026-10-10",
         descricao: "Levar testemunhas",
+        status: "PENDENTE" as const,
       };
 
       const result = await adapter.criar(mockUserId, payload);
@@ -50,6 +51,7 @@ describe("FirestorePrazoAdapter", () => {
         processoId: "proc-1",
         titulo: "Audiência",
         dataVencimento: "2026-10-10",
+        status: "PENDENTE" as const,
       };
 
       await expect(adapter.criar(mockUserId, payload)).rejects.toThrow("Processo não encontrado ou sem permissão.");
@@ -72,7 +74,7 @@ describe("FirestorePrazoAdapter", () => {
 
       expect(getDocs).toHaveBeenCalled();
       expect(result).toHaveLength(2);
-      expect(result[0].titulo).toBe("Prazo 1");
+      expect(result[0]?.titulo).toBe("Prazo 1");
     });
   });
 
@@ -88,7 +90,8 @@ describe("FirestorePrazoAdapter", () => {
       expect(updateDoc).toHaveBeenCalled();
       // O primeiro argumento (docRef) é complexo de testar diretamente sem destrinchar o firestoreMock, 
       // mas verificamos se o payload de update passou CONCLUIDO
-      expect(vi.mocked(updateDoc).mock.calls[0][1]).toMatchObject({
+      const calls = vi.mocked(updateDoc).mock.calls;
+      expect(calls[0]?.[1]).toMatchObject({
         status: "CONCLUIDO"
       });
     });

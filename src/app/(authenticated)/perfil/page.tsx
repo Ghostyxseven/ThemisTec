@@ -121,7 +121,7 @@ export default function PerfilPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={(e) => { void handleSave(); }}
+                  onClick={() => { void handleSave(); }}
                   disabled={isLoading}
                   className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark disabled:opacity-50 transition-colors"
                 >

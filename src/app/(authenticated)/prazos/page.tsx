@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+
 import Link from "next/link";
 import { Calendar, CheckCircle2, AlertCircle } from "lucide-react";
 import { useListPrazos } from "./useListPrazos";
