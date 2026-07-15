@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Feature** | `feat(auth): implementar pagina de login com MVVM e validacao Zod` |
 | **Desenvolvedora** | Josiane |
-| **Status** | 🟡 Requer Ajustes (Arquitetura e UX) |
+| **Status** | 🟢 Aprovado (Arquitetura e UX) |
 
 ---
 
@@ -124,8 +124,8 @@ Adicione `inputMode="email"` no input de e-mail. Isso força o teclado do celula
 
 ## ✅ Checklist para Conclusão
 
-- [ ] Implementar `IAuthService` e `FirebaseAuthAdapter` (ou alinhar com Micael).
-- [ ] Refatorar `useLogin` para usar o Adapter (Injeção de dependência).
-- [ ] Refatorar a View para usar `react-hook-form` + `zodResolver`.
-- [ ] Adicionar botão de visualizar senha (UX).
-- [ ] Adicionar `inputMode="email"` ao campo de e-mail (UX).
+- [x] Implementar `IAuthService` e `FirebaseAuthAdapter` (ou alinhar com Micael).
+- [x] Refatorar `useLogin` para usar o Adapter (Injeção de dependência).
+- [x] Refatorar a View para usar `react-hook-form` + `zodResolver`.
+- [x] Adicionar botão de visualizar senha (UX).
+- [x] Adicionar `inputMode="email"` ao campo de e-mail (UX).

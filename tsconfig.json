@@ -8,39 +8,59 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "exactOptionalPropertyTypes": false,
-
     /* ═══ Module & Resolution ═══ */
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-
     /* ═══ Next.js ═══ */
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "noEmit": true,
-
     /* ═══ Paths ═══ */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/specs/*": ["./src/specs/*"],
-      "@/services/*": ["./src/services/*"],
-      "@/features/*": ["./src/features/*"],
-      "@/shared/*": ["./src/shared/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@/specs/*": [
+        "./src/specs/*"
+      ],
+      "@/services/*": [
+        "./src/services/*"
+      ],
+      "@/features/*": [
+        "./src/features/*"
+      ],
+      "@/shared/*": [
+        "./src/shared/*"
+      ]
     },
-
     /* ═══ Plugins ═══ */
     "plugins": [
-      { "name": "next" }
+      {
+        "name": "next"
+      }
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

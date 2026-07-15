@@ -1,11 +1,30 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
 
 :root {
-  --color-primary: #1a3c5e;
-  --color-primary-dark: #0f2540;
+  /* Colors - Indigo Theme */
+  --background: #f0f2f8;
+  --foreground: #1e1b4b;
+  
+  --color-primary: #4338ca;
+  --color-primary-dark: #3730a3;
+  --color-primary-light: #6366f1;
   --color-accent: #c9a84c;
+  
+  --color-sidebar-from: #1e1b4b;
+  --color-sidebar-to: #0f0d2e;
+  
+  /* Semantic */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #6366f1;
+  
+  /* Layout variables */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
 }
 
 * {
@@ -14,4 +33,23 @@
 
 body {
   font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.4);
 }

@@ -21,6 +21,14 @@ export const StatusProcessoEnum = z.enum([
   "arquivado",
 ]);
 
+/** Status Financeiro (US12) */
+export const StatusPagamentoEnum = z.enum([
+  "PAGO",
+  "PENDENTE",
+  "ATRASADO",
+  "PARCIAL",
+]);
+
 /** US07 - Registrar processo */
 export const CreateProcessoSchema = z.object({
   numero: z.string().min(1, "Número do processo é obrigatório"),
@@ -32,6 +40,8 @@ export const CreateProcessoSchema = z.object({
     .optional(),
   clienteId: z.string().min(1, "Cliente vinculado é obrigatório"),
   dataAbertura: z.string().date("Data de abertura inválida"),
+  valorHonorarios: z.number().optional().default(0),
+  statusPagamento: StatusPagamentoEnum.optional().default("PENDENTE"),
 });
 
 /** Atualizar processo */
@@ -42,6 +52,8 @@ export const UpdateProcessoSchema = z.object({
     .string()
     .max(1000, "Descrição deve ter no máximo 1000 caracteres")
     .optional(),
+  valorHonorarios: z.number().optional(),
+  statusPagamento: StatusPagamentoEnum.optional(),
 });
 
 /** US08 - Parâmetros de listagem/filtro */
@@ -57,8 +69,8 @@ export const UploadDocumentoSchema = z.object({
   descricao: z.string().max(200, "Descrição deve ter no máximo 200 caracteres").optional(),
 });
 
-/** Tamanho máximo: 10MB */
-export const TAMANHO_MAXIMO_ARQUIVO = 10 * 1024 * 1024; // 10485760 bytes
+/** Tamanho máximo: 5MB */
+export const TAMANHO_MAXIMO_ARQUIVO = 5 * 1024 * 1024; // 5242880 bytes
 
 /** Tipos MIME aceitos */
 export const TIPOS_ACEITOS = ["application/pdf"] as const;
@@ -83,6 +95,8 @@ export const ProcessoSchema = z.object({
   clienteId: z.string(),
   clienteNome: z.string(),
   dataAbertura: z.string(),
+  valorHonorarios: z.number(),
+  statusPagamento: StatusPagamentoEnum,
   documentos: z.array(DocumentoSchema).default([]),
   userId: z.string(), // dono do registro (advogado)
   criadoEm: z.string().datetime(),
@@ -106,6 +120,7 @@ export const ProcessoListResponseSchema = z.object({
 
 export type TipoProcesso = z.infer<typeof TipoProcessoEnum>;
 export type StatusProcesso = z.infer<typeof StatusProcessoEnum>;
+export type StatusPagamento = z.infer<typeof StatusPagamentoEnum>;
 export type CreateProcessoInput = z.infer<typeof CreateProcessoSchema>;
 export type UpdateProcessoInput = z.infer<typeof UpdateProcessoSchema>;
 export type ListProcessosQuery = z.infer<typeof ListProcessosQuerySchema>;

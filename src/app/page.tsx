@@ -1,10 +1,5 @@
-import { redirect } from "next/navigation";
+import { LandingView } from "@/features/landing/view/LandingView";
 
-/**
- * Rota raiz — redireciona para /login.
- * O middleware de autenticação (a ser implementado) redireciona
- * usuários autenticados diretamente para /dashboard.
- */
-export default function RootPage(): never {
-  redirect("/login");
+export default function RootPage() {
+  return <LandingView />;
 }
