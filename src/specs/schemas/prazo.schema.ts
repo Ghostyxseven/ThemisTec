@@ -13,7 +13,7 @@ export const PrazoSchema = z.object({
   atualizadoEm: z.string(),
 });
 
-export const CreatePrazoSchema = PrazoSchema.omit({
+export const BaseCreatePrazoSchema = PrazoSchema.omit({
   id: true,
   userId: true,
   criadoEm: true,
@@ -21,7 +21,26 @@ export const CreatePrazoSchema = PrazoSchema.omit({
   processoNumero: true, // we will inject this in the adapter
 });
 
-export const UpdatePrazoSchema = CreatePrazoSchema.partial();
+export const CreatePrazoSchema = BaseCreatePrazoSchema.refine((data) => {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0); // Ajusta para o início do dia
+  
+  // Como dataVencimento é 'YYYY-MM-DD', podemos criar um Date
+  const parts = data.dataVencimento.split("-");
+  if (parts.length !== 3) return false;
+  
+  const year = Number(parts[0]);
+  const month = Number(parts[1]);
+  const day = Number(parts[2]);
+  const dataVenc = new Date(year, month - 1, day);
+  
+  return dataVenc >= hoje;
+}, {
+  message: "A data de vencimento não pode ser anterior a hoje.",
+  path: ["dataVencimento"],
+});
+
+export const UpdatePrazoSchema = BaseCreatePrazoSchema.partial();
 
 export type Prazo = z.infer<typeof PrazoSchema>;
 export type CreatePrazoInput = z.infer<typeof CreatePrazoSchema>;
