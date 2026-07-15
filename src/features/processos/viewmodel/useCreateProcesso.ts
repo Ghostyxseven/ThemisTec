@@ -27,7 +27,7 @@ export function useCreateProcesso(): UseCreateProcessoReturn {
     setErrorMessage(null);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Você precisa estar autenticado.");
       }
@@ -48,7 +48,7 @@ export function useCreateProcesso(): UseCreateProcessoReturn {
     setErrorMessage(null);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Você precisa estar autenticado para registrar um processo.");
       }

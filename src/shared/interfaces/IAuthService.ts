@@ -6,4 +6,5 @@ export interface IAuthService {
   resetPassword(dados: ResetPasswordInput): Promise<void>;
   logout(): Promise<void>;
   getCurrentUserId(): string | null;
+  waitForAuth(): Promise<string | null>;
 }

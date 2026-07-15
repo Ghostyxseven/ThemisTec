@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { authService, clienteRepository, processoRepository } from "@/services";
+import { authService, clienteRepository, processoRepository, prazoRepository } from "@/services";
 
 interface Estatisticas {
   totalClientes: number;
   totalProcessos: number;
   ativosProcessos: number;
+  honorariosAReceber: number;
+  prazosDaSemana: number;
 }
 
 interface UseDashboardReturn {
@@ -26,22 +28,26 @@ export function useDashboard(): UseDashboardReturn {
     setErrorMessage(null);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Usuário não autenticado.");
       }
 
       // Buscar os dados concorrentemente para ser mais rápido
-      const [totalClientes, totalProcessos, ativosProcessos] = await Promise.all([
+      const [totalClientes, totalProcessos, ativosProcessos, honorariosAReceber, prazosDaSemana] = await Promise.all([
         clienteRepository.contarClientes(userId),
         processoRepository.contarProcessos(userId),
-        processoRepository.contarProcessosAtivos(userId)
+        processoRepository.contarProcessosAtivos(userId),
+        processoRepository.somarHonorariosAReceber(userId),
+        prazoRepository.contarPrazosDaSemana(userId)
       ]);
 
       setEstatisticas({
         totalClientes,
         totalProcessos,
         ativosProcessos,
+        honorariosAReceber,
+        prazosDaSemana,
       });
     } catch (erro) {
       const msg = erro instanceof Error ? erro.message : "Erro ao carregar estatísticas.";
