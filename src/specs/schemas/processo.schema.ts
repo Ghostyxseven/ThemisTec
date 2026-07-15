@@ -26,6 +26,7 @@ export const StatusPagamentoEnum = z.enum([
   "PAGO",
   "PENDENTE",
   "ATRASADO",
+  "PARCIAL",
 ]);
 
 /** US07 - Registrar processo */
