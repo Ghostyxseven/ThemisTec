@@ -211,18 +211,20 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
   public async somarHonorariosAReceber(userId: string): Promise<number> {
     try {
       const processosRef = collection(this.db, "processos");
-      // Não podemos usar != "PAGO" com getAggregateFromServer facilmente em algumas versões se não tiver índice,
-      // então vamos buscar os pendentes e atrasados.
+      
       const qPendente = query(processosRef, where("userId", "==", userId), where("statusPagamento", "==", "PENDENTE"));
       const qAtrasado = query(processosRef, where("userId", "==", userId), where("statusPagamento", "==", "ATRASADO"));
+      const qParcial = query(processosRef, where("userId", "==", userId), where("statusPagamento", "==", "PARCIAL"));
       
-      const [snapPendente, snapAtrasado] = await Promise.all([
+      const [snapPendente, snapAtrasado, snapParcial] = await Promise.all([
         getAggregateFromServer(qPendente, { total: sum("valorHonorarios") }),
-        getAggregateFromServer(qAtrasado, { total: sum("valorHonorarios") })
+        getAggregateFromServer(qAtrasado, { total: sum("valorHonorarios") }),
+        getAggregateFromServer(qParcial, { total: sum("valorHonorarios") })
       ]);
       
-      return (snapPendente.data().total || 0) + (snapAtrasado.data().total || 0);
-    } catch {
+      return (snapPendente.data().total || 0) + (snapAtrasado.data().total || 0) + (snapParcial.data().total || 0);
+    } catch (err) {
+      console.error("Firestore error in somarHonorariosAReceber:", err);
       throw new Error("Erro ao somar honorários a receber.");
     }
   }
