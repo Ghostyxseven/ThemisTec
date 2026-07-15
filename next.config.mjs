@@ -9,7 +9,8 @@ const withPWA = withPWAInit({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Outras configurações do Next.js podem vir aqui
+  // Silence Turbopack warning caused by next-pwa injecting Webpack config
+  turbopack: {},
 };
 
 export default withPWA(nextConfig);
