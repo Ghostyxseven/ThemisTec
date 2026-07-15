@@ -2,7 +2,7 @@
 
 
 import Link from "next/link";
-import { Calendar, CheckCircle2, AlertCircle } from "lucide-react";
+import { Calendar, CheckCircle2, AlertCircle, Trash2 } from "lucide-react";
 import { useListPrazos } from "../viewmodel/useListPrazos";
 
 const isAtrasado = (dataISO: string) => {
@@ -18,7 +18,7 @@ const isToday = (dataISO: string) => {
 };
 
 export function PrazosListView() {
-  const { dados, isLoading, errorMessage, concluirPrazo } = useListPrazos();
+  const { dados, isLoading, errorMessage, concluirPrazo, excluirPrazo } = useListPrazos();
 
   return (
     <main className="flex-1 px-4 py-8 md:px-8 lg:px-10">
@@ -113,7 +113,7 @@ export function PrazosListView() {
                             {prazo.status}
                           </span>
                         </td>
-                        <td className="px-6 py-5 text-right">
+                        <td className="px-6 py-5 text-right flex items-center justify-end gap-3">
                           {prazo.status === "PENDENTE" ? (
                             <button
                               onClick={() => void concluirPrazo(prazo.id)}
@@ -125,6 +125,17 @@ export function PrazosListView() {
                           ) : (
                             <span className="text-xs text-slate-400 font-medium">Finalizado</span>
                           )}
+                          <button
+                            onClick={() => {
+                              if (confirm("Tem certeza que deseja excluir este prazo?")) {
+                                void excluirPrazo(prazo.id);
+                              }
+                            }}
+                            className="inline-flex items-center justify-center p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Excluir Prazo"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
                         </td>
                       </tr>
                     );

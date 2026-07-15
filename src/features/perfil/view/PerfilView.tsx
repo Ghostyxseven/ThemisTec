@@ -11,6 +11,7 @@ export function PerfilView() {
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const auth = getAuth(getFirebaseApp());
@@ -30,6 +31,7 @@ export function PerfilView() {
   const handleSave = async () => {
     try {
       setIsLoading(true);
+      setErrorMessage(null);
       const auth = getAuth(getFirebaseApp());
       if (auth.currentUser) {
         await updateProfile(auth.currentUser, { displayName: newName });
@@ -37,7 +39,7 @@ export function PerfilView() {
         setIsEditing(false);
       }
     } catch {
-      alert("Erro ao atualizar perfil.");
+      setErrorMessage("Erro ao atualizar perfil.");
     } finally {
       setIsLoading(false);
     }
@@ -54,6 +56,12 @@ export function PerfilView() {
             Gerencie suas informações pessoais e configurações de conta.
           </p>
         </div>
+
+        {errorMessage && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            {errorMessage}
+          </div>
+        )}
 
         <div className="rounded-2xl bg-white border border-slate-100 shadow-soft p-6">
           <div className="flex items-center gap-6 mb-8">
