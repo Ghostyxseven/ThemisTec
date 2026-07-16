@@ -46,6 +46,7 @@ export function useEditProcesso(processoId: string) {
   }, [processoId, reset]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void carregarProcesso();
   }, [carregarProcesso]);
 

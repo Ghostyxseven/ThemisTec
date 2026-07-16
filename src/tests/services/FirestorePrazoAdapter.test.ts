@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import "../setup/firebaseMock"; // Importa o mock ANTES do adapter
 import { FirestorePrazoAdapter } from "@/features/prazos/model/FirestorePrazoAdapter";

@@ -4,7 +4,7 @@ import { vi } from "vitest";
 vi.mock("firebase/firestore", () => {
   return {
     collection: vi.fn(),
-    doc: vi.fn((_db, collectionName, id) => {
+    doc: vi.fn((_db: unknown, collectionName: string, id?: string) => {
       if (id) {
         return { id, path: `${collectionName}/${id}` };
       }

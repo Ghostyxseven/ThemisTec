@@ -2,12 +2,19 @@ import { useState, useCallback, useEffect } from "react";
 import { authService, prazoRepository } from "@/services";
 import { Prazo } from "@/specs/schemas/prazo.schema";
 
-export function useListPrazos() {
+export function useListPrazos(): {
+  dados: Prazo[];
+  isLoading: boolean;
+  errorMessage: string | null;
+  carregarPrazos: () => Promise<void>;
+  concluirPrazo: (prazoId: string) => Promise<void>;
+  excluirPrazo: (prazoId: string) => Promise<void>;
+} {
   const [dados, setDados] = useState<Prazo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const carregarPrazos = useCallback(async () => {
+  const carregarPrazos = useCallback(async (): Promise<void> => {
     try {
       setIsLoading(true);
       setErrorMessage(null);
@@ -26,10 +33,11 @@ export function useListPrazos() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void carregarPrazos();
   }, [carregarPrazos]);
 
-  const concluirPrazo = async (prazoId: string) => {
+  const concluirPrazo = async (prazoId: string): Promise<void> => {
     try {
       const userId = await authService.waitForAuth();
       if (!userId) throw new Error("Usuário não autenticado");
@@ -41,7 +49,7 @@ export function useListPrazos() {
     }
   };
 
-  const excluirPrazo = async (prazoId: string) => {
+  const excluirPrazo = async (prazoId: string): Promise<void> => {
     try {
       const userId = await authService.waitForAuth();
       if (!userId) throw new Error("Usuário não autenticado");
