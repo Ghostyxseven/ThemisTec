@@ -116,11 +116,12 @@ export class FirestoreClienteAdapter implements IClienteRepository {
       // Filtrar por busca (search) caso seja fornecido
       if (params.search) {
         const termo = params.search.toLowerCase().trim();
-        clientes = clientes.filter(
-          (c) =>
-            c.nome.toLowerCase().includes(termo) ||
-            c.cpf.includes(termo.replace(/\D/g, ""))
-        );
+        const termoCpf = termo.replace(/\D/g, "");
+        clientes = clientes.filter((c) => {
+          const nomeMatch = (c.nome ?? "").toLowerCase().includes(termo);
+          const cpfMatch = termoCpf.length > 0 && (c.cpf ?? "").includes(termoCpf);
+          return nomeMatch || cpfMatch;
+        });
       }
 
       // Paginar
@@ -181,6 +182,14 @@ export class FirestoreClienteAdapter implements IClienteRepository {
     const clienteExistente = await this.buscarPorId(id, userId);
     if (!clienteExistente) {
       throw new Error("Cliente não encontrado.");
+    }
+
+    // Se CPF foi informado e é diferente do atual, verificar unicidade
+    if (dados.cpf && dados.cpf !== clienteExistente.cpf) {
+      const cpfEmUso = await this.buscarPorCpf(dados.cpf, userId);
+      if (cpfEmUso) {
+        throw new Error("Já existe outro cliente cadastrado com este CPF.");
+      }
     }
 
     const agora = new Date().toISOString();
