@@ -2,7 +2,7 @@
 title: "[STORY] Construir Interface do Dashboard (US11)"
 epic: "04"
 assignee: "Josiane (Frontend)"
-status: "todo"
+status: "done"
 ---
 
 # US11: Construir Interface do Dashboard
@@ -22,7 +22,7 @@ Para que eu tenha uma visão geral do meu volume de trabalho rapidamente.
 - A rota raiz `/` deve redirecionar para `/dashboard` se o usuário estiver autenticado (ou `/login` se não estiver).
 
 ## 3. Critérios de Aceite
-- [ ] A página `/dashboard` renderiza corretamente e de forma responsiva.
-- [ ] O ViewModel `useDashboard` é responsável por orquestrar a busca dos dados.
-- [ ] Caso haja erro ao buscar os dados, a interface exibe uma mensagem amigável.
-- [ ] Durante a busca (loading), são exibidos skeleton loaders ou indicadores visuais de carregamento.
+- [x] A página `/dashboard` renderiza corretamente e de forma responsiva.
+- [x] O ViewModel `useDashboard` é responsável por orquestrar a busca dos dados.
+- [x] Caso haja erro ao buscar os dados, a interface exibe uma mensagem amigável.
+- [x] Durante a busca (loading), são exibidos skeleton loaders ou indicadores visuais de carregamento.

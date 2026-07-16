@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { RegisterSchema } from "@/specs/schemas/auth.schema";
 import { useRegister } from "./useRegister";
+import { Scale, ArrowLeft, Eye, EyeOff, AlertCircle, CheckCircle2 } from "lucide-react";
 
 type RegisterFormInput = z.infer<typeof RegisterSchema>;
 
@@ -28,192 +29,182 @@ export default function RegisterPage(): React.ReactNode {
   };
 
   return (
-    <main className="min-h-screen lg:grid lg:grid-cols-2">
-      {/* Branding Panel (Desktop Only) */}
-      <div className="hidden lg:flex lg:flex-col lg:justify-center lg:items-center bg-gradient-to-br from-primary to-primary-dark text-white p-12">
-        <div className="max-w-md text-center">
-          <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-white/10 p-4 shadow-lg ring-1 ring-white/20">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 text-white">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
-            </svg>
-          </div>
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-white drop-shadow-sm">ThemisTec</h1>
-          <p className="text-lg leading-relaxed text-blue-100/90 font-light">
-            Junte-se a centenas de advogados que já transformaram seus escritórios com o poder da nossa plataforma.
-          </p>
-        </div>
+    <main className="min-h-screen relative flex items-center justify-center overflow-hidden bg-slate-900 selection:bg-primary selection:text-white">
+      {/* Dynamic Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-primary/30 blur-[120px] mix-blend-screen animate-pulse duration-10000" />
+        <div className="absolute -bottom-[20%] -left-[10%] w-[60%] h-[40%] rounded-full bg-emerald-500/10 blur-[120px] mix-blend-screen" />
+        <div className="absolute top-[40%] left-[20%] w-[40%] h-[60%] rounded-full bg-blue-500/20 blur-[100px] mix-blend-screen" />
       </div>
 
-      {/* Form Panel */}
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 lg:min-h-full lg:px-8">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center lg:text-left">
-            <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">Criar sua conta</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Ou{" "}
-              <Link href="/login" className="font-semibold text-primary hover:text-primary-dark transition-colors">
-                faça login se já possui cadastro
+      <div className="relative z-10 w-full max-w-[420px] px-6 py-12">
+        {/* Back Link */}
+        <Link 
+          href="/" 
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors mb-8 group"
+        >
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Voltar para o Início
+        </Link>
+
+        {/* Glassmorphism Card */}
+        <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl shadow-black/50 rounded-3xl p-8 sm:p-10">
+          
+          <div className="text-center mb-8">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary-dark shadow-lg mb-6 ring-1 ring-white/20">
+              <Scale className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight text-white mb-2">Criar sua conta</h2>
+            <p className="text-sm text-slate-300">
+              Já possui cadastro?{" "}
+              <Link href="/login" className="font-semibold text-blue-400 hover:text-blue-300 transition-colors">
+                Faça login
               </Link>
             </p>
           </div>
 
-          <div className="mt-8 bg-white py-8 px-4 shadow-xl shadow-gray-200/50 sm:rounded-2xl sm:px-10 border border-gray-100">
-            {errorMessage !== null && (
-              <div role="alert" className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
-                <div className="flex">
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">Falha ao criar conta</h3>
-                    <div className="mt-1 text-sm text-red-700">
-                      <p>{errorMessage}</p>
-                    </div>
-                  </div>
-                </div>
+          {errorMessage && (
+            <div role="alert" className="mb-6 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-200">
+              <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5 text-red-400" />
+              <p className="text-sm font-medium leading-relaxed">{errorMessage}</p>
+            </div>
+          )}
+
+          {successMessage ? (
+            <div className="text-center py-6 space-y-6">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20 ring-1 ring-emerald-500/30">
+                <CheckCircle2 className="h-8 w-8 text-emerald-400" />
               </div>
-            )}
-
-            {successMessage !== null ? (
-              <div className="text-center py-6 space-y-6">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-                  <svg className="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                </div>
-                <div role="alert" className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-800 font-medium">
-                  {successMessage}
-                </div>
-                <Link
-                  href="/login"
-                  className="
-                    flex w-full justify-center rounded-lg bg-primary px-3 py-3 text-sm font-semibold leading-6 text-white shadow-md
-                    hover:bg-primary-dark hover:shadow-lg transition-all duration-200
-                  "
-                >
-                  Ir para o Login
-                </Link>
+              <div role="alert" className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-4 text-sm text-emerald-200 font-medium">
+                {successMessage}
               </div>
-            ) : (
-              <form onSubmit={(e) => { void handleSubmit(onSubmit)(e); }} noValidate className="space-y-5">
-                <div>
-                  <label htmlFor="nome" className="block text-sm font-medium leading-6 text-gray-900">
-                    Nome Completo
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      id="nome"
-                      type="text"
-                      autoComplete="name"
-                      {...register("nome")}
-                      disabled={isLoading}
-                      aria-describedby={errors.nome ? "nome-error" : undefined}
-                      aria-invalid={errors.nome !== undefined}
-                      placeholder="Dr(a). Seu Nome"
-                      className={`
-                        block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
-                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6
-                        transition-all disabled:cursor-not-allowed disabled:bg-gray-50
-                        ${errors.nome ? "ring-red-300 focus:ring-red-500" : ""}
-                      `}
-                    />
-                    {errors.nome?.message !== undefined && (
-                      <p id="nome-error" className="mt-2 text-sm text-red-600">{errors.nome.message}</p>
-                    )}
-                  </div>
-                </div>
+              <Link
+                href="/login"
+                className="
+                  flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/30
+                  hover:bg-primary-light hover:shadow-xl hover:shadow-primary/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+                  transition-all duration-200 active:scale-[0.98]
+                "
+              >
+                Ir para o Login
+              </Link>
+            </div>
+          ) : (
+            <form onSubmit={(e) => { void handleSubmit(onSubmit)(e); }} noValidate className="space-y-5">
+              <div>
+                <label htmlFor="nome" className="block text-sm font-medium text-slate-200 mb-1.5">
+                  Nome Completo
+                </label>
+                <input
+                  id="nome"
+                  type="text"
+                  autoComplete="name"
+                  {...register("nome")}
+                  disabled={isLoading}
+                  aria-invalid={errors.nome !== undefined}
+                  placeholder="Dr(a). Seu Nome"
+                  className={`
+                    block w-full rounded-xl border-0 bg-white/5 py-3 px-4 text-white shadow-inner ring-1 ring-inset ring-white/10
+                    placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm
+                    transition-all disabled:opacity-50 disabled:cursor-not-allowed
+                    ${errors.nome ? "ring-red-500/50 focus:ring-red-500" : "hover:bg-white/10 hover:ring-white/20"}
+                  `}
+                />
+                {errors.nome && (
+                  <p className="mt-2 text-xs text-red-400">{errors.nome.message}</p>
+                )}
+              </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                    E-mail
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      id="email"
-                      type="email"
-                      inputMode="email"
-                      autoComplete="email"
-                      {...register("email")}
-                      disabled={isLoading}
-                      aria-describedby={errors.email ? "email-error" : undefined}
-                      aria-invalid={errors.email !== undefined}
-                      placeholder="seu@email.com"
-                      className={`
-                        block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
-                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6
-                        transition-all disabled:cursor-not-allowed disabled:bg-gray-50
-                        ${errors.email ? "ring-red-300 focus:ring-red-500" : ""}
-                      `}
-                    />
-                    {errors.email?.message !== undefined && (
-                      <p id="email-error" className="mt-2 text-sm text-red-600">{errors.email.message}</p>
-                    )}
-                  </div>
-                </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-slate-200 mb-1.5">
+                  E-mail
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  {...register("email")}
+                  disabled={isLoading}
+                  aria-invalid={errors.email !== undefined}
+                  placeholder="seu@email.com"
+                  className={`
+                    block w-full rounded-xl border-0 bg-white/5 py-3 px-4 text-white shadow-inner ring-1 ring-inset ring-white/10
+                    placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm
+                    transition-all disabled:opacity-50 disabled:cursor-not-allowed
+                    ${errors.email ? "ring-red-500/50 focus:ring-red-500" : "hover:bg-white/10 hover:ring-white/20"}
+                  `}
+                />
+                {errors.email && (
+                  <p className="mt-2 text-xs text-red-400">{errors.email.message}</p>
+                )}
+              </div>
 
-                <div>
-                  <label htmlFor="senha" className="block text-sm font-medium leading-6 text-gray-900">
-                    Senha
-                  </label>
-                  <div className="relative mt-2">
-                    <input
-                      id="senha"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="new-password"
-                      {...register("senha")}
-                      disabled={isLoading}
-                      aria-describedby={errors.senha ? "senha-error" : undefined}
-                      aria-invalid={errors.senha !== undefined}
-                      placeholder="Mínimo 8 caracteres"
-                      className={`
-                        block w-full rounded-lg border-0 py-2.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
-                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6
-                        transition-all disabled:cursor-not-allowed disabled:bg-gray-50
-                        ${errors.senha ? "ring-red-300 focus:ring-red-500" : ""}
-                      `}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => { setShowPassword(!showPassword); }}
-                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none"
-                    >
-                      {showPassword ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
-                        </svg>
-                      ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-                  {errors.senha?.message !== undefined && (
-                    <p id="senha-error" className="mt-2 text-sm text-red-600">{errors.senha.message}</p>
-                  )}
-                </div>
-
-                <div className="pt-2">
-                  <button
-                    type="submit"
+              <div>
+                <label htmlFor="senha" className="block text-sm font-medium text-slate-200 mb-1.5">
+                  Senha
+                </label>
+                <div className="relative">
+                  <input
+                    id="senha"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    {...register("senha")}
                     disabled={isLoading}
-                    className="
-                      flex w-full justify-center rounded-lg bg-primary px-3 py-3 text-sm font-semibold leading-6 text-white shadow-md
-                      hover:bg-primary-dark hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
-                      transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none active:scale-[0.98]
-                    "
+                    aria-invalid={errors.senha !== undefined}
+                    placeholder="Mínimo 8 caracteres"
+                    className={`
+                      block w-full rounded-xl border-0 bg-white/5 py-3 pl-4 pr-11 text-white shadow-inner ring-1 ring-inset ring-white/10
+                      placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm
+                      transition-all disabled:opacity-50 disabled:cursor-not-allowed
+                      ${errors.senha ? "ring-red-500/50 focus:ring-red-500" : "hover:bg-white/10 hover:ring-white/20"}
+                    `}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-white transition-colors"
                   >
-                    {isLoading ? "Criando conta..." : "Criar Conta Agora"}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-              </form>
-            )}
-          </div>
-          
-          {successMessage === null && (
-            <p className="text-center text-xs leading-5 text-gray-400">
-              © {new Date().getFullYear()} ThemisTec. Todos os direitos reservados.
-            </p>
+                {errors.senha && (
+                  <p className="mt-2 text-xs text-red-400">{errors.senha.message}</p>
+                )}
+              </div>
+
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="
+                    flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/30
+                    hover:bg-primary-light hover:shadow-xl hover:shadow-primary/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+                    transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]
+                  "
+                >
+                  {isLoading ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span>Criando conta...</span>
+                    </>
+                  ) : (
+                    "Criar Conta Agora"
+                  )}
+                </button>
+              </div>
+            </form>
           )}
         </div>
+        
+        {successMessage === null && (
+          <p className="text-center text-xs font-medium text-slate-500 mt-8">
+            ThemisTec © {new Date().getFullYear()}
+          </p>
+        )}
       </div>
     </main>
   );

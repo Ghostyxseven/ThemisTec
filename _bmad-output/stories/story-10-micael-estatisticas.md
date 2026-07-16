@@ -2,7 +2,7 @@
 title: "[STORY] Consultar Estatísticas Gerais (US10)"
 epic: "04"
 assignee: "Micael (Backend)"
-status: "todo"
+status: "done"
 ---
 
 # US10: Consultar Estatísticas Gerais (Dashboard)
@@ -20,7 +20,7 @@ Para que eu consiga ter uma visão geral do meu volume de trabalho na página in
 - A solução deve ser performática (preferencialmente usando Server-side Aggregation do Firestore, como `getCountFromServer`, para não precisar baixar todos os documentos).
 
 ## 3. Critérios de Aceite
-- [ ] `IClienteRepository` possui a assinatura `contarClientes(userId: string): Promise<number>`
-- [ ] `IProcessoRepository` possui as assinaturas `contarProcessos(userId: string): Promise<number>` e `contarProcessosAtivos(userId: string): Promise<number>`
-- [ ] As implementações `FirestoreClienteAdapter` e `FirestoreProcessoAdapter` usam `getCountFromServer` corretamente para retornar as agregações.
-- [ ] Apenas documentos pertencentes ao `userId` são contabilizados na agregação.
+- [x] `IClienteRepository` possui a assinatura `contarClientes(userId: string): Promise<number>`
+- [x] `IProcessoRepository` possui as assinaturas `contarProcessos(userId: string): Promise<number>` e `contarProcessosAtivos(userId: string): Promise<number>`
+- [x] As implementações `FirestoreClienteAdapter` e `FirestoreProcessoAdapter` usam `getCountFromServer` corretamente para retornar as agregações.
+- [x] Apenas documentos pertencentes ao `userId` são contabilizados na agregação.
