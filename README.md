@@ -4,7 +4,7 @@
 
 **Plataforma inteligente de gestão jurídica para advogados modernos.**
 
-Desenvolvido por **ThemisTec** · MVP em desenvolvimento ativo
+Desenvolvido por **ThemisTec** · MVP 100% Concluído
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%7C%20Auth%20%7C%20Storage-orange?style=for-the-badge&logo=firebase)](https://firebase.google.com/)
@@ -29,15 +29,15 @@ A plataforma centraliza toda a gestão em um único lugar — clientes, processo
 
 | Épico | Funcionalidade | Status |
 |---|---|---|
-| 🔐 **Autenticação** | Login com e-mail e senha | 🔧 Em desenvolvimento |
-| 🔐 **Autenticação** | Cadastro de nova conta | 🔧 Em desenvolvimento |
-| 🔐 **Autenticação** | Recuperação de senha por e-mail | 🔧 Em desenvolvimento |
-| 👤 **Clientes** | Cadastro de clientes (CPF único) | 🔧 Em desenvolvimento |
-| 👤 **Clientes** | Consulta e busca por nome/CPF | 🔧 Em desenvolvimento |
-| 👤 **Clientes** | Edição e exclusão de clientes | 🔧 Em desenvolvimento |
-| 📁 **Processos** | Registro de processo vinculado a cliente | 🔧 Em desenvolvimento |
-| 📁 **Processos** | Consulta e filtros por status | 🔧 Em desenvolvimento |
-| 📁 **Processos** | Anexar documentos PDF (até 10MB) | 🔧 Em desenvolvimento |
+| 🔐 **Autenticação** | Login com e-mail e senha | ✅ Concluído |
+| 🔐 **Autenticação** | Cadastro de nova conta | ✅ Concluído |
+| 🔐 **Autenticação** | Recuperação de senha por e-mail | ✅ Concluído |
+| 👤 **Clientes** | Cadastro de clientes (CPF único) | ✅ Concluído |
+| 👤 **Clientes** | Consulta e busca por nome/CPF | ✅ Concluído |
+| 👤 **Clientes** | Edição e exclusão de clientes | ✅ Concluído |
+| 📁 **Processos** | Registro de processo vinculado a cliente | ✅ Concluído |
+| 📁 **Processos** | Consulta e filtros por status | ✅ Concluído |
+| 📁 **Processos** | Anexar documentos PDF (até 10MB) | ✅ Concluído |
 
 ---
 
@@ -176,7 +176,7 @@ git push -u origin feature/nome-da-feature
 | 1 | **PRD** — Requisitos do Produto | [`docs/PRD.md`](docs/PRD.md) | ✅ Completo |
 | 2 | **Specs** — OpenAPI + Schemas Zod | [`src/specs/`](src/specs/) | ✅ Completo |
 | 3 | **AI Harness** — Harness Engineering | [`docs/AI_Harness.md`](docs/AI_Harness.md) | ✅ Completo |
-| 4 | **MVP Funcional** — Código-fonte da aplicação | [`src/`](src/) | 🔧 Em desenvolvimento |
+| 4 | **MVP Funcional** — Código-fonte da aplicação | [`src/`](src/) | ✅ Completo |
 
 ### Documentação Complementar
 

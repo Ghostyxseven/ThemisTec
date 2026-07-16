@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 import type { RegisterInput } from "@/specs/schemas/auth.schema";
-import { IAuthService } from "@/shared/interfaces/IAuthService";
-import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
-
-const authService: IAuthService = new FirebaseAuthAdapter();
+import { authService } from "@/services";
 
 interface UseRegisterReturn {
   isLoading: boolean;

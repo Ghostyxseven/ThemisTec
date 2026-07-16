@@ -3,13 +3,7 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { Cliente, UpdateClienteInput } from "@/specs/schemas/cliente.schema";
-import { IClienteRepository } from "@/shared/interfaces/IClienteRepository";
-import { FirestoreClienteAdapter } from "@/services/firebase/FirestoreClienteAdapter";
-import { IAuthService } from "@/shared/interfaces/IAuthService";
-import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
-
-const clienteRepository: IClienteRepository = new FirestoreClienteAdapter();
-const authService: IAuthService = new FirebaseAuthAdapter();
+import { authService, clienteRepository } from "@/services";
 
 interface UseUpdateClienteReturn {
   isLoading: boolean;

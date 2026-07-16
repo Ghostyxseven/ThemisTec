@@ -68,8 +68,8 @@ export const UploadDocumentoSchema = z.object({
   descricao: z.string().max(200, "Descrição deve ter no máximo 200 caracteres").optional(),
 });
 
-/** Tamanho máximo: 10MB */
-export const TAMANHO_MAXIMO_ARQUIVO = 10 * 1024 * 1024; // 10485760 bytes
+/** Tamanho máximo: 5MB */
+export const TAMANHO_MAXIMO_ARQUIVO = 5 * 1024 * 1024; // 5242880 bytes
 
 /** Tipos MIME aceitos */
 export const TIPOS_ACEITOS = ["application/pdf"] as const;

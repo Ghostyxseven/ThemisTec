@@ -3,16 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Processo, ProcessoListResponse, StatusProcesso } from "@/specs/schemas/processo.schema";
 import type { Cliente } from "@/specs/schemas/cliente.schema";
-import { IProcessoRepository } from "@/shared/interfaces/IProcessoRepository";
-import { FirestoreProcessoAdapter } from "@/services/firebase/FirestoreProcessoAdapter";
-import { IClienteRepository } from "@/shared/interfaces/IClienteRepository";
-import { FirestoreClienteAdapter } from "@/services/firebase/FirestoreClienteAdapter";
-import { IAuthService } from "@/shared/interfaces/IAuthService";
-import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
-
-const processoRepository: IProcessoRepository = new FirestoreProcessoAdapter();
-const clienteRepository: IClienteRepository = new FirestoreClienteAdapter();
-const authService: IAuthService = new FirebaseAuthAdapter();
+import { authService, clienteRepository, processoRepository } from "@/services";
 import { ExportService } from "@/services/export/ExportService";
 
 const exportService = new ExportService();
@@ -33,6 +24,7 @@ interface UseListProcessosReturn {
   refetch: () => void;
   isExporting: boolean;
   exportarCsv: () => Promise<void>;
+  excluirProcesso: (id: string) => Promise<void>;
 }
 
 export function useListProcessos(): UseListProcessosReturn {
@@ -122,6 +114,19 @@ export function useListProcessos(): UseListProcessosReturn {
     }
   };
 
+  const excluirProcesso = async (id: string): Promise<void> => {
+    try {
+      const userId = authService.getCurrentUserId();
+      if (!userId) throw new Error("Usuário não autenticado.");
+      await processoRepository.excluir(id, userId);
+      void fetchProcessos();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Erro ao excluir processo.";
+      setErrorMessage(msg);
+      throw new Error(msg); // re-throw para a interface
+    }
+  };
+
   useEffect(() => {
     let active = true;
 
@@ -155,5 +160,6 @@ export function useListProcessos(): UseListProcessosReturn {
     refetch: () => { void fetchProcessos(); },
     isExporting,
     exportarCsv,
+    excluirProcesso,
   };
 }

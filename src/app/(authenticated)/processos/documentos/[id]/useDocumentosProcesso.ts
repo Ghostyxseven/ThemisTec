@@ -3,16 +3,8 @@
 import { useState, useCallback } from "react";
 import type { Processo, Documento } from "@/specs/schemas/processo.schema";
 import { TAMANHO_MAXIMO_ARQUIVO } from "@/specs/schemas/processo.schema";
-import { IProcessoRepository } from "@/shared/interfaces/IProcessoRepository";
-import { FirestoreProcessoAdapter } from "@/services/firebase/FirestoreProcessoAdapter";
-import { IStorageService } from "@/shared/interfaces/IStorageService";
-import { FirebaseStorageAdapter } from "@/services/firebase/FirebaseStorageAdapter";
-import { IAuthService } from "@/shared/interfaces/IAuthService";
-import { FirebaseAuthAdapter } from "@/services/firebase/FirebaseAuthAdapter";
-
-const processoRepository: IProcessoRepository = new FirestoreProcessoAdapter();
-const storageService: IStorageService = new FirebaseStorageAdapter();
-const authService: IAuthService = new FirebaseAuthAdapter();
+import { authService, processoRepository } from "@/services";
+import { supabaseClient } from "@/services/supabase/supabase.client";
 
 interface UseDocumentosProcessoReturn {
   processo: Processo | null;
@@ -68,7 +60,7 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
       }
 
       if (file.size > TAMANHO_MAXIMO_ARQUIVO) {
-        throw new Error("O tamanho do arquivo excede o limite de 10 MB.");
+        throw new Error("O tamanho do arquivo excede o limite de 5 MB.");
       }
 
       // Gerar path único no Firebase Storage
@@ -77,8 +69,25 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
         : Math.random().toString(36).substring(2, 15);
       const filePath = `processos/${processoId}/${uuid}.pdf`;
 
-      // Upload do arquivo
-      const downloadUrl = await storageService.uploadFile(filePath, file);
+      // Upload do arquivo para o Supabase
+      const { error } = await supabaseClient.storage
+        .from("processos")
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (error) {
+        console.error("Supabase error:", error);
+        throw new Error("Falha ao enviar o arquivo para o servidor.");
+      }
+
+      // Pegar URL Pública
+      const { data: urlData } = supabaseClient.storage
+        .from("processos")
+        .getPublicUrl(filePath);
+
+      const downloadUrl = urlData.publicUrl;
 
       // Metadados do documento
       const novoDocumento: Documento = {
@@ -90,8 +99,14 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
         enviadoEm: new Date().toISOString(),
       };
 
-      // Registrar referência no Firestore
-      await processoRepository.adicionarDocumento(processoId, novoDocumento, userId);
+      try {
+        // Registrar referência no Firestore
+        await processoRepository.adicionarDocumento(processoId, novoDocumento, userId);
+      } catch (firestoreError) {
+        // Compensação (Rollback): Ocorreu um erro no banco, então deleta o PDF que acabou de subir
+        await supabaseClient.storage.from("processos").remove([filePath]);
+        throw firestoreError; // Repassa o erro para o catch principal
+      }
 
       setSuccessMessage("Documento anexado com sucesso!");
       
