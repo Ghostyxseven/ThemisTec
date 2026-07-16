@@ -1,7 +1,7 @@
 import { IAuthService } from "@/shared/interfaces/IAuthService";
 import { FirebaseError } from "firebase/app";
 import { LoginInput, RegisterInput, ResetPasswordInput } from "@/specs/schemas/auth.schema";
-import { getFirebaseApp } from "./firebase.client";
+import { getFirebaseApp } from "@/services/firebase/firebase.client";
 import {
   getAuth,
   signInWithEmailAndPassword,

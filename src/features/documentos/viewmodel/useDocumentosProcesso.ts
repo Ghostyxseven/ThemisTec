@@ -14,6 +14,7 @@ interface UseDocumentosProcessoReturn {
   successMessage: string | null;
   carregarProcesso: (processoId: string) => Promise<void>;
   anexarDocumento: (processoId: string, file: File, descricao?: string) => Promise<void>;
+  removerDocumento: (processoId: string, documentoId: string) => Promise<void>;
   setErrorMessage: (msg: string | null) => void;
   setSuccessMessage: (msg: string | null) => void;
 }
@@ -95,7 +96,7 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
         nomeArquivo: file.name,
         url: downloadUrl,
         tamanho: file.size,
-        descricao: descricao || undefined,
+        ...(descricao ? { descricao } : {}),
         enviadoEm: new Date().toISOString(),
       };
 
@@ -120,6 +121,36 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
     }
   };
 
+  const removerDocumento = async (processoId: string, documentoId: string): Promise<void> => {
+    setIsUploading(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const userId = authService.getCurrentUserId();
+      if (!userId) {
+        throw new Error("Usuário não autenticado.");
+      }
+
+      await processoRepository.removerDocumento(processoId, documentoId, userId);
+
+      const filePath = `processos/${processoId}/${documentoId}.pdf`;
+      const { error } = await supabaseClient.storage.from("processos").remove([filePath]);
+      
+      if (error) {
+        console.error("Supabase Storage error (remover):", error);
+      }
+
+      setSuccessMessage("Documento removido com sucesso!");
+      await carregarProcesso(processoId);
+    } catch (erro) {
+      const msg = erro instanceof Error ? erro.message : "Erro ao remover o documento.";
+      setErrorMessage(msg);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return {
     processo,
     isLoading,
@@ -128,6 +159,7 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
     successMessage,
     carregarProcesso,
     anexarDocumento,
+    removerDocumento,
     setErrorMessage,
     setSuccessMessage,
   };

@@ -1,8 +1,8 @@
-import { FirebaseAuthAdapter } from "./firebase/FirebaseAuthAdapter";
-import { FirestoreClienteAdapter } from "./firebase/FirestoreClienteAdapter";
-import { FirestoreProcessoAdapter } from "./firebase/FirestoreProcessoAdapter";
-import { FirestorePrazoAdapter } from "./firebase/FirestorePrazoAdapter";
-import { FirebaseStorageAdapter } from "./firebase/FirebaseStorageAdapter";
+import { FirebaseAuthAdapter } from "@/features/auth/model/FirebaseAuthAdapter";
+import { FirestoreClienteAdapter } from "@/features/clientes/model/FirestoreClienteAdapter";
+import { FirestoreProcessoAdapter } from "@/features/processos/model/FirestoreProcessoAdapter";
+import { FirestorePrazoAdapter } from "@/features/prazos/model/FirestorePrazoAdapter";
+import { FirebaseStorageAdapter } from "@/features/documentos/model/FirebaseStorageAdapter";
 import { IAuthService } from "@/shared/interfaces/IAuthService";
 import { IClienteRepository } from "@/shared/interfaces/IClienteRepository";
 import { IProcessoRepository } from "@/shared/interfaces/IProcessoRepository";

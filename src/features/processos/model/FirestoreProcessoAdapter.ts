@@ -1,6 +1,6 @@
 import { IProcessoRepository } from "@/shared/interfaces/IProcessoRepository";
 import { CreateProcessoInput, Processo, ListProcessosQuery, ProcessoListResponse, TipoProcesso, StatusProcesso, StatusPagamento, Documento, UpdateProcessoInput } from "@/specs/schemas/processo.schema";
-import { getFirestoreDb } from "./firebase.client";
+import { getFirestoreDb } from "@/services/firebase/firebase.client";
 import {
   collection,
   addDoc,
@@ -163,6 +163,24 @@ export class FirestoreProcessoAdapter implements IProcessoRepository {
     } catch (error) {
       if (error instanceof Error) throw error;
       throw new Error("Falha ao anexar documento ao processo.");
+    }
+  }
+
+  public async removerDocumento(processoId: string, documentoId: string, userId: string): Promise<void> {
+    try {
+      const processo = await this.buscarPorId(processoId, userId);
+      const novosDocumentos = processo.documentos.filter(doc => doc.id !== documentoId);
+      
+      const docRef = doc(this.db, "processos", processoId);
+      const agora = new Date().toISOString();
+
+      await updateDoc(docRef, {
+        documentos: novosDocumentos,
+        atualizadoEm: agora,
+      });
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error("Falha ao remover documento do processo.");
     }
   }
 
