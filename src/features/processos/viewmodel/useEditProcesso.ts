@@ -25,7 +25,7 @@ export function useEditProcesso(processoId: string) {
     try {
       setIsLoading(true);
       setErrorMessage(null);
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) throw new Error("Usuário não autenticado");
 
       const processo = await processoRepository.buscarPorId(processoId, userId);
@@ -54,7 +54,7 @@ export function useEditProcesso(processoId: string) {
       setIsSubmitting(true);
       setErrorMessage(null);
       
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) throw new Error("Sessão expirada. Faça login novamente.");
 
       await processoRepository.atualizar(processoId, dados, userId);

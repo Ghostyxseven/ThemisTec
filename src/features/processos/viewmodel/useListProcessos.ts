@@ -40,7 +40,7 @@ export function useListProcessos(): UseListProcessosReturn {
 
   const loadClientes = useCallback(async (): Promise<void> => {
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (userId) {
         const res = await clienteRepository.listar({ limit: 100, page: 1 }, userId);
         setClientes(res.dados);
@@ -55,7 +55,7 @@ export function useListProcessos(): UseListProcessosReturn {
     setErrorMessage(null);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Usuário não autenticado.");
       }

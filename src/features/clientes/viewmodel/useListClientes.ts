@@ -36,7 +36,7 @@ export function useListClientes(): UseListClientesReturn {
     setErrorMessage(null);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Usuário não autenticado.");
       }
@@ -63,7 +63,7 @@ export function useListClientes(): UseListClientesReturn {
     setErrorMessage(null);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Você precisa estar autenticado para realizar esta ação.");
       }
@@ -82,7 +82,7 @@ export function useListClientes(): UseListClientesReturn {
     setIsExporting(true);
     setErrorMessage(null);
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) throw new Error("Usuário não autenticado.");
 
       const response = await clienteRepository.listar({ limit: 9999, page: 1 }, userId);

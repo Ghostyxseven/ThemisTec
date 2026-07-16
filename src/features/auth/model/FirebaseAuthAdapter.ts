@@ -62,6 +62,15 @@ export class FirebaseAuthAdapter implements IAuthService {
     return this.auth.currentUser?.uid ?? null;
   }
 
+  public waitForAuth(): Promise<string | null> {
+    return new Promise((resolve) => {
+      const unsubscribe = this.auth.onAuthStateChanged((user) => {
+        unsubscribe(); // we only need the first resolved state
+        resolve(user ? user.uid : null);
+      });
+    });
+  }
+
   private handleAuthError(error: FirebaseError): never {
     if (
       error.code === "auth/user-not-found" ||
