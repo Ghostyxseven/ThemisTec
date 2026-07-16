@@ -50,6 +50,7 @@ export function ClientesEditView(): React.ReactNode {
     resolver: zodResolver(UpdateClienteSchema),
     defaultValues: {
       nome: "",
+      cpf: "",
       email: "",
       telefone: "",
       endereco: "",
@@ -67,6 +68,7 @@ export function ClientesEditView(): React.ReactNode {
     if (cliente) {
       reset({
         nome: cliente.nome,
+        cpf: formatCpf(cliente.cpf),
         email: cliente.email || "",
         telefone: cliente.telefone || "",
         endereco: cliente.endereco || "",
@@ -161,20 +163,35 @@ export function ClientesEditView(): React.ReactNode {
                     )}
                   </div>
 
-                  {/* Campo CPF (Somente Leitura) */}
+                  {/* Campo CPF (Editável) */}
                   <div>
-                    <label htmlFor="cpf-disabled" className="mb-1 block text-sm font-medium text-slate-500">
-                      CPF (Não editável)
+                    <label htmlFor="cpf" className="mb-1 block text-sm font-medium text-slate-700">
+                      CPF
                     </label>
                     <input
-                      id="cpf-disabled"
+                      id="cpf"
                       type="text"
-                      disabled
-                      value={cliente ? formatCpf(cliente.cpf) : ""}
-                      className="
-                        block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none bg-slate-50 text-slate-500 cursor-not-allowed
-                      "
+                      inputMode="numeric"
+                      placeholder="000.000.000-00"
+                      {...register("cpf")}
+                      disabled={isSaving}
+                      aria-describedby={errors.cpf ? "cpf-error" : "cpf-hint"}
+                      aria-invalid={errors.cpf !== undefined}
+                      className={`
+                        block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
+                        disabled:cursor-not-allowed disabled:bg-slate-50
+                        ${errors.cpf ? "border-red-400 bg-red-50" : ""}
+                      `}
                     />
+                    {errors.cpf?.message !== undefined ? (
+                      <p id="cpf-error" className="mt-1 text-sm text-red-500">
+                        {errors.cpf.message}
+                      </p>
+                    ) : (
+                      <p id="cpf-hint" className="mt-1 text-xs text-slate-400">
+                        Altere somente se o CPF foi cadastrado incorretamente.
+                      </p>
+                    )}
                   </div>
 
                   {/* Campo E-mail */}
