@@ -3,7 +3,7 @@
 import { useDashboard } from "../viewmodel/useDashboard";
 import React from "react";
 import Link from "next/link";
-import { LayoutDashboard, Users, Scale, ArrowUpRight, RefreshCcw } from "lucide-react";
+import { LayoutDashboard, Users, Scale, ArrowUpRight, RefreshCcw, Calendar, DollarSign } from "lucide-react";
 
 export function DashboardView(): React.ReactElement {
   const { isLoading, errorMessage, estatisticas, refetch } = useDashboard();
@@ -56,7 +56,7 @@ export function DashboardView(): React.ReactElement {
         )}
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {/* Card Clientes */}
           <div className="rounded-2xl bg-white border border-slate-100 shadow-soft p-6 transition-all duration-300 hover:shadow-card hover:-translate-y-0.5">
             <div className="flex items-center justify-between mb-4">
@@ -112,6 +112,45 @@ export function DashboardView(): React.ReactElement {
                 <div className="h-9 w-16 bg-slate-100 rounded-lg animate-pulse"></div>
               ) : (
                 <p className="text-3xl font-bold text-foreground tracking-tight">{estatisticas?.ativosProcessos ?? 0}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Card Honorários */}
+          <div className="rounded-2xl bg-white border border-slate-100 shadow-soft p-6 transition-all duration-300 hover:shadow-card hover:-translate-y-0.5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50">
+                <DollarSign className="h-6 w-6 text-green-500" />
+              </div>
+            </div>
+            <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Honorários a Receber</p>
+            <div className="mt-1">
+              {isLoading ? (
+                <div className="h-9 w-24 bg-slate-100 rounded-lg animate-pulse"></div>
+              ) : (
+                <p className="text-3xl font-bold text-foreground tracking-tight">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(estatisticas?.honorariosAReceber ?? 0)}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Card Prazos da Semana */}
+          <div className="rounded-2xl bg-white border border-slate-100 shadow-soft p-6 transition-all duration-300 hover:shadow-card hover:-translate-y-0.5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50">
+                <Calendar className="h-6 w-6 text-orange-500" />
+              </div>
+              <Link href="/prazos" className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary-dark transition-colors">
+                Ver todos <ArrowUpRight className="h-3 w-3" />
+              </Link>
+            </div>
+            <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Prazos (Próx. 7 dias)</p>
+            <div className="mt-1">
+              {isLoading ? (
+                <div className="h-9 w-16 bg-slate-100 rounded-lg animate-pulse"></div>
+              ) : (
+                <p className="text-3xl font-bold text-foreground tracking-tight">{estatisticas?.prazosDaSemana ?? 0}</p>
               )}
             </div>
           </div>

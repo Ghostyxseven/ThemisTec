@@ -1,4 +1,4 @@
-import { collection, doc, setDoc, getDocs, query, where, orderBy, updateDoc, getDoc, Firestore } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, query, where, orderBy, updateDoc, getDoc, Firestore, getCountFromServer } from "firebase/firestore";
 import { getFirestoreDb } from "@/services/firebase/firebase.client";
 import { IPrazoRepository } from "@/shared/interfaces/IPrazoRepository";
 import { Prazo, CreatePrazoInput } from "@/specs/schemas/prazo.schema";
@@ -66,5 +66,25 @@ export class FirestorePrazoAdapter implements IPrazoRepository {
       status: "CONCLUIDO",
       atualizadoEm: new Date().toISOString()
     });
+  }
+
+  async contarPrazosDaSemana(userId: string): Promise<number> {
+    const hoje = new Date();
+    const dataHoje = hoje.toISOString().split("T")[0];
+    
+    const daqui7Dias = new Date();
+    daqui7Dias.setDate(hoje.getDate() + 7);
+    const dataFim = daqui7Dias.toISOString().split("T")[0];
+
+    const q = query(
+      collection(this.db, this.collectionName),
+      where("userId", "==", userId),
+      where("status", "==", "PENDENTE"),
+      where("dataVencimento", ">=", dataHoje),
+      where("dataVencimento", "<=", dataFim)
+    );
+
+    const snapshot = await getCountFromServer(q);
+    return snapshot.data().count;
   }
 }
