@@ -428,7 +428,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: Token JWT do Firebase Auth
+      description: Token JWT do Supabase Auth
 
   schemas:
     # --- AUTH ---

@@ -3,7 +3,7 @@
 Você é um Agente de IA trabalhando no projeto **ThemisTec**. Suas ações devem ser estritamente guiadas por este documento. Qualquer violação destas regras é considerada uma falha grave.
 
 ## 1. Contexto do Projeto (O que você precisa saber)
-- **Stack Tecnológica:** Next.js (App Router), Tailwind CSS, Firebase (Auth/Firestore), Zod (Validação).
+- **Stack Tecnológica:** Next.js (App Router), Tailwind CSS, Supabase (Auth/PostgreSQL/Storage), Zod (Validação).
 - **Arquitetura:** Monolito Modular baseado em **MVVM** com forte uso de **Inversão de Dependência (Adapters)**. A View NUNCA deve importar o banco de dados diretamente.
 - **Base de Conhecimento:** Se tiver dúvidas sobre a arquitetura, leia o diretório `_bmad-output/project-knowledge/`.
 
