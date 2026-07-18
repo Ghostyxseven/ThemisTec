@@ -342,6 +342,7 @@ export function ProcessosListView(): React.ReactNode {
                           <div className="flex items-center justify-end gap-2">
                             <Link
                               href={`/processos/documentos/${processo.id}`}
+                              aria-label={`Abrir anexos do processo ${processo.numero}`}
                               title="Anexos"
                               className="
                                 inline-flex items-center justify-center h-8 w-8 text-slate-400 hover:text-primary
@@ -352,6 +353,7 @@ export function ProcessosListView(): React.ReactNode {
                             </Link>
                             <Link
                               href={`/processos/editar/${processo.id}`}
+                              aria-label={`Editar processo ${processo.numero}`}
                               title="Editar"
                               className="
                                 inline-flex items-center justify-center h-8 w-8 text-slate-400 hover:text-primary
@@ -362,6 +364,7 @@ export function ProcessosListView(): React.ReactNode {
                             </Link>
                             <button
                               type="button"
+                              aria-label={`Excluir processo ${processo.numero}`}
                               title="Excluir"
                               onClick={() => setProcessoParaExcluir(processo.id)}
                               className="
@@ -412,10 +415,12 @@ export function ProcessosListView(): React.ReactNode {
 
         {/* Modal de Exclusão */}
         {processoParaExcluir && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setProcessoParaExcluir(null)} />
+          <div role="dialog" aria-modal="true" aria-labelledby="titulo-excluir-processo" className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <button type="button" aria-label="Fechar confirmação" className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setProcessoParaExcluir(null)} />
             <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
               <button
+                type="button"
+                aria-label="Fechar confirmação"
                 onClick={() => setProcessoParaExcluir(null)}
                 className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 transition-colors"
               >
@@ -426,7 +431,7 @@ export function ProcessosListView(): React.ReactNode {
                 <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
                   <AlertTriangle className="h-7 w-7 text-red-500" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800">Excluir Processo</h3>
+                <h3 id="titulo-excluir-processo" className="text-xl font-bold text-slate-800">Excluir Processo</h3>
                 <p className="mt-2 text-sm text-slate-500">
                   Tem certeza que deseja excluir este processo permanentemente? Esta ação não poderá ser desfeita.
                 </p>

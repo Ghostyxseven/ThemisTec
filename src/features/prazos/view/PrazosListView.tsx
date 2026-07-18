@@ -116,6 +116,7 @@ export function PrazosListView(): React.JSX.Element {
                         <td className="px-6 py-5 text-right flex items-center justify-end gap-3">
                           {prazo.status === "PENDENTE" ? (
                             <button
+                              type="button"
                               onClick={() => void concluirPrazo(prazo.id)}
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                             >
@@ -126,6 +127,8 @@ export function PrazosListView(): React.JSX.Element {
                             <span className="text-xs text-slate-400 font-medium">Finalizado</span>
                           )}
                           <button
+                            type="button"
+                            aria-label={`Excluir prazo ${prazo.titulo}`}
                             onClick={() => {
                               if (confirm("Tem certeza que deseja excluir este prazo?")) {
                                 void excluirPrazo(prazo.id);

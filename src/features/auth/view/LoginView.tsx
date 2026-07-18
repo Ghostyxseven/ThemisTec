@@ -121,6 +121,7 @@ export function LoginView(): React.ReactNode {
                 />
                 <button
                   type="button"
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-white transition-colors"
                 >

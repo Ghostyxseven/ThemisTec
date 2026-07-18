@@ -81,6 +81,9 @@ export function NotificationBell(): React.JSX.Element {
       <div className="relative" ref={dropdownRef}>
         <button
           type="button"
+          aria-label={`Notificações${itemCount > 0 ? `, ${itemCount} pendentes` : ""}`}
+          aria-expanded={isOpen}
+          aria-controls="painel-notificacoes"
           onClick={() => setIsOpen(!isOpen)}
           className={`relative p-2.5 rounded-xl transition-all ${isOpen ? 'bg-primary/10 text-primary' : 'text-slate-400 hover:text-primary hover:bg-primary/5'}`}
         >
@@ -94,7 +97,7 @@ export function NotificationBell(): React.JSX.Element {
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-white border border-slate-100 shadow-xl z-50 overflow-hidden transform origin-top-right transition-all">
+          <div id="painel-notificacoes" className="absolute right-0 mt-2 w-[min(20rem,calc(100vw-2rem))] rounded-2xl bg-white border border-slate-100 shadow-xl z-50 overflow-hidden transform origin-top-right transition-all">
             <div className="px-4 py-3 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
               <h3 className="text-sm font-bold text-slate-800">Notificações</h3>
               <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -155,11 +158,13 @@ export function NotificationBell(): React.JSX.Element {
 
       {/* Floating Toast Notification */}
       {showToast && itemCount > 0 && (
-        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+        <div role="status" aria-live="polite" className="fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300 sm:bottom-6 sm:left-auto sm:right-6">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden w-80">
             <div className={`h-1.5 w-full ${isAtrasado(prazosUrgentes[0]?.dataVencimento || '') ? 'bg-red-500' : 'bg-amber-500'}`}></div>
             <div className="p-4 relative">
               <button 
+                type="button"
+                aria-label="Fechar notificação"
                 onClick={() => setShowToast(false)}
                 className="absolute top-3 right-3 text-slate-400 hover:text-slate-600 transition-colors"
               >

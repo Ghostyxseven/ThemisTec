@@ -9,13 +9,14 @@ export function AppShell({ children }: { children: React.ReactNode }): React.JSX
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
+      <a href="#conteudo-principal" className="skip-link">Ir para o conteúdo principal</a>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header onOpenSidebar={() => setSidebarOpen(true)} />
         
         {/* Usamos overflow-y-auto no main se quisermos scroll apenas do conteúdo */}
-        <main className="flex-1 overflow-y-auto bg-background">
+        <main id="conteudo-principal" tabIndex={-1} className="flex-1 overflow-y-auto bg-background">
           {children}
         </main>
       </div>

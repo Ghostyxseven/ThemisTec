@@ -31,7 +31,7 @@ setup("cria usuário descartável e autentica pela interface", async ({ page }) 
     await page.goto("/login");
     await page.waitForLoadState("networkidle");
     await page.getByLabel("E-mail").fill(email);
-    await page.getByLabel("Senha").fill(password);
+    await page.locator("#senha").fill(password);
     await page.getByRole("button", { name: "Entrar no Sistema" }).click();
     await expect(page).toHaveURL(/\/dashboard$/);
     await page.context().storageState({ path: statePath });

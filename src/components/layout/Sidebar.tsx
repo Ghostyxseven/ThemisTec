@@ -60,14 +60,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
     <>
       {/* Mobile overlay */}
       {isOpen && (
-        <div
+        <button
+          type="button"
+          aria-label="Fechar menu lateral"
           className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden transition-opacity"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
-      <div
+      <aside
+        aria-label="Menu lateral"
         className={`
           fixed inset-y-0 left-0 z-50 flex w-64 flex-col
           bg-gradient-to-b from-sidebar-from to-sidebar-to
@@ -87,7 +90,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-1 flex-col overflow-y-auto px-4 py-6">
+        <nav aria-label="Navegação principal" className="flex flex-1 flex-col overflow-y-auto px-4 py-6">
           <div className="text-[10px] font-semibold text-indigo-300/40 uppercase tracking-[0.15em] mb-4 px-3">
             Menu Principal
           </div>
@@ -131,9 +134,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
 
           {/* User Profile */}
           <div className="relative" ref={dropdownRef}>
-            <div 
+            <button
+              type="button"
+              aria-expanded={showDropdown}
+              aria-controls="menu-usuario"
               onClick={() => setShowDropdown(!showDropdown)}
-              className="group flex items-center gap-3 rounded-xl px-3 py-3 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
+              className="group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 text-emerald-400 font-bold text-sm ring-2 ring-emerald-500/30 group-hover:ring-emerald-400/50 transition-all duration-300">
                 {userInitial || 'U'}
@@ -149,11 +155,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
                 </div>
               </div>
               <ChevronDown className={`h-4 w-4 shrink-0 text-indigo-300/40 transition-transform duration-300 group-hover:text-indigo-200 ${showDropdown ? 'rotate-180' : ''}`} />
-            </div>
+            </button>
 
             {/* Dropdown Menu */}
             {showDropdown && (
-              <div className="absolute bottom-[calc(100%+8px)] left-0 w-full rounded-xl bg-sidebar-to border border-white/10 shadow-2xl overflow-hidden z-50 py-1">
+              <div id="menu-usuario" className="absolute bottom-[calc(100%+8px)] left-0 w-full rounded-xl bg-sidebar-to border border-white/10 shadow-2xl overflow-hidden z-50 py-1">
                 <Link 
                   href="/perfil"
                   onClick={() => setShowDropdown(false)}
@@ -173,7 +179,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
             )}
           </div>
         </div>
-      </div>
+      </aside>
     </>
   );
 }

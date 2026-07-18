@@ -32,11 +32,46 @@
 }
 
 body {
+  min-height: 100vh;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   background-color: var(--background);
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary-light) 70%, white);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  border-radius: 0.75rem;
+  background: white;
+  color: var(--color-primary-dark);
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgb(15 23 42 / 20%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Scrollbar styling */

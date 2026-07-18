@@ -128,7 +128,7 @@ export function ClientesListView(): React.ReactNode {
               className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md"
             />
           </div>
-          <button className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 shadow-sm hover:bg-slate-50 hover:shadow-md transition-all">
+          <button type="button" aria-label="Opções de filtro" className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 shadow-sm hover:bg-slate-50 hover:shadow-md transition-all">
             <SlidersHorizontal className="h-4 w-4 text-slate-500" />
           </button>
         </div>
@@ -255,6 +255,7 @@ export function ClientesListView(): React.ReactNode {
                             </Link>
                             <button
                               type="button"
+                              aria-label={`Excluir cliente ${cliente.nome}`}
                               onClick={() => { void handleExcluir(cliente.id, cliente.nome); }}
                               className="text-sm font-medium text-red-400 hover:text-red-600 transition-colors"
                               title="Excluir"
