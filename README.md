@@ -119,8 +119,18 @@ npm run harness
 # Ou individualmente:
 npm run typecheck   # Verificação de tipos TypeScript (strict mode)
 npm run lint        # ESLint com regras do projeto
-npm run test        # 36 testes de contrato (Auth, Clientes, Processos)
+npm run test        # Testes unitários e de contratos
 ```
+
+### Integração Contínua
+
+O workflow `.github/workflows/ci.yml` valida pushes e pull requests para `develop` e `main` com:
+
+- typecheck, lint da aplicação e do Playwright, testes unitários e build;
+- jornadas E2E públicas no Chromium;
+- auditoria que bloqueia vulnerabilidades críticas.
+
+Os testes autenticados e de RLS usam credenciais descartáveis e continuam opt-in (`npm run test:e2e` com `SUPABASE_SERVICE_ROLE_KEY` e `npm run test:rls` com `POSTGRES_URL`).
 
 ---
 
