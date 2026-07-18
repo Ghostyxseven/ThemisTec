@@ -67,6 +67,10 @@ ui-debug.log
 
 # Testing
 coverage/
+playwright-report/
+test-results/
+.playwright/
+supabase/.temp/
 
 # Misc
 *.log

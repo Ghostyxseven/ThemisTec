@@ -1,5 +1,5 @@
 import { ClientesEditView } from "@/features/clientes/view/ClientesEditView";
 
-export default function EdicaoClientePage() {
+export default function EdicaoClientePage(): React.JSX.Element {
   return <ClientesEditView />;
 }
