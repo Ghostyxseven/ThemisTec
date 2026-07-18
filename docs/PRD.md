@@ -98,6 +98,19 @@ A plataforma permite que advogados em início de carreira organizem seu fluxo de
 | Rastreamento de prazos judiciais | Necessita integração com tribunais |
 | Notificações push | Dependência de serviço adicional |
 | Geração automática de petições | Complexidade de IA/templates |
+
+### Roadmap pós-MVP — Épico 02
+
+O próximo ciclo evolutivo está detalhado em `_bmad-output/stories/epic-02-evolucao-operacional.md` e contempla:
+
+- agenda jurídica completa;
+- dashboard financeiro;
+- movimentações processuais;
+- busca global;
+- central de documentos;
+- notificações persistentes.
+
+As integrações com calendários começam por exportação `.ics`. Sincronização OAuth, envio de e-mails e automações server-side serão fases posteriores, após validação dos fluxos locais e das políticas RLS.
 | Modo offline (PWA completo) | Service workers exigem mais tempo |
 | Multi-tenancy (escritório com permissões) | Arquitetura mais complexa |
 | Relatórios e exportação | Feature de conveniência, não essencial |
