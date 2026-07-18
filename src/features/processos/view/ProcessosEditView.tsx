@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Scale, ArrowLeft } from "lucide-react";
 import { useEditProcesso } from "../viewmodel/useEditProcesso";
 
-export function ProcessosEditView({ params }: { params: Promise<{ id: string }> }) {
+export function ProcessosEditView({ params }: { params: Promise<{ id: string }> }): React.JSX.Element {
   const resolvedParams = use(params);
   const {
     register,

@@ -5,31 +5,29 @@ import { Bell, AlertCircle, X, CheckCircle2 } from "lucide-react";
 import { authService, prazoRepository } from "@/services";
 import { Prazo } from "@/specs/schemas/prazo.schema";
 import Link from "next/link";
-import { getAuth } from "firebase/auth";
-import { getFirebaseApp } from "@/services/firebase/firebase.client";
 
-const isAtrasado = (dataISO: string) => {
+const isAtrasado = (dataISO: string): boolean => {
   const today = new Date();
   today.setHours(0,0,0,0);
   const todayStr = today.toISOString().split("T")[0] || "";
   return dataISO < todayStr;
 };
 
-const isToday = (dataISO: string) => {
+const isToday = (dataISO: string): boolean => {
   const todayStr = new Date().toISOString().split("T")[0] || "";
   return dataISO === todayStr;
 };
 
-export function NotificationBell() {
+export function NotificationBell(): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [prazosUrgentes, setPrazosUrgentes] = useState<Prazo[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchNotificacoes = async () => {
+    const fetchNotificacoes = async (): Promise<void> => {
       try {
-        const userId = authService.getCurrentUserId();
+        const userId = await authService.waitForAuth();
         if (!userId) return;
 
         const todosPrazos = await prazoRepository.listarPorUsuario(userId);
@@ -56,8 +54,7 @@ export function NotificationBell() {
     };
 
     // Usar onAuthStateChanged para garantir que o auth inicializou
-    const auth = getAuth(getFirebaseApp());
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = authService.onAuthStateChanged((user) => {
       if (user) {
         void fetchNotificacoes();
       }
@@ -68,7 +65,7 @@ export function NotificationBell() {
 
   // Fechar dropdown clicando fora
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent): void => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }

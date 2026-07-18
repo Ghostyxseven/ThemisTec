@@ -5,19 +5,19 @@ import Link from "next/link";
 import { Calendar, CheckCircle2, AlertCircle, Trash2 } from "lucide-react";
 import { useListPrazos } from "../viewmodel/useListPrazos";
 
-const isAtrasado = (dataISO: string) => {
+const isAtrasado = (dataISO: string): boolean => {
   const today = new Date();
   today.setHours(0,0,0,0);
   const todayStr = today.toISOString().split("T")[0] || "";
   return dataISO < todayStr;
 };
 
-const isToday = (dataISO: string) => {
+const isToday = (dataISO: string): boolean => {
   const todayStr = new Date().toISOString().split("T")[0] || "";
   return dataISO === todayStr;
 };
 
-export function PrazosListView() {
+export function PrazosListView(): React.JSX.Element {
   const { dados, isLoading, errorMessage, concluirPrazo, excluirPrazo } = useListPrazos();
 
   return (

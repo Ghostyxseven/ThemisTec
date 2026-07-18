@@ -9,10 +9,10 @@ interface HeaderProps {
   onOpenSidebar: () => void;
 }
 
-export function Header({ onOpenSidebar }: HeaderProps) {
+export function Header({ onOpenSidebar }: HeaderProps): React.JSX.Element {
   const router = useRouter();
 
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     try {
       await authService.logout();
       router.push("/login");

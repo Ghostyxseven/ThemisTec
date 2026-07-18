@@ -4,8 +4,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { LayoutDashboard, Users, Scale, ChevronDown, Calendar, User as UserIcon, LogOut } from "lucide-react";
-import { getAuth } from "firebase/auth";
-import { getFirebaseApp } from "@/services/firebase/firebase.client";
 import { authService } from "@/services";
 
 interface SidebarProps {
@@ -20,7 +18,7 @@ const navigation = [
   { name: "Agenda Jurídica", href: "/prazos", icon: Calendar },
 ];
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
   const pathname = usePathname();
   const router = useRouter();
   const [userName, setUserName] = useState("Carregando...");
@@ -29,7 +27,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent): void => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
       }
@@ -38,7 +36,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     try {
       await authService.logout();
       router.push("/login");
@@ -48,8 +46,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   };
 
   useEffect(() => {
-    const auth = getAuth(getFirebaseApp());
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = authService.onAuthStateChanged((user) => {
       if (user) {
         const name = user.displayName || user.email?.split("@")[0] || "Usuário";
         setUserName(name);

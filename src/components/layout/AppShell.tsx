@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ children }: { children: React.ReactNode }): React.JSX.Element {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (

@@ -50,7 +50,7 @@ export const ListClientesQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(50).default(10),
 });
 
-/** Modelo completo do Cliente (Firestore) */
+/** Modelo completo do Cliente */
 export const ClienteSchema = z.object({
   id: z.string(),
   nome: z.string(),

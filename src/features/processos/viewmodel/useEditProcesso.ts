@@ -1,11 +1,22 @@
 import { useState, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import type { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { authService, processoRepository } from "@/services";
 import { UpdateProcessoSchema, UpdateProcessoInput } from "@/specs/schemas/processo.schema";
 
-export function useEditProcesso(processoId: string) {
+interface EditProcessoViewModel {
+  register: UseFormRegister<UpdateProcessoInput>;
+  handleSubmit: (event?: React.BaseSyntheticEvent) => Promise<void>;
+  errors: FieldErrors<UpdateProcessoInput>;
+  setValue: UseFormSetValue<UpdateProcessoInput>;
+  isSubmitting: boolean;
+  isLoading: boolean;
+  errorMessage: string | null;
+}
+
+export function useEditProcesso(processoId: string): EditProcessoViewModel {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +61,7 @@ export function useEditProcesso(processoId: string) {
     void carregarProcesso();
   }, [carregarProcesso]);
 
-  const onSubmit = async (dados: UpdateProcessoInput) => {
+  const onSubmit = async (dados: UpdateProcessoInput): Promise<void> => {
     try {
       setIsSubmitting(true);
       setErrorMessage(null);

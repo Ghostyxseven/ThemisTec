@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CreatePrazoSchema, CreatePrazoInput } from "@/specs/schemas/prazo.schema";
 import { useCreatePrazo } from "../viewmodel/useCreatePrazo";
 
-export function PrazosCreateView() {
+export function PrazosCreateView(): React.JSX.Element {
   const {
     processos,
     loadProcessos,
@@ -38,7 +38,7 @@ export function PrazosCreateView() {
     void loadProcessos();
   }, [loadProcessos]);
 
-  const onSubmit = async (data: z.input<typeof CreatePrazoSchema>) => {
+  const onSubmit = async (data: z.input<typeof CreatePrazoSchema>): Promise<void> => {
     await createPrazo(data as CreatePrazoInput);
   };
 

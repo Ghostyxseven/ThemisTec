@@ -303,7 +303,8 @@ export function DocumentosProcessoView({ params }: { params: Promise<{ id: strin
                           </div>
                           <div className="flex flex-col sm:flex-row items-center gap-2 mt-3 sm:mt-0">
                             <a
-                              href={doc.url}
+                              href={doc.url ?? "#"}
+                              onClick={(event) => { if (!doc.url) event.preventDefault(); }}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="
@@ -312,7 +313,7 @@ export function DocumentosProcessoView({ params }: { params: Promise<{ id: strin
                                 transition-colors shadow-sm w-full sm:w-auto
                               "
                             >
-                              Visualizar PDF ↗
+                              {doc.url ? "Visualizar PDF ↗" : "Arquivo indisponível"}
                             </a>
                             <button
                               type="button"

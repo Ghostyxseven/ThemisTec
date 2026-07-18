@@ -13,7 +13,7 @@
  */
 
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { UserPlus, ArrowLeft } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateClienteSchema } from "@/specs/schemas/cliente.schema";
@@ -35,7 +35,7 @@ export function ClientesCreateView(): React.ReactNode {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<CreateClienteInput>({
     resolver: zodResolver(CreateClienteSchema),
@@ -49,7 +49,7 @@ export function ClientesCreateView(): React.ReactNode {
     },
   });
 
-  const cpfValue = watch("cpf") || "";
+  const cpfValue = useWatch({ control, name: "cpf" }) || "";
   const { ref: cpfRef, ...cpfRegister } = register("cpf");
 
   const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>): void => {

@@ -8,7 +8,7 @@
  * - Prover barra de pesquisa reativa por Nome ou CPF
  * - Paginar resultados e gerenciar navegação
  *
- * A View não conhece detalhes do Firestore/Firebase.
+ * A View não conhece detalhes do provedor de persistência.
  */
 
 import { useState, useEffect } from "react";

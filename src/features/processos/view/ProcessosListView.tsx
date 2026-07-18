@@ -88,7 +88,7 @@ export function ProcessosListView(): React.ReactNode {
     setPage(1);
   };
 
-  const confirmarExclusao = async () => {
+  const confirmarExclusao = async (): Promise<void> => {
     if (!processoParaExcluir) return;
     try {
       setIsDeleting(true);

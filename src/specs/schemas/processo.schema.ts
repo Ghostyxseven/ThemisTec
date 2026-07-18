@@ -79,13 +79,14 @@ export const TIPOS_ACEITOS = ["application/pdf"] as const;
 export const DocumentoSchema = z.object({
   id: z.string(),
   nomeArquivo: z.string(),
-  url: z.string().url(),
+  url: z.string().url().optional(),
+  storagePath: z.string().min(1).optional(),
   tamanho: z.number().max(TAMANHO_MAXIMO_ARQUIVO),
   descricao: z.string().optional(),
   enviadoEm: z.string().datetime(),
 });
 
-/** Modelo completo do Processo (Firestore) */
+/** Modelo completo do Processo */
 export const ProcessoSchema = z.object({
   id: z.string(),
   numero: z.string(),

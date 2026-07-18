@@ -7,6 +7,9 @@ export interface IStorageService {
    */
   uploadFile(path: string, file: File): Promise<string>;
 
+  /** Gera uma URL assinada temporária para um arquivo privado. */
+  getFileUrl(path: string): Promise<string>;
+
   /**
    * Deleta um arquivo do repositório em nuvem.
    * @param path Caminho do arquivo a ser deletado.
