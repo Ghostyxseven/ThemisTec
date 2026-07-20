@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Button } from "@/components/ui/Button";
+import { Building2, UserPlus, Users, Crown, AlertCircle, CheckCircle2 } from "lucide-react";
 
 interface Membro {
   id: string;
@@ -55,6 +55,7 @@ export default function EquipePage(): React.ReactElement {
       return;
     }
     setSubmitting(true);
+    setMensagem(null);
     try {
       const res = await fetch("/api/escritorio", {
         method: "PATCH",
@@ -100,120 +101,174 @@ export default function EquipePage(): React.ReactElement {
 
   if (loading) {
     return (
-      <div className="p-8 max-w-4xl mx-auto">
-        <p className="text-zinc-500">Carregando...</p>
+      <div className="flex-1 px-4 py-8 md:px-8 lg:px-10">
+        <div className="max-w-4xl mx-auto flex items-center justify-center py-20">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 max-w-4xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-zinc-100">Escritório e Equipe</h1>
-        <p className="text-zinc-400">Gerencie o nome do seu escritório e os membros da equipe.</p>
-      </div>
+    <div className="flex-1 px-4 py-8 md:px-8 lg:px-10">
+      <div className="max-w-4xl mx-auto space-y-6 animate-fade-in-up">
 
-      {/* Mensagem de feedback */}
-      {mensagem && (
-        <div
-          role="alert"
-          className={`rounded-xl px-4 py-3 text-sm ${
-            mensagem.tipo === "sucesso"
-              ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-300"
-              : "bg-red-500/10 border border-red-500/30 text-red-300"
-          }`}
-        >
-          {mensagem.texto}
+        {/* Header */}
+        <div>
+          <h1 className="page-title">Escritório</h1>
+          <p className="page-subtitle">Gerencie o nome e os membros da sua equipe</p>
         </div>
-      )}
 
-      {/* Seção: Nome do Escritório */}
-      <div className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 rounded-2xl p-6">
-        <h2 className="text-xl font-medium text-zinc-100 mb-4">Nome do Escritório</h2>
-        {editandoNome ? (
-          <div className="flex space-x-4">
-            <input
-              type="text"
-              value={nomeEscritorio}
-              onChange={(e) => setNomeEscritorio(e.target.value)}
-              placeholder="Nome do escritório"
-              className="flex-1 rounded-xl bg-zinc-800/50 border border-zinc-700 px-4 py-2 text-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-600"
-              disabled={submitting}
-            />
-            <Button onClick={() => void handleRenomear()} variant="primary" disabled={submitting}>
-              {submitting ? "Salvando..." : "Salvar"}
-            </Button>
-            <Button onClick={() => { setEditandoNome(false); setNomeEscritorio(escritorio?.nome || ""); }} variant="outline" disabled={submitting}>
-              Cancelar
-            </Button>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-lg text-zinc-200 font-semibold">{escritorio?.nome}</p>
-              <p className="text-sm text-zinc-500">Plano: {escritorio?.plano || "FREE"}</p>
-            </div>
-            {papel === "admin" && (
-              <Button onClick={() => setEditandoNome(true)} variant="outline" size="sm">
-                Editar Nome
-              </Button>
+        {/* Mensagem de feedback */}
+        {mensagem && (
+          <div
+            role="alert"
+            className={`rounded-xl px-4 py-3 text-sm flex items-center gap-3 ${
+              mensagem.tipo === "sucesso"
+                ? "bg-emerald-50 border border-emerald-200 text-emerald-700"
+                : "bg-red-50 border border-red-200 text-red-700"
+            }`}
+          >
+            {mensagem.tipo === "sucesso" ? (
+              <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
+            ) : (
+              <AlertCircle className="h-4 w-4 flex-shrink-0" />
             )}
+            {mensagem.texto}
           </div>
         )}
-      </div>
 
-      {/* Seção: Convidar Membro */}
-      {papel === "admin" && (
-        <div className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 rounded-2xl p-6">
-          <h2 className="text-xl font-medium text-zinc-100 mb-2">Adicionar Membro</h2>
-          <p className="text-sm text-zinc-500 mb-4">
-            O usuário precisa já ter uma conta criada no ThemisTec. Ao adicioná-lo, ele terá acesso a todos os dados do escritório.
-          </p>
-          <div className="flex space-x-4">
-            <input
-              type="email"
-              value={emailConvite}
-              onChange={(e) => setEmailConvite(e.target.value)}
-              placeholder="e-mail do colega"
-              className="flex-1 rounded-xl bg-zinc-800/50 border border-zinc-700 px-4 py-2 text-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-600"
-              disabled={submitting}
-              onKeyDown={(e) => { if (e.key === "Enter") void handleConvidar(); }}
-            />
-            <Button onClick={() => void handleConvidar()} variant="primary" disabled={submitting}>
-              {submitting ? "Adicionando..." : "Adicionar"}
-            </Button>
+        {/* Card: Nome do Escritório */}
+        <div className="rounded-2xl border border-slate-200/60 bg-white p-6 shadow-soft">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+              <Building2 className="h-5 w-5" />
+            </div>
+            <h2 className="text-lg font-semibold text-slate-800">Nome do Escritório</h2>
           </div>
-        </div>
-      )}
 
-      {/* Seção: Membros */}
-      <div className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 rounded-2xl p-6">
-        <h2 className="text-xl font-medium text-zinc-100 mb-4">
-          Membros ({membros.length})
-        </h2>
-        {membros.length === 0 ? (
-          <p className="text-zinc-500">Nenhum membro encontrado.</p>
-        ) : (
-          <div className="space-y-3">
-            {membros.map((m) => (
-              <div key={m.id} className="flex justify-between items-center bg-zinc-800/30 p-4 rounded-xl border border-zinc-800/80">
-                <div>
-                  <p className="font-medium text-zinc-200">{m.email}</p>
-                  <p className="text-sm text-zinc-500">
-                    Membro desde {new Date(m.criado_em).toLocaleDateString("pt-BR")}
-                  </p>
-                </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${
-                  m.papel === "admin" 
-                    ? "bg-violet-500/20 text-violet-300 border border-violet-500/30" 
-                    : "bg-zinc-700/50 text-zinc-300"
-                }`}>
-                  {m.papel}
-                </span>
+          {editandoNome ? (
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="text"
+                value={nomeEscritorio}
+                onChange={(e) => setNomeEscritorio(e.target.value)}
+                placeholder="Nome do escritório"
+                className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                disabled={submitting}
+                autoFocus
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={() => void handleRenomear()}
+                  disabled={submitting}
+                  className="px-4 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+                >
+                  {submitting ? "Salvando..." : "Salvar"}
+                </button>
+                <button
+                  onClick={() => { setEditandoNome(false); setNomeEscritorio(escritorio?.nome || ""); }}
+                  disabled={submitting}
+                  className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors"
+                >
+                  Cancelar
+                </button>
               </div>
-            ))}
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xl font-semibold text-slate-800">{escritorio?.nome}</p>
+                <p className="text-sm text-slate-500 mt-1">Plano {escritorio?.plano || "FREE"}</p>
+              </div>
+              {papel === "admin" && (
+                <button
+                  onClick={() => setEditandoNome(true)}
+                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors"
+                >
+                  Editar
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Card: Convidar Membro */}
+        {papel === "admin" && (
+          <div className="rounded-2xl border border-slate-200/60 bg-white p-6 shadow-soft">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                <UserPlus className="h-5 w-5" />
+              </div>
+              <h2 className="text-lg font-semibold text-slate-800">Adicionar Membro</h2>
+            </div>
+            <p className="text-sm text-slate-500 mb-4 ml-[52px]">
+              O colega precisa já ter uma conta no ThemisTec. Ele terá acesso a todos os dados do escritório.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email"
+                value={emailConvite}
+                onChange={(e) => setEmailConvite(e.target.value)}
+                placeholder="e-mail do colega"
+                className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                disabled={submitting}
+                onKeyDown={(e) => { if (e.key === "Enter") void handleConvidar(); }}
+              />
+              <button
+                onClick={() => void handleConvidar()}
+                disabled={submitting}
+                className="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 whitespace-nowrap"
+              >
+                {submitting ? "Adicionando..." : "Adicionar"}
+              </button>
+            </div>
           </div>
         )}
+
+        {/* Card: Membros */}
+        <div className="rounded-2xl border border-slate-200/60 bg-white p-6 shadow-soft">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+              <Users className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-slate-800">Membros da Equipe</h2>
+              <p className="text-sm text-slate-500">{membros.length} membro{membros.length !== 1 ? "s" : ""}</p>
+            </div>
+          </div>
+
+          {membros.length === 0 ? (
+            <p className="text-sm text-slate-500 text-center py-8">Nenhum membro encontrado.</p>
+          ) : (
+            <div className="space-y-3">
+              {membros.map((m) => (
+                <div key={m.id} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
+                      {m.email.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-medium text-slate-800 text-sm">{m.email}</p>
+                      <p className="text-xs text-slate-500">
+                        Desde {new Date(m.criado_em).toLocaleDateString("pt-BR")}
+                      </p>
+                    </div>
+                  </div>
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
+                    m.papel === "admin"
+                      ? "bg-violet-100 text-violet-700"
+                      : "bg-slate-200 text-slate-600"
+                  }`}>
+                    {m.papel === "admin" && <Crown className="h-3 w-3" />}
+                    {m.papel === "admin" ? "Admin" : "Membro"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
       </div>
     </div>
   );

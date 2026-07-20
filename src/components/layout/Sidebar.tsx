@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import { LayoutDashboard, Users, Scale, ChevronDown, Calendar, User as UserIcon, LogOut, WalletCards, Files, CalendarCheck } from "lucide-react";
+import { LayoutDashboard, Users, Scale, ChevronDown, Calendar, User as UserIcon, LogOut, WalletCards, Files, CalendarCheck, Settings, Building2 } from "lucide-react";
 import { authService } from "@/services";
 
 interface SidebarProps {
@@ -19,6 +19,8 @@ const navigation = [
   { name: "Agenda", href: "/agenda", icon: Calendar },
   { name: "Financeiro", href: "/financeiro", icon: WalletCards },
   { name: "Documentos", href: "/documentos", icon: Files },
+  { name: "Escritório", href: "/configuracoes/equipe", icon: Building2 },
+  { name: "Configurações", href: "/configuracoes", icon: Settings },
 ];
 
 export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
