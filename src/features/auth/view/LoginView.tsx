@@ -52,12 +52,9 @@ export function LoginView(): React.ReactNode {
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary-dark shadow-lg mb-6 ring-1 ring-white/20">
               <Scale className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-2xl font-bold tracking-tight text-white mb-2">Bem-vindo de volta</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-white mb-2">Acesse sua conta</h2>
             <p className="text-sm text-slate-300">
-              Não tem uma conta?{" "}
-              <Link href="/register" className="font-semibold text-blue-400 hover:text-blue-300 transition-colors">
-                Crie agora
-              </Link>
+              Entre com suas credenciais para acessar o sistema
             </p>
           </div>
 

@@ -21,14 +21,16 @@ const navigation = [
   { name: "Documentos", href: "/documentos", icon: Files },
   { name: "Escritório", href: "/configuracoes/equipe", icon: Building2 },
   { name: "Configurações", href: "/configuracoes", icon: Settings },
-  { name: "Admin", href: "/admin", icon: ShieldCheck },
 ];
+
+const SUPER_ADMIN_EMAIL = "cardosomicael245@gmail.com";
 
 export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
   const pathname = usePathname();
   const router = useRouter();
   const [userName, setUserName] = useState("Carregando...");
   const [userInitial, setUserInitial] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -57,6 +59,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
         const name = user.displayName || user.email?.split("@")[0] || "Usuário";
         setUserName(name);
         setUserInitial(name.charAt(0).toUpperCase());
+        setUserEmail(user.email || "");
       }
     });
     return () => unsubscribe();
@@ -133,6 +136,33 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
               );
             })}
           </ul>
+
+          {/* Super Admin link - só aparece para o admin da plataforma */}
+          {userEmail === SUPER_ADMIN_EMAIL && (
+            <div className="mt-6 pt-4 border-t border-white/[0.06]">
+              <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-[0.15em] mb-3 px-3">
+                Plataforma
+              </p>
+              <Link
+                href="/admin"
+                onClick={() => onClose()}
+                className={`
+                  relative flex items-center gap-x-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150
+                  ${
+                    pathname?.startsWith("/admin")
+                      ? "bg-blue-600/10 text-blue-400"
+                      : "text-slate-400 hover:bg-white/[0.04] hover:text-slate-200"
+                  }
+                `}
+              >
+                {pathname?.startsWith("/admin") && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-[3px] bg-blue-500 rounded-r-full" />
+                )}
+                <ShieldCheck className={`h-[18px] w-[18px] shrink-0 ${pathname?.startsWith("/admin") ? "text-blue-400" : "text-slate-500"}`} aria-hidden="true" />
+                <span>Super Admin</span>
+              </Link>
+            </div>
+          )}
         </nav>
 
         {/* User Profile */}
