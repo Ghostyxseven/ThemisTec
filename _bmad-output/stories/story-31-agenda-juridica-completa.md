@@ -1,6 +1,6 @@
 # Story 31: Agenda jurídica completa
 
-**Status:** ready-for-spec
+**Status:** done
 
 ## Story
 

@@ -1,4 +1,4 @@
-﻿# Project Overview: ThemisTec
+# Project Overview: ThemisTec
 
 ## Executive Summary
 ThemisTec é uma aplicação web voltada para a gestão jurídica para advogados autônomos.
@@ -11,7 +11,7 @@ Este documento reflete a estrutura atual da aplicação, com foco especial no mo
 | Framework      | Next.js         | 15.x   | App Router, SSR, Performance |
 | Linguagem      | TypeScript      | 5.x    | Tipagem estática, segurança |
 | Estilização    | Tailwind CSS    | 3.x    | Utility-first, produtividade |
-| Autenticação   | Firebase Auth   | 11.x   | Autenticação como serviço |
+| Autenticação   | Supabase Auth   | 2.x    | Autenticação como serviço |
 | Formulários    | Zod             | 3.x    | Validação de esquemas |
 | Linting/Code   | ESLint, Prettier| -      | Padronização de código |
 

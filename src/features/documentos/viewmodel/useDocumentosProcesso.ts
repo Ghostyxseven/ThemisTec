@@ -69,7 +69,7 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
       }
 
       if (file.size > TAMANHO_MAXIMO_ARQUIVO) {
-        throw new Error("O tamanho do arquivo excede o limite de 5 MB.");
+        throw new Error("O tamanho do arquivo excede o limite de 25 MB.");
       }
 
       // Gerar caminho único no Storage.

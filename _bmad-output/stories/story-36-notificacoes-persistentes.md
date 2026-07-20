@@ -1,6 +1,6 @@
 # Story 36: Notificações persistentes
 
-**Status:** ready-for-spec
+**Status:** done
 
 ## Story
 

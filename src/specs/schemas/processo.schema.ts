@@ -69,8 +69,8 @@ export const UploadDocumentoSchema = z.object({
   descricao: z.string().max(200, "Descrição deve ter no máximo 200 caracteres").optional(),
 });
 
-/** Tamanho máximo: 5MB */
-export const TAMANHO_MAXIMO_ARQUIVO = 5 * 1024 * 1024; // 5242880 bytes
+/** Tamanho máximo: 25MB */
+export const TAMANHO_MAXIMO_ARQUIVO = 25 * 1024 * 1024; // 26214400 bytes
 
 /** Tipos MIME aceitos */
 export const TIPOS_ACEITOS = ["application/pdf"] as const;
@@ -99,6 +99,7 @@ export const ProcessoSchema = z.object({
   valorHonorarios: z.number(),
   statusPagamento: StatusPagamentoEnum,
   documentos: z.array(DocumentoSchema).default([]),
+  tenantId: z.string().uuid().optional(), // ID da Organização (Multi-tenancy)
   userId: z.string(), // dono do registro (advogado)
   criadoEm: z.string().datetime(),
   atualizadoEm: z.string().datetime(),

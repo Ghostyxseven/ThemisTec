@@ -11,9 +11,9 @@ project-root/
 │   │   │   └── useLogin.ts  # ViewModel (Lógica de estado e chamadas ao Model)
 │   │   └── ...
 │   ├── services/            # Serviços de Infraestrutura (Model)
-│   │   └── firebase/        # Integração com Firebase
-│   │       ├── firebase.config.ts    # Inicialização do App Firebase
-│   │       └── FirebaseAuthAdapter.ts# Implementação da injeção de dependência
+│   │   └── supabase/        # Integração com Supabase
+│   │       ├── supabase.config.ts    # Inicialização do App Supabase
+│   │       └── SupabaseAuthAdapter.ts# Implementação da injeção de dependência
 │   ├── shared/              # Código compartilhado
 │   │   └── interfaces/      # Interfaces de contrato (ex: IAuthService.ts)
 │   └── specs/               # Especificações, validadores e tipos
@@ -22,7 +22,7 @@ project-root/
 │   ├── planning-artifacts/  # Documentos de planejamento de Épicos
 │   └── project-knowledge/   # Base de conhecimento e arquitetura do projeto
 └── public/                  # Arquivos estáticos
-\\\
+```
 
 ## Pastas Críticas Explicadas
 

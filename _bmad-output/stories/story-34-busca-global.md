@@ -1,6 +1,6 @@
 # Story 34: Busca global
 
-**Status:** ready-for-spec
+**Status:** done
 
 ## Story
 

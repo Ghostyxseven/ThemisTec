@@ -62,27 +62,27 @@ export function ClientesCreateView(): React.ReactNode {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-background px-4 py-12 md:px-8">
-      <div className="w-full max-w-2xl">
+    <main className="flex-1 px-4 py-8 md:px-8 lg:px-10">
+      <div className="w-full max-w-2xl mx-auto animate-fade-in-up">
         
         {/* Link para voltar */}
         <div className="mb-6">
           <Link
             href="/clientes"
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors group"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
             Voltar para listagem
           </Link>
         </div>
 
         {/* Cabeçalho */}
         <div className="mb-8 flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light/10">
-            <UserPlus className="h-6 w-6 text-primary" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+            <UserPlus className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Novo <span className="text-primary">Cliente</span></h1>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">Novo Cliente</h1>
             <p className="text-sm text-slate-500">
               Cadastre os dados pessoais do cliente para vinculação de processos.
             </p>
@@ -90,8 +90,11 @@ export function ClientesCreateView(): React.ReactNode {
         </div>
 
         {/* Card do formulário */}
-        <div className="rounded-2xl bg-white px-8 py-10 shadow-soft border border-slate-100">
-          <h2 className="mb-6 text-lg font-semibold text-foreground border-b border-slate-100 pb-4">Dados Cadastrais</h2>
+        <div className="rounded-xl bg-white p-6 sm:p-8 shadow-sm border border-slate-200">
+          <div className="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100">
+            <div className="h-2 w-2 rounded-full bg-blue-600" />
+            <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">Dados Cadastrais</h2>
+          </div>
 
           {/* Erro geral (vindo do ViewModel) */}
           {errorMessage !== null && (
@@ -109,8 +112,8 @@ export function ClientesCreateView(): React.ReactNode {
               
               {/* Campo Nome */}
               <div>
-                <label htmlFor="nome" className="mb-1 block text-sm font-medium text-gray-700">
-                  Nome Completo *
+                <label htmlFor="nome" className="mb-1.5 block text-sm font-medium text-slate-700">
+                  Nome Completo <span className="text-red-400">*</span>
                 </label>
                 <input
                   id="nome"
@@ -122,8 +125,8 @@ export function ClientesCreateView(): React.ReactNode {
                   aria-invalid={errors.nome !== undefined}
                   className={`
                       block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
-                    disabled:cursor-not-allowed disabled:bg-gray-100
-                    ${errors.nome ? "border-red-400 bg-red-50" : "border-gray-300"}
+                    disabled:cursor-not-allowed disabled:bg-slate-50
+                    ${errors.nome ? "border-red-400 bg-red-50" : "border-slate-200"}
                   `}
                 />
                 {errors.nome?.message !== undefined && (
@@ -135,7 +138,7 @@ export function ClientesCreateView(): React.ReactNode {
 
               {/* Campo CPF */}
               <div>
-                <label htmlFor="cpf" className="mb-1 block text-sm font-medium text-gray-700">
+                <label htmlFor="cpf" className="mb-1.5 block text-sm font-medium text-slate-700">
                   CPF * (Apenas números)
                 </label>
                 <input
@@ -152,8 +155,8 @@ export function ClientesCreateView(): React.ReactNode {
                   aria-invalid={errors.cpf !== undefined}
                   className={`
                       block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
-                    disabled:cursor-not-allowed disabled:bg-gray-100
-                    ${errors.cpf ? "border-red-400 bg-red-50" : "border-gray-300"}
+                    disabled:cursor-not-allowed disabled:bg-slate-50
+                    ${errors.cpf ? "border-red-400 bg-red-50" : "border-slate-200"}
                   `}
                 />
                 {errors.cpf?.message !== undefined && (
@@ -165,7 +168,7 @@ export function ClientesCreateView(): React.ReactNode {
 
               {/* Campo E-mail */}
               <div>
-                <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-700">
                   E-mail
                 </label>
                 <input
@@ -179,8 +182,8 @@ export function ClientesCreateView(): React.ReactNode {
                   aria-invalid={errors.email !== undefined}
                   className={`
                       block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
-                    disabled:cursor-not-allowed disabled:bg-gray-100
-                    ${errors.email ? "border-red-400 bg-red-50" : "border-gray-300"}
+                    disabled:cursor-not-allowed disabled:bg-slate-50
+                    ${errors.email ? "border-red-400 bg-red-50" : "border-slate-200"}
                   `}
                 />
                 {errors.email?.message !== undefined && (
@@ -192,7 +195,7 @@ export function ClientesCreateView(): React.ReactNode {
 
               {/* Campo Telefone */}
               <div>
-                <label htmlFor="telefone" className="mb-1 block text-sm font-medium text-gray-700">
+                <label htmlFor="telefone" className="mb-1.5 block text-sm font-medium text-slate-700">
                   Telefone
                 </label>
                 <input
@@ -203,7 +206,7 @@ export function ClientesCreateView(): React.ReactNode {
                   disabled={isLoading}
                   className="
                       block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
-                    disabled:cursor-not-allowed disabled:bg-gray-100
+                    disabled:cursor-not-allowed disabled:bg-slate-50
                   "
                 />
               </div>
@@ -212,7 +215,7 @@ export function ClientesCreateView(): React.ReactNode {
 
             {/* Campo Endereço */}
             <div>
-              <label htmlFor="endereco" className="mb-1 block text-sm font-medium text-gray-700">
+              <label htmlFor="endereco" className="mb-1.5 block text-sm font-medium text-slate-700">
                 Endereço Residencial
               </label>
               <input
@@ -223,14 +226,14 @@ export function ClientesCreateView(): React.ReactNode {
                 disabled={isLoading}
                 className="
                       block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
-                  disabled:cursor-not-allowed disabled:bg-gray-100
+                  disabled:cursor-not-allowed disabled:bg-slate-50
                 "
               />
             </div>
 
             {/* Campo Observações */}
             <div>
-              <label htmlFor="observacoes" className="mb-1 block text-sm font-medium text-gray-700">
+              <label htmlFor="observacoes" className="mb-1.5 block text-sm font-medium text-slate-700">
                 Observações Adicionais
               </label>
               <textarea
@@ -243,8 +246,8 @@ export function ClientesCreateView(): React.ReactNode {
                 aria-invalid={errors.observacoes !== undefined}
                 className={`
                       block w-full rounded-xl border border-slate-200 py-3 px-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md
-                  disabled:cursor-not-allowed disabled:bg-gray-100
-                  ${errors.observacoes ? "border-red-400 bg-red-50" : "border-gray-300"}
+                  disabled:cursor-not-allowed disabled:bg-slate-50
+                  ${errors.observacoes ? "border-red-400 bg-red-50" : "border-slate-200"}
                 `}
               />
               {errors.observacoes?.message !== undefined && (
@@ -255,26 +258,17 @@ export function ClientesCreateView(): React.ReactNode {
             </div>
 
             {/* Ações */}
-            <div className="flex items-center justify-end space-x-4 pt-4 border-t">
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
               <Link
                 href="/clientes"
-                className="
-                  px-5 py-2.5 text-sm font-semibold text-gray-600 hover:text-gray-800
-                  transition-colors rounded-lg border border-gray-300 hover:bg-gray-50
-                "
+                className="rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
               >
                 Cancelar
               </Link>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="
-                  rounded-lg bg-primary px-6 py-2.5
-                  text-sm font-semibold text-white
-                  transition-all duration-200 hover:bg-primary-dark
-                  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-                  disabled:cursor-not-allowed disabled:opacity-60 active:scale-95
-                "
+                className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 active:scale-95 transition-all"
               >
                 {isLoading ? "Salvando..." : "Salvar Cliente"}
               </button>

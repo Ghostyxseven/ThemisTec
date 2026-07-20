@@ -1,6 +1,6 @@
 # Épico 02: Evolução operacional do escritório
 
-**Status:** planned
+**Status:** done
 
 ## Objetivo
 

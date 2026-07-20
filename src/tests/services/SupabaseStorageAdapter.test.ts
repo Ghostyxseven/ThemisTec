@@ -15,12 +15,16 @@ describe("SupabaseStorageAdapter", () => {
     expect(storageMock.createSignedUrl).toHaveBeenCalledWith("user/processos/proc/doc.pdf", 900);
   });
 
-  it("remove o upload quando não consegue gerar acesso seguro", async () => {
+  it("retorna o path após upload bem-sucedido", async () => {
     storageMock.upload.mockResolvedValueOnce({ error: null });
-    storageMock.createSignedUrl.mockResolvedValueOnce({ data: null, error: { message: "failed" } });
-    storageMock.remove.mockResolvedValueOnce({ error: null });
     const file = new File(["pdf"], "doc.pdf", { type: "application/pdf" });
-    await expect(new SupabaseStorageAdapter().uploadFile("user/processos/proc/doc.pdf", file)).rejects.toThrow("Falha ao gerar acesso seguro");
-    expect(storageMock.remove).toHaveBeenCalledWith(["user/processos/proc/doc.pdf"]);
+    const result = await new SupabaseStorageAdapter().uploadFile("user/processos/proc/doc.pdf", file);
+    expect(result).toBe("user/processos/proc/doc.pdf");
+  });
+
+  it("rejeita quando o upload falha", async () => {
+    storageMock.upload.mockResolvedValueOnce({ error: { message: "Bucket not found" } });
+    const file = new File(["pdf"], "doc.pdf", { type: "application/pdf" });
+    await expect(new SupabaseStorageAdapter().uploadFile("user/processos/proc/doc.pdf", file)).rejects.toThrow("Falha ao enviar o arquivo");
   });
 });

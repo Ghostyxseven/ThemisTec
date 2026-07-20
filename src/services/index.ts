@@ -3,11 +3,23 @@ import { SupabaseClienteAdapter } from "@/features/clientes/model/SupabaseClient
 import { SupabaseProcessoAdapter } from "@/features/processos/model/SupabaseProcessoAdapter";
 import { SupabasePrazoAdapter } from "@/features/prazos/model/SupabasePrazoAdapter";
 import { SupabaseStorageAdapter } from "@/features/documentos/model/SupabaseStorageAdapter";
+import { SupabaseEventoAdapter } from "@/features/agenda/model/SupabaseEventoAdapter";
+import { SupabaseFinanceiroAdapter } from "@/features/financeiro/model/SupabaseFinanceiroAdapter";
+import { SupabaseMovimentacaoAdapter } from "@/features/movimentacoes/model/SupabaseMovimentacaoAdapter";
+import { SupabaseBuscaAdapter } from "@/features/busca/model/SupabaseBuscaAdapter";
+import { SupabaseDocumentoCatalogoAdapter } from "@/features/documentos-central/model/SupabaseDocumentoCatalogoAdapter";
+import { SupabaseNotificacaoAdapter } from "@/features/notificacoes/model/SupabaseNotificacaoAdapter";
 import { IAuthService } from "@/shared/interfaces/IAuthService";
 import { IClienteRepository } from "@/shared/interfaces/IClienteRepository";
 import { IProcessoRepository } from "@/shared/interfaces/IProcessoRepository";
 import { IPrazoRepository } from "@/shared/interfaces/IPrazoRepository";
 import { IStorageService } from "@/shared/interfaces/IStorageService";
+import type { IEventoRepository } from "@/shared/interfaces/IEventoRepository";
+import type { IFinanceiroRepository } from "@/shared/interfaces/IFinanceiroRepository";
+import type { IMovimentacaoRepository } from "@/shared/interfaces/IMovimentacaoRepository";
+import type { IBuscaRepository } from "@/shared/interfaces/IBuscaRepository";
+import type { IDocumentoRepository } from "@/shared/interfaces/IDocumentoRepository";
+import type { INotificacaoRepository } from "@/shared/interfaces/INotificacaoRepository";
 
 // Exportando instâncias únicas (Singletons) como um Service Locator
 export const authService: IAuthService = new SupabaseAuthAdapter();
@@ -15,3 +27,9 @@ export const clienteRepository: IClienteRepository = new SupabaseClienteAdapter(
 export const processoRepository: IProcessoRepository = new SupabaseProcessoAdapter();
 export const prazoRepository: IPrazoRepository = new SupabasePrazoAdapter();
 export const storageService: IStorageService = new SupabaseStorageAdapter();
+export const eventoRepository: IEventoRepository = new SupabaseEventoAdapter();
+export const financeiroRepository: IFinanceiroRepository = new SupabaseFinanceiroAdapter();
+export const movimentacaoRepository: IMovimentacaoRepository = new SupabaseMovimentacaoAdapter();
+export const buscaRepository: IBuscaRepository = new SupabaseBuscaAdapter();
+export const documentoRepository: IDocumentoRepository = new SupabaseDocumentoCatalogoAdapter();
+export const notificacaoRepository: INotificacaoRepository = new SupabaseNotificacaoAdapter();

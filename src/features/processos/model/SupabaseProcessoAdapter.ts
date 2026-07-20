@@ -38,8 +38,17 @@ export class SupabaseProcessoAdapter implements IProcessoRepository {
 
   public async removerDocumento(processoId: string, documentoId: string, userId: string): Promise<void> {
     const processo = await this.buscarPorId(processoId, userId);
+    const docParaRemover = processo.documentos.find((doc) => doc.id === documentoId);
     const { error } = await supabaseClient.from("processos").update({ documentos: processo.documentos.filter((doc) => doc.id !== documentoId), atualizado_em: new Date().toISOString() }).eq("id", processoId).eq("user_id", userId);
     if (error) throw new Error("Falha ao remover documento do processo.");
+    // Excluir o arquivo do Supabase Storage
+    if (docParaRemover?.storagePath) {
+      try {
+        await supabaseClient.storage.from("processos").remove([docParaRemover.storagePath]);
+      } catch {
+        console.error("Falha ao excluir arquivo do storage:", docParaRemover.storagePath);
+      }
+    }
   }
 
   public async atualizar(id: string, dados: UpdateProcessoInput, userId: string): Promise<Processo> {
@@ -51,8 +60,22 @@ export class SupabaseProcessoAdapter implements IProcessoRepository {
   }
 
   public async excluir(id: string, userId: string): Promise<void> {
+    const processo = await this.buscarPorId(id, userId);
     const { error } = await supabaseClient.from("processos").delete().eq("id", id).eq("user_id", userId);
     if (error) throw new Error("Erro ao excluir o processo.");
+    // Excluir arquivos do Supabase Storage
+    if (processo.documentos.length > 0) {
+      try {
+        const paths = processo.documentos
+          .filter((doc): doc is typeof doc & { storagePath: string } => Boolean(doc.storagePath))
+          .map((doc) => doc.storagePath);
+        if (paths.length > 0) {
+          await supabaseClient.storage.from("processos").remove(paths);
+        }
+      } catch {
+        console.error("Falha ao excluir arquivos do storage para processo:", id);
+      }
+    }
   }
 
   private async contar(userId: string, status?: StatusProcesso): Promise<number> {

@@ -17,6 +17,9 @@ function authError(message: string): Error {
   if (normalized.includes("invalid login credentials")) return new Error("E-mail ou senha incorretos.");
   if (normalized.includes("already registered") || normalized.includes("already been registered")) return new Error("Este e-mail já está cadastrado.");
   if (normalized.includes("password")) return new Error("A senha fornecida não atende aos requisitos de segurança.");
+  if (normalized.includes("email not confirmed")) return new Error("Por favor, confirme seu e-mail através do link que enviamos antes de fazer login.");
+  
+  console.error("Supabase Auth Error:", message);
   return new Error("Falha na autenticação. Tente novamente mais tarde.");
 }
 

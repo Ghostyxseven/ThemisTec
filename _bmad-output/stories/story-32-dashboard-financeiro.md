@@ -1,6 +1,6 @@
 # Story 32: Dashboard financeiro
 
-**Status:** ready-for-spec
+**Status:** done
 
 ## Story
 

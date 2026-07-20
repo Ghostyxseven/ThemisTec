@@ -1,6 +1,6 @@
 # Story 33: Movimentações processuais
 
-**Status:** ready-for-spec
+**Status:** done
 
 ## Story
 

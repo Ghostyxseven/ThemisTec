@@ -14,7 +14,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useListClientes } from "../viewmodel/useListClientes";
-import { Users, UserCheck, UserPlus, TrendingUp, Search, SlidersHorizontal, Download } from "lucide-react";
+import { Users, UserCheck, UserPlus, Search, SlidersHorizontal, Download } from "lucide-react";
 
 const formatCpf = (value: string): string => {
   const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -147,7 +147,7 @@ export function ClientesListView(): React.ReactNode {
         )}
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="flex items-center gap-4 rounded-2xl bg-white p-5 border border-slate-100 shadow-soft transition-all hover:shadow-card">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50">
               <Users className="h-5 w-5 text-blue-500" />
@@ -176,16 +176,6 @@ export function ClientesListView(): React.ReactNode {
               <p className="text-xs font-medium text-purple-500 uppercase tracking-wider">Novos (este mês)</p>
               <p className="text-xl font-bold text-foreground">0</p>
               <p className="text-[11px] text-slate-400">Nenhum novo cliente</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 rounded-2xl bg-white p-5 border border-slate-100 shadow-soft transition-all hover:shadow-card">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50">
-              <TrendingUp className="h-5 w-5 text-amber-500" />
-            </div>
-            <div>
-              <p className="text-xs font-medium text-amber-500 uppercase tracking-wider">Taxa de Conversão</p>
-              <p className="text-xl font-bold text-foreground">0%</p>
-              <p className="text-[11px] text-slate-400">Sem dados ainda</p>
             </div>
           </div>
         </div>

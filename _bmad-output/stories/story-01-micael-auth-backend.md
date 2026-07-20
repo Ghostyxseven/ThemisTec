@@ -1,7 +1,7 @@
 # Story 01: Motor de Autenticação com Firebase (Backend/Model)
 
 **Responsável:** Micael  
-**Status:** Done ✅ (Entregue)  
+**Status:** done
 **Épico Relacionado:** Épico 01 - Autenticação  
 
 ## 1. Contexto e Objetivo

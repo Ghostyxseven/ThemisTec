@@ -1,6 +1,6 @@
 # Story 35: Central de documentos
 
-**Status:** ready-for-spec
+**Status:** done
 
 ## Story
 

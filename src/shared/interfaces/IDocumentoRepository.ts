@@ -1,0 +1,2 @@
+import type { DocumentoCatalogo } from "@/specs/schemas/documento.schema";
+export interface IDocumentoRepository { listar(userId: string, incluirLixeira?: boolean): Promise<DocumentoCatalogo[]>; cadastrar(userId: string, dados: Omit<DocumentoCatalogo, "id" | "userId" | "criadoEm" | "atualizadoEm">): Promise<DocumentoCatalogo>; moverParaLixeira(userId: string, id: string): Promise<void>; restaurar(userId: string, id: string): Promise<void>; excluirDefinitivo(userId: string, id: string): Promise<void> }

@@ -127,7 +127,7 @@ As integrações com calendários começam por exportação `.ics`. Sincronizaç
 | Compatibilidade | Navegadores modernos (Chrome, Firefox, Safari, Edge) |
 | Responsividade | Funcional em desktop e mobile |
 | Proteção de dados | Conformidade com LGPD (coleta mínima, sem compartilhamento) |
-| Upload | Apenas PDF, máximo 10MB por arquivo, 5GB por usuário |
+| Upload | Apenas PDF, máximo 25MB por arquivo, 5GB por usuário |
 
 ---
 
@@ -181,6 +181,6 @@ As integrações com calendários começam por exportação `.ics`. Sincronizaç
 
 | Risco | Probabilidade | Impacto | Mitigação |
 |-------|--------------|---------|-----------|
-| Limitações do plano gratuito Firebase | Média | Alto | Créditos US$300 Google Cloud + monitoramento de uso |
+| Limitações do plano gratuito Supabase | Média | Alto | Monitoramento de uso no painel do Supabase |
 | Gestão de tempo e escopo | Alta | Alto | MVP delimitado, sem scope creep, reuniões semanais |
-| Problemas de integração Next.js/Firebase | Média | Alto | Padrão Singleton + Adapter para isolar dependências |
+| Problemas de integração Next.js/Supabase | Média | Alto | Padrão Singleton + Adapter para isolar dependências |

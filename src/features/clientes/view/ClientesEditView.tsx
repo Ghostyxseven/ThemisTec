@@ -84,27 +84,27 @@ export function ClientesEditView(): React.ReactNode {
   };
 
   return (
-    <main className="flex-1 px-4 py-8 md:px-8 lg:px-10 bg-background">
-      <div className="w-full max-w-2xl mx-auto">
+    <main className="flex-1 px-4 py-8 md:px-8 lg:px-10">
+      <div className="w-full max-w-2xl mx-auto animate-fade-in-up">
         
         {/* Link de volta */}
         <div className="mb-6">
           <Link
             href="/clientes"
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors group"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
             Cancelar e voltar
           </Link>
         </div>
 
         {/* Cabeçalho */}
         <div className="mb-8 flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light/10">
-            <UserCheck className="h-6 w-6 text-primary" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+            <UserCheck className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Editar <span className="text-primary">Cliente</span></h1>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">Editar Cliente</h1>
             <p className="text-sm text-slate-500">
               Atualize as informações cadastrais do cliente selecionado.
             </p>
