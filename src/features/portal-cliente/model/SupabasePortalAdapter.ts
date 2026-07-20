@@ -1,6 +1,8 @@
 import { supabaseClient } from "@/services/supabase/supabase.client";
 import type { Processo } from "@/specs/schemas/processo.schema";
 import type { Cliente } from "@/specs/schemas/cliente.schema";
+import type { Cobranca, CobrancaRow } from "@/specs/schemas/cobranca.schema";
+import { cobrancaRowToDomain } from "@/specs/schemas/cobranca.schema";
 
 export class SupabasePortalAdapter {
   public async autenticar(cpf: string, dataNascimento: string): Promise<Cliente> {
@@ -59,7 +61,7 @@ export class SupabasePortalAdapter {
     }));
   }
 
-  public async listarCobrancas(clienteId: string): Promise<any[]> {
+  public async listarCobrancas(clienteId: string): Promise<(Cobranca & { processoNumero?: string | null })[]> {
     const { data, error } = await supabaseClient
       .from("cobrancas")
       .select("*, processos(numero)")
@@ -70,6 +72,9 @@ export class SupabasePortalAdapter {
       throw new Error("Erro ao carregar cobranças.");
     }
 
-    return data || [];
+    return (data || []).map((row) => {
+      const base = cobrancaRowToDomain(row as CobrancaRow);
+      return { ...base, processoNumero: row.processos?.numero ?? null };
+    });
   }
 }

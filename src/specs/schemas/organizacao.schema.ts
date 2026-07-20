@@ -13,7 +13,7 @@ export const OrganizacaoMembroSchema = z.object({
   id: z.string().uuid(),
   organizacaoId: z.string().uuid(),
   userId: z.string().uuid(),
-  role: z.enum(["ADMIN", "USER"]).default("USER"),
+  papel: z.enum(["admin", "membro"]).default("membro"),
   criadoEm: z.string().datetime(),
 });
 
