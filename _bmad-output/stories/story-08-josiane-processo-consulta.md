@@ -1,7 +1,7 @@
 # Story 08: Consulta de Processos com Filtros (US08)
 
 **Responsável:** Josiane  
-**Status:** review  
+**Status:** done
 **Épico Relacionado:** Épico 03 - Gestão de Processos  
 
 ## 1. Contexto e Objetivo

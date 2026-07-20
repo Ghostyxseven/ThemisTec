@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Briefcase, CalendarClock, CircleDollarSign, Scale } from "lucide-react";
 
-export function LandingView() {
+export function LandingView(): React.JSX.Element {
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-primary selection:text-white">
       {/* Navigation */}

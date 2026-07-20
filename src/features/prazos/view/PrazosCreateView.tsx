@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CreatePrazoSchema, CreatePrazoInput } from "@/specs/schemas/prazo.schema";
 import { useCreatePrazo } from "../viewmodel/useCreatePrazo";
 
-export function PrazosCreateView() {
+export function PrazosCreateView(): React.JSX.Element {
   const {
     processos,
     loadProcessos,
@@ -38,29 +38,29 @@ export function PrazosCreateView() {
     void loadProcessos();
   }, [loadProcessos]);
 
-  const onSubmit = async (data: z.input<typeof CreatePrazoSchema>) => {
+  const onSubmit = async (data: z.input<typeof CreatePrazoSchema>): Promise<void> => {
     await createPrazo(data as CreatePrazoInput);
   };
 
   return (
-    <main className="flex-1 px-4 py-8 md:px-8 lg:px-10 bg-background">
-      <div className="w-full max-w-3xl mx-auto">
+    <main className="flex-1 px-4 py-8 md:px-8 lg:px-10">
+      <div className="w-full max-w-3xl mx-auto animate-fade-in-up">
         <div className="mb-6">
           <Link
             href="/prazos"
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors group"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
             Voltar para agenda
           </Link>
         </div>
 
         <div className="mb-8 flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light/10">
-            <Calendar className="h-6 w-6 text-primary" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+            <Calendar className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Novo <span className="text-primary">Prazo</span></h1>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">Novo Prazo</h1>
             <p className="text-sm text-slate-500">
               Vincule uma data importante a um processo existente.
             </p>

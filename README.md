@@ -6,8 +6,8 @@
 
 Desenvolvido por **ThemisTec** · MVP 100% Concluído
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%7C%20Auth%20%7C%20Storage-orange?style=for-the-badge&logo=firebase)](https://firebase.google.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL%20%7C%20Auth%20%7C%20Storage-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
 [![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/)
 [![License](https://img.shields.io/badge/Licença-MIT-blue?style=for-the-badge)](LICENSE)
 
@@ -37,7 +37,7 @@ A plataforma centraliza toda a gestão em um único lugar — clientes, processo
 | 👤 **Clientes** | Edição e exclusão de clientes | ✅ Concluído |
 | 📁 **Processos** | Registro de processo vinculado a cliente | ✅ Concluído |
 | 📁 **Processos** | Consulta e filtros por status | ✅ Concluído |
-| 📁 **Processos** | Anexar documentos PDF (até 10MB) | ✅ Concluído |
+| 📁 **Processos** | Anexar documentos PDF (até 5MB) | ✅ Concluído |
 
 ---
 
@@ -45,10 +45,10 @@ A plataforma centraliza toda a gestão em um único lugar — clientes, processo
 
 ```
 ThemisTec/
-├── 🖥️  Frontend & Backend  → Next.js 15 (App Router)
-├── 🔥  Banco de Dados       → Firebase Firestore
-├── 🔐  Autenticação         → Firebase Auth (Email/Senha + JWT)
-├── 📦  Armazenamento        → Firebase Storage (PDFs)
+├── 🖥️  Frontend & Backend  → Next.js 16 (App Router)
+├── 🗄️  Banco de Dados       → Supabase PostgreSQL com RLS
+├── 🔐  Autenticação         → Supabase Auth (Email/Senha + JWT)
+├── 📦  Armazenamento        → Supabase Storage privado (PDFs)
 ├── 🚀  Hospedagem           → Vercel (CI/CD automático)
 ├── 🌐  Domínio              → Hostinger (themistec.site)
 └── 🛡️  Segurança & CDN     → Cloudflare
@@ -68,9 +68,8 @@ src/
 │   ├── clientes/     # Gestão de clientes
 │   └── processos/    # Gestão de processos
 ├── components/       # Componentes reutilizáveis de UI (View)
-├── hooks/            # Custom Hooks com lógica de negócios (ViewModel)
-├── services/         # Chamadas ao Firebase (Model)
-└── lib/              # Configuração do Firebase e utilitários
+├── features/         # Views, ViewModels e adapters por domínio
+└── services/         # Clientes Supabase e injeção de dependências
 ```
 
 ---
@@ -80,7 +79,7 @@ src/
 ### Pré-requisitos
 - [Node.js](https://nodejs.org/) v20+
 - [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
-- Conta no [Firebase](https://firebase.google.com/) com projeto configurado
+- Projeto no [Supabase](https://supabase.com/) com a migration aplicada
 
 ### Instalação
 
@@ -94,7 +93,7 @@ npm install
 
 # 3. Configure as variáveis de ambiente
 cp .env.example .env.local
-# Preencha as variáveis com as chaves do seu projeto Firebase
+# Preencha as variáveis públicas do seu projeto Supabase
 
 # 4. Inicie o servidor de desenvolvimento
 npm run dev
@@ -105,12 +104,8 @@ Acesse `http://localhost:3000` no seu navegador.
 ### Variáveis de Ambiente
 
 ```env
-NEXT_PUBLIC_FIREBASE_API_KEY=
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
-NEXT_PUBLIC_FIREBASE_APP_ID=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ```
 
 ### Validar o Harness (Sensores de Qualidade)
@@ -124,8 +119,18 @@ npm run harness
 # Ou individualmente:
 npm run typecheck   # Verificação de tipos TypeScript (strict mode)
 npm run lint        # ESLint com regras do projeto
-npm run test        # 36 testes de contrato (Auth, Clientes, Processos)
+npm run test        # Testes unitários e de contratos
 ```
+
+### Integração Contínua
+
+O workflow `.github/workflows/ci.yml` valida pushes e pull requests para `develop` e `main` com:
+
+- typecheck, lint da aplicação e do Playwright, testes unitários e build;
+- jornadas E2E públicas no Chromium;
+- auditoria que bloqueia vulnerabilidades críticas.
+
+Os testes autenticados e de RLS usam credenciais descartáveis e continuam opt-in (`npm run test:e2e` com `SUPABASE_SERVICE_ROLE_KEY` e `npm run test:rls` com `POSTGRES_URL`).
 
 ---
 
@@ -190,11 +195,12 @@ git push -u origin feature/nome-da-feature
 - [ADR-0001](docs/architecture/decisions/0001-adocao-de-adrs.md) · Adoção de ADRs
 - [ADR-0002](docs/architecture/decisions/0002-organizacao-do-codigo.md) · Organização do Código
 - [ADR-0003](docs/architecture/decisions/0003-stack-tecnologica-do-mvp.md) · Stack Tecnológica do MVP
-- [ADR-0004](docs/architecture/decisions/0004-autenticacao-com-firebase.md) · Autenticação com Firebase
+- [ADR-0004](docs/architecture/decisions/0004-autenticacao-com-firebase.md) · Decisão histórica de autenticação
 - [ADR-0005](docs/architecture/decisions/0005-hospedagem-e-infraestrutura.md) · Hospedagem e Infraestrutura
 - [ADR-0006](docs/architecture/decisions/0006-armazenamento-de-arquivos.md) · Armazenamento de Arquivos
 - [ADR-0007](docs/architecture/decisions/0007-adocao-do-mvvm.md) · Adoção do Padrão MVVM
 - [ADR-0008](docs/architecture/decisions/0008-padroes-de-projeto-gof.md) · Padrões de Projeto GoF
+- [ADR-0009](docs/architecture/decisions/0009-migracao-integral-para-supabase.md) · Migração integral para Supabase
 
 ---
 

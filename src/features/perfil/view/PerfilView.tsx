@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getAuth, updateProfile } from "firebase/auth";
-import { getFirebaseApp } from "@/services/firebase/firebase.client";
 import { User, Mail, Shield } from "lucide-react";
+import { authService } from "@/services";
 
-export function PerfilView() {
+export function PerfilView(): React.JSX.Element {
   const [userName, setUserName] = useState("Carregando...");
   const [userEmail, setUserEmail] = useState("Carregando...");
   const [isEditing, setIsEditing] = useState(false);
@@ -14,8 +13,7 @@ export function PerfilView() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    const auth = getAuth(getFirebaseApp());
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = authService.onAuthStateChanged((user) => {
       if (user) {
         setUserName(user.displayName || "Usuário");
         setUserEmail(user.email || "");
@@ -28,16 +26,13 @@ export function PerfilView() {
     return () => unsubscribe();
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<void> => {
     try {
       setIsLoading(true);
       setErrorMessage(null);
-      const auth = getAuth(getFirebaseApp());
-      if (auth.currentUser) {
-        await updateProfile(auth.currentUser, { displayName: newName });
-        setUserName(newName);
-        setIsEditing(false);
-      }
+      await authService.updateDisplayName(newName);
+      setUserName(newName);
+      setIsEditing(false);
     } catch {
       setErrorMessage("Erro ao atualizar perfil.");
     } finally {

@@ -1,14 +1,14 @@
 # Story 09: Anexar PDF ao Processo (US09)
 
 **Responsável:** Josiane  
-**Status:** planning  
+**Status:** done
 **Épico Relacionado:** Épico 03 - Gestão de Processos  
 
 ## 1. Contexto e Objetivo
 Como advogado, quero anexar um PDF ao processo para guardar documentos importantes vinculados a cada ação.
 
 ## 2. Contratos Rigorosos (Spec-Driven Development)
-- **Schema de Validação:** Utilizar os limites definidos em `src/specs/schemas/processo.schema.ts` (`UploadDocumentoSchema`, `TAMANHO_MAXIMO_ARQUIVO = 10MB`, `TIPOS_ACEITOS = ["application/pdf"]`).
+- **Schema de Validação:** Utilizar os limites definidos em `src/specs/schemas/processo.schema.ts` (`UploadDocumentoSchema`, `TAMANHO_MAXIMO_ARQUIVO = 25MB`, `TIPOS_ACEITOS = ["application/pdf"]`).
 - **ViewModel:** A View deve consumir apenas a ViewModel correspondente (ex: `useDocumentosProcesso`) para realizar o upload e listagem dos anexos.
 - **Armazenamento (Firebase Storage):** Os arquivos PDF devem ser enviados ao Firebase Storage sob a pasta `processos/{processoId}/{uuid}.pdf`.
 - **Banco de Dados (Firestore):** A URL de download gerada e os metadados do arquivo devem ser salvos no array `documentos` do documento do processo no Firestore.
@@ -21,7 +21,7 @@ Como advogado, quero anexar um PDF ao processo para guardar documentos important
    * Campo de texto opcional para Descrição do documento (máx. 200 caracteres, validado por `UploadDocumentoSchema`).
 2. **Validações de Arquivo:**
    * Apenas arquivos PDF são aceitos.
-   * Tamanho máximo do arquivo: 10MB.
+   * Tamanho máximo do arquivo: 25MB.
    * Validação tanto no cliente (antes de enviar) quanto na interface do Adapter.
 3. **Feedback visual:**
    * Indicador de progresso/carregamento durante o upload.

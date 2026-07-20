@@ -26,7 +26,7 @@ export function useUpdateCliente(): UseUpdateClienteReturn {
     setErrorMessage(null);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Você precisa estar autenticado para visualizar esta página.");
       }
@@ -51,7 +51,7 @@ export function useUpdateCliente(): UseUpdateClienteReturn {
     setErrorMessage(null);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Você precisa estar autenticado para realizar esta ação.");
       }

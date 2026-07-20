@@ -5,31 +5,29 @@ import { Bell, AlertCircle, X, CheckCircle2 } from "lucide-react";
 import { authService, prazoRepository } from "@/services";
 import { Prazo } from "@/specs/schemas/prazo.schema";
 import Link from "next/link";
-import { getAuth } from "firebase/auth";
-import { getFirebaseApp } from "@/services/firebase/firebase.client";
 
-const isAtrasado = (dataISO: string) => {
+const isAtrasado = (dataISO: string): boolean => {
   const today = new Date();
   today.setHours(0,0,0,0);
   const todayStr = today.toISOString().split("T")[0] || "";
   return dataISO < todayStr;
 };
 
-const isToday = (dataISO: string) => {
+const isToday = (dataISO: string): boolean => {
   const todayStr = new Date().toISOString().split("T")[0] || "";
   return dataISO === todayStr;
 };
 
-export function NotificationBell() {
+export function NotificationBell(): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [prazosUrgentes, setPrazosUrgentes] = useState<Prazo[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchNotificacoes = async () => {
+    const fetchNotificacoes = async (): Promise<void> => {
       try {
-        const userId = authService.getCurrentUserId();
+        const userId = await authService.waitForAuth();
         if (!userId) return;
 
         const todosPrazos = await prazoRepository.listarPorUsuario(userId);
@@ -56,8 +54,7 @@ export function NotificationBell() {
     };
 
     // Usar onAuthStateChanged para garantir que o auth inicializou
-    const auth = getAuth(getFirebaseApp());
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = authService.onAuthStateChanged((user) => {
       if (user) {
         void fetchNotificacoes();
       }
@@ -68,7 +65,7 @@ export function NotificationBell() {
 
   // Fechar dropdown clicando fora
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent): void => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
@@ -84,6 +81,9 @@ export function NotificationBell() {
       <div className="relative" ref={dropdownRef}>
         <button
           type="button"
+          aria-label={`Notificações${itemCount > 0 ? `, ${itemCount} pendentes` : ""}`}
+          aria-expanded={isOpen}
+          aria-controls="painel-notificacoes"
           onClick={() => setIsOpen(!isOpen)}
           className={`relative p-2.5 rounded-xl transition-all ${isOpen ? 'bg-primary/10 text-primary' : 'text-slate-400 hover:text-primary hover:bg-primary/5'}`}
         >
@@ -97,7 +97,7 @@ export function NotificationBell() {
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-white border border-slate-100 shadow-xl z-50 overflow-hidden transform origin-top-right transition-all">
+          <div id="painel-notificacoes" className="absolute right-0 mt-2 w-[min(20rem,calc(100vw-2rem))] rounded-2xl bg-white border border-slate-100 shadow-xl z-50 overflow-hidden transform origin-top-right transition-all">
             <div className="px-4 py-3 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
               <h3 className="text-sm font-bold text-slate-800">Notificações</h3>
               <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -158,11 +158,13 @@ export function NotificationBell() {
 
       {/* Floating Toast Notification */}
       {showToast && itemCount > 0 && (
-        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+        <div role="status" aria-live="polite" className="fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300 sm:bottom-6 sm:left-auto sm:right-6">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden w-80">
             <div className={`h-1.5 w-full ${isAtrasado(prazosUrgentes[0]?.dataVencimento || '') ? 'bg-red-500' : 'bg-amber-500'}`}></div>
             <div className="p-4 relative">
               <button 
+                type="button"
+                aria-label="Fechar notificação"
                 onClick={() => setShowToast(false)}
                 className="absolute top-3 right-3 text-slate-400 hover:text-slate-600 transition-colors"
               >

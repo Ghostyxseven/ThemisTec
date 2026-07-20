@@ -1,4 +1,4 @@
-﻿{
+{
   "workflow_version": "1.2.0",
   "timestamps": {
     "started": "2026-07-11T14:35:30Z",
@@ -25,7 +25,7 @@
       "step": "step_3",
       "status": "completed",
       "timestamp": "2026-07-11T14:35:30Z",
-      "summary": "Tech stack: Next.js (React), Tailwind CSS, Firebase Auth"
+      "summary": "Tech stack: Next.js (React), Tailwind CSS, Supabase Auth"
     },
     {
       "step": "step_4",
@@ -37,7 +37,7 @@
   "current_step": "step_10",
   "findings": {
     "project_classification": "Monolith, Next.js Web App",
-    "technology_stack": "React on Next.js, Firebase Backend"
+    "technology_stack": "React on Next.js, Supabase Backend"
   },
   "outputs_generated": [
     "project-overview.md",

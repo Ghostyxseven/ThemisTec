@@ -18,6 +18,7 @@ export const CreateClienteSchema = z.object({
     .max(100, "Nome deve ter no máximo 100 caracteres"),
   cpf: cpfSchema,
   email: z.string().email("E-mail inválido").optional().or(z.literal("")),
+  dataNascimento: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Formato inválido (YYYY-MM-DD)").optional(),
   telefone: z.string().optional(),
   endereco: z.string().optional(),
   observacoes: z
@@ -35,6 +36,7 @@ export const UpdateClienteSchema = z.object({
     .optional(),
   cpf: cpfSchema.optional(),
   email: z.string().email("E-mail inválido").optional().or(z.literal("")),
+  dataNascimento: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Formato inválido (YYYY-MM-DD)").optional(),
   telefone: z.string().optional(),
   endereco: z.string().optional(),
   observacoes: z
@@ -50,15 +52,17 @@ export const ListClientesQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(50).default(10),
 });
 
-/** Modelo completo do Cliente (Firestore) */
+/** Modelo completo do Cliente */
 export const ClienteSchema = z.object({
   id: z.string(),
   nome: z.string(),
   cpf: cpfSchema,
   email: z.string().email().optional(),
+  dataNascimento: z.string().optional(),
   telefone: z.string().optional(),
   endereco: z.string().optional(),
   observacoes: z.string().optional(),
+  tenantId: z.string().uuid().optional(), // ID da Organização (Multi-tenancy)
   userId: z.string(), // dono do registro (advogado)
   criadoEm: z.string().datetime(),
   atualizadoEm: z.string().datetime(),

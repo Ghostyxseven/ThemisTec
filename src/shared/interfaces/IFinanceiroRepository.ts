@@ -1,0 +1,2 @@
+import type { CreateLancamentoInput, LancamentoFinanceiro, ResumoFinanceiro } from "@/specs/schemas/financeiro.schema";
+export interface IFinanceiroRepository { listar(userId: string, inicio: string, fim: string): Promise<LancamentoFinanceiro[]>; criar(userId: string, dados: CreateLancamentoInput): Promise<LancamentoFinanceiro>; resumo(userId: string, inicio: string, fim: string): Promise<ResumoFinanceiro>; excluir(userId: string, id: string): Promise<void> }

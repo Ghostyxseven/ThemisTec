@@ -8,7 +8,7 @@
  * - Validar se o usuário está autenticado
  * - Chamar a camada de serviço/adapter
  *
- * A View (page.tsx) NÃO conhece Firebase diretamente.
+ * A View não conhece o provedor de persistência diretamente.
  */
 
 import { useState } from "react";
@@ -32,7 +32,7 @@ export function useCreateCliente(): UseCreateClienteReturn {
     setIsLoading(true);
 
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) {
         throw new Error("Você precisa estar autenticado para realizar esta ação.");
       }

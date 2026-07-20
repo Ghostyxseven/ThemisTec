@@ -3,7 +3,7 @@
 Data: 2026-06-18
 
 ## Status
-Aceito
+Substituído pelo ADR-0009
 
 ## Contexto
 Para entregar o MVP dentro do cronograma (calendário acadêmico), precisamos de tecnologias que promovam desenvolvimento ágil, segurança, e estabilidade sem a necessidade de gerenciar infraestrutura complexa ou servidores locais robustos.

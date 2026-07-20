@@ -3,8 +3,7 @@
 import { useState, useCallback } from "react";
 import type { Processo, Documento } from "@/specs/schemas/processo.schema";
 import { TAMANHO_MAXIMO_ARQUIVO } from "@/specs/schemas/processo.schema";
-import { authService, processoRepository } from "@/services";
-import { supabaseClient } from "@/services/supabase/supabase.client";
+import { authService, processoRepository, storageService } from "@/services";
 
 interface UseDocumentosProcessoReturn {
   processo: Processo | null;
@@ -35,7 +34,16 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
         throw new Error("Usuário não autenticado.");
       }
       const dados = await processoRepository.buscarPorId(processoId, userId);
-      setProcesso(dados);
+      const documentos = await Promise.all(dados.documentos.map(async (documento) => {
+        if (!documento.storagePath) return documento;
+        try {
+          const url = await storageService.getFileUrl(documento.storagePath);
+          return { ...documento, url };
+        } catch {
+          return { ...documento, url: undefined };
+        }
+      }));
+      setProcesso({ ...dados, documentos });
     } catch (erro) {
       const msg = erro instanceof Error ? erro.message : "Erro ao carregar detalhes do processo.";
       setErrorMessage(msg);
@@ -61,52 +69,37 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
       }
 
       if (file.size > TAMANHO_MAXIMO_ARQUIVO) {
-        throw new Error("O tamanho do arquivo excede o limite de 5 MB.");
+        throw new Error("O tamanho do arquivo excede o limite de 25 MB.");
       }
 
-      // Gerar path único no Firebase Storage
+      // Gerar caminho único no Storage.
       const uuid = typeof window !== "undefined" && window.crypto?.randomUUID
         ? window.crypto.randomUUID()
         : Math.random().toString(36).substring(2, 15);
-      const filePath = `processos/${processoId}/${uuid}.pdf`;
+      const filePath = `${userId}/processos/${processoId}/${uuid}.pdf`;
 
       // Upload do arquivo para o Supabase
-      const { error } = await supabaseClient.storage
-        .from("processos")
-        .upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false,
-        });
-
-      if (error) {
-        console.error("Supabase error:", error);
-        throw new Error("Falha ao enviar o arquivo para o servidor.");
-      }
+      const downloadUrl = await storageService.uploadFile(filePath, file);
 
       // Pegar URL Pública
-      const { data: urlData } = supabaseClient.storage
-        .from("processos")
-        .getPublicUrl(filePath);
-
-      const downloadUrl = urlData.publicUrl;
-
       // Metadados do documento
       const novoDocumento: Documento = {
         id: uuid,
         nomeArquivo: file.name,
         url: downloadUrl,
+        storagePath: filePath,
         tamanho: file.size,
         ...(descricao ? { descricao } : {}),
         enviadoEm: new Date().toISOString(),
       };
 
       try {
-        // Registrar referência no Firestore
+        // Registrar referência no banco.
         await processoRepository.adicionarDocumento(processoId, novoDocumento, userId);
-      } catch (firestoreError) {
+      } catch (databaseError) {
         // Compensação (Rollback): Ocorreu um erro no banco, então deleta o PDF que acabou de subir
-        await supabaseClient.storage.from("processos").remove([filePath]);
-        throw firestoreError; // Repassa o erro para o catch principal
+        await storageService.deleteFile(filePath);
+        throw databaseError;
       }
 
       setSuccessMessage("Documento anexado com sucesso!");
@@ -134,12 +127,8 @@ export function useDocumentosProcesso(): UseDocumentosProcessoReturn {
 
       await processoRepository.removerDocumento(processoId, documentoId, userId);
 
-      const filePath = `processos/${processoId}/${documentoId}.pdf`;
-      const { error } = await supabaseClient.storage.from("processos").remove([filePath]);
-      
-      if (error) {
-        console.error("Supabase Storage error (remover):", error);
-      }
+      const filePath = `${userId}/processos/${processoId}/${documentoId}.pdf`;
+      await storageService.deleteFile(filePath);
 
       setSuccessMessage("Documento removido com sucesso!");
       await carregarProcesso(processoId);

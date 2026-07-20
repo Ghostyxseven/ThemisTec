@@ -1,21 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import { useListPrazos } from "@/features/prazos/viewmodel/useListPrazos";
 import { prazoRepository } from "@/services";
 
 import { Prazo } from "@/specs/schemas/prazo.schema";
 
 // Mock do auth para simular usuário logado
-vi.mock("firebase/auth", () => ({
-  getAuth: vi.fn(() => ({
-    currentUser: { uid: "user-123" },
-    onAuthStateChanged: vi.fn((callback: (user: { uid: string } | null) => void) => {
-      callback({ uid: "user-123" });
-      return vi.fn(); // unsubscribe
-    })
-  })),
-}));
-
 // Mock do authService e prazoRepository
 vi.mock("@/services", () => ({
   authService: {
@@ -34,11 +24,12 @@ describe("useListPrazos Hook", () => {
     vi.clearAllMocks();
   });
 
-  it("deve inicializar com o estado correto", () => {
+  it("deve inicializar e concluir o carregamento automático", async () => {
+    vi.mocked(prazoRepository.listarPorUsuario).mockResolvedValue([]);
     const { result } = renderHook(() => useListPrazos());
-    
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.dados).toEqual([]);
-    expect(result.current.isLoading).toBe(true);
     expect(result.current.errorMessage).toBe(null);
   });
 

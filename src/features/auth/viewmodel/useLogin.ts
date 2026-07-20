@@ -7,7 +7,7 @@
  * - Gerenciar estado da chamada de login
  * - Expor estado de loading, erro e a função login para a View
  *
- * A View (login/page.tsx) NÃO conhece Firebase diretamente —
+ * A View não conhece o provedor de autenticação diretamente —
  * apenas consome este hook.
  */
 
@@ -31,7 +31,7 @@ export function useLogin(): UseLoginReturn {
     setErrorMessage(null);
     setIsLoading(true);
     try {
-      // Delega a chamada para o Firebase ao Adapter de Autenticação
+      // Delega a chamada ao adapter de autenticação.
       await authService.login(dados);
       router.push("/dashboard");
     } catch (erro) {

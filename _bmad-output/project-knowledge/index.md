@@ -11,9 +11,9 @@ Ela documenta de forma oficial a arquitetura, estrutura e o código-fonte desenv
 
 ### Quick Reference
 
-- **Tech Stack:** Next.js, Tailwind CSS, Firebase Auth, Zod
+- **Tech Stack:** Next.js, Tailwind CSS, Supabase Auth, Zod
 - **Entry Point:** `src/app/page.tsx`
-- **Adapter de Autenticação (Epic 01 - Micael):** `src/services/firebase/FirebaseAuthAdapter.ts`
+- **Adapter de Autenticação (Epic 01 - Micael):** `src/features/auth/model/SupabaseAuthAdapter.ts`
 
 ### Generated Documentation
 

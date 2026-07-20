@@ -8,13 +8,13 @@
  * - Prover barra de pesquisa reativa por Nome ou CPF
  * - Paginar resultados e gerenciar navegação
  *
- * A View não conhece detalhes do Firestore/Firebase.
+ * A View não conhece detalhes do provedor de persistência.
  */
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useListClientes } from "../viewmodel/useListClientes";
-import { Users, UserCheck, UserPlus, TrendingUp, Search, SlidersHorizontal, Download } from "lucide-react";
+import { Users, UserCheck, UserPlus, Search, SlidersHorizontal, Download } from "lucide-react";
 
 const formatCpf = (value: string): string => {
   const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -128,7 +128,7 @@ export function ClientesListView(): React.ReactNode {
               className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm shadow-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10 focus:shadow-md"
             />
           </div>
-          <button className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 shadow-sm hover:bg-slate-50 hover:shadow-md transition-all">
+          <button type="button" aria-label="Opções de filtro" className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 shadow-sm hover:bg-slate-50 hover:shadow-md transition-all">
             <SlidersHorizontal className="h-4 w-4 text-slate-500" />
           </button>
         </div>
@@ -147,7 +147,7 @@ export function ClientesListView(): React.ReactNode {
         )}
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="flex items-center gap-4 rounded-2xl bg-white p-5 border border-slate-100 shadow-soft transition-all hover:shadow-card">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50">
               <Users className="h-5 w-5 text-blue-500" />
@@ -176,16 +176,6 @@ export function ClientesListView(): React.ReactNode {
               <p className="text-xs font-medium text-purple-500 uppercase tracking-wider">Novos (este mês)</p>
               <p className="text-xl font-bold text-foreground">0</p>
               <p className="text-[11px] text-slate-400">Nenhum novo cliente</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 rounded-2xl bg-white p-5 border border-slate-100 shadow-soft transition-all hover:shadow-card">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50">
-              <TrendingUp className="h-5 w-5 text-amber-500" />
-            </div>
-            <div>
-              <p className="text-xs font-medium text-amber-500 uppercase tracking-wider">Taxa de Conversão</p>
-              <p className="text-xl font-bold text-foreground">0%</p>
-              <p className="text-[11px] text-slate-400">Sem dados ainda</p>
             </div>
           </div>
         </div>
@@ -255,6 +245,7 @@ export function ClientesListView(): React.ReactNode {
                             </Link>
                             <button
                               type="button"
+                              aria-label={`Excluir cliente ${cliente.nome}`}
                               onClick={() => { void handleExcluir(cliente.id, cliente.nome); }}
                               className="text-sm font-medium text-red-400 hover:text-red-600 transition-colors"
                               title="Excluir"

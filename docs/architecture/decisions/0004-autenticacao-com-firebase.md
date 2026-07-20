@@ -3,7 +3,7 @@
 Data: 2026-06-18
 
 ## Status
-Aceito
+Substituído pelo ADR-0009
 
 ## Contexto
 O Themis lidará com dados sensíveis de processos jurídicos e clientes. É estritamente necessário garantir que somente usuários autorizados acessem a plataforma (Épico EP01). Precisamos implementar login, cadastro e recuperação de senha.

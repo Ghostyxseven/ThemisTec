@@ -61,7 +61,7 @@ Cada tipo tem seu próprio template (ver seção 4). Use sempre o template corre
 | `[STORY] US06` | Edição e exclusão de cliente | EP02 – Clientes | Josiane |
 | `[STORY] US07` | Registro de processo vinculado a cliente | EP03 – Processos | Micael |
 | `[STORY] US08` | Consulta de processos com filtros | EP03 – Processos | Micael |
-| `[STORY] US09` | Anexar PDF ao processo (máx. 10MB) | EP03 – Processos | Micael |
+| `[STORY] US09` | Anexar PDF ao processo (máx. 25MB) | EP03 – Processos | Micael |
 
 ---
 
