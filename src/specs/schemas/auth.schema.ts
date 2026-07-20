@@ -25,6 +25,14 @@ export const ResetPasswordSchema = z.object({
   email: z.string().email("E-mail inválido"),
 });
 
+export const NewPasswordSchema = z.object({
+  senha: z.string().min(8, "Senha deve ter no mínimo 8 caracteres"),
+  confirmarSenha: z.string().min(8, "Confirme a nova senha"),
+}).refine((dados) => dados.senha === dados.confirmarSenha, {
+  message: "As senhas não coincidem",
+  path: ["confirmarSenha"],
+});
+
 /** Resposta de autenticação */
 export const AuthResponseSchema = z.object({
   token: z.string(),
@@ -42,4 +50,5 @@ export const AuthResponseSchema = z.object({
 export type LoginInput = z.infer<typeof LoginSchema>;
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
+export type NewPasswordInput = z.infer<typeof NewPasswordSchema>;
 export type AuthResponse = z.infer<typeof AuthResponseSchema>;

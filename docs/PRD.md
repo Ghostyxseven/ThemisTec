@@ -75,7 +75,7 @@ A plataforma permite que advogados em início de carreira organizem seu fluxo de
 #### Detalhamento das User Stories do MVP
 
 **Autenticação:**
-- US01: Login com e-mail e senha (Firebase Auth)
+- US01: Login com e-mail e senha (Supabase Auth)
 - US02: Cadastro de conta com confirmação por e-mail
 - US03: Recuperação de senha via link por e-mail
 
@@ -87,7 +87,7 @@ A plataforma permite que advogados em início de carreira organizem seu fluxo de
 **Gestão de Processos:**
 - US07: Registro de processo vinculado a cliente (número único, tipo e data obrigatórios)
 - US08: Consulta de processos com filtro por status e cliente
-- US09: Anexar PDF ao processo (máx. 10MB, URL salva no Firestore)
+- US09: Anexar PDF ao processo (máx. 5MB, referência salva no PostgreSQL)
 
 ### 4.2 O que fica de fora (versões futuras)
 
@@ -98,6 +98,19 @@ A plataforma permite que advogados em início de carreira organizem seu fluxo de
 | Rastreamento de prazos judiciais | Necessita integração com tribunais |
 | Notificações push | Dependência de serviço adicional |
 | Geração automática de petições | Complexidade de IA/templates |
+
+### Roadmap pós-MVP — Épico 02
+
+O próximo ciclo evolutivo está detalhado em `_bmad-output/stories/epic-02-evolucao-operacional.md` e contempla:
+
+- agenda jurídica completa;
+- dashboard financeiro;
+- movimentações processuais;
+- busca global;
+- central de documentos;
+- notificações persistentes.
+
+As integrações com calendários começam por exportação `.ics`. Sincronização OAuth, envio de e-mails e automações server-side serão fases posteriores, após validação dos fluxos locais e das políticas RLS.
 | Modo offline (PWA completo) | Service workers exigem mais tempo |
 | Multi-tenancy (escritório com permissões) | Arquitetura mais complexa |
 | Relatórios e exportação | Feature de conveniência, não essencial |
@@ -110,11 +123,11 @@ A plataforma permite que advogados em início de carreira organizem seu fluxo de
 |-----------|---------------|
 | Performance | Listagens retornam em menos de 2 segundos |
 | Segurança | Dados acessíveis apenas por usuários autenticados (JWT) |
-| Disponibilidade | 99.5% (garantido por Vercel + Firebase) |
+| Disponibilidade | 99.5% (Vercel + Supabase) |
 | Compatibilidade | Navegadores modernos (Chrome, Firefox, Safari, Edge) |
 | Responsividade | Funcional em desktop e mobile |
 | Proteção de dados | Conformidade com LGPD (coleta mínima, sem compartilhamento) |
-| Upload | Apenas PDF, máximo 10MB por arquivo, 5GB por usuário |
+| Upload | Apenas PDF, máximo 25MB por arquivo, 5GB por usuário |
 
 ---
 
@@ -124,9 +137,9 @@ A plataforma permite que advogados em início de carreira organizem seu fluxo de
 |--------|-----------|-----------------|
 | Frontend | Next.js + React | Interface do usuário (PWA) |
 | Backend | Next.js API Routes / Server Actions | Lógica de servidor |
-| Banco de Dados | Firebase Firestore | Armazenamento de dados |
-| Autenticação | Firebase Auth | Login, cadastro, sessões |
-| Armazenamento | Firebase Storage | Upload de PDFs |
+| Banco de Dados | Supabase PostgreSQL | Armazenamento de dados com RLS |
+| Autenticação | Supabase Auth | Login, cadastro, sessões |
+| Armazenamento | Supabase Storage | Upload privado de PDFs |
 | Hospedagem | Vercel | Deploy e CDN |
 | DNS/Segurança | Cloudflare | DDoS, cache, SSL |
 | Domínio | Hostinger | themistec.site |
@@ -134,8 +147,8 @@ A plataforma permite que advogados em início de carreira organizem seu fluxo de
 **Padrão Arquitetural:** MVVM (Model-View-ViewModel) com Monolito Modular
 
 **Padrões de Projeto (GoF):**
-- Adapter — isolamento dos SDKs do Firebase
-- Singleton — instância única do Firebase Client
+- Adapter — isolamento do SDK do Supabase
+- Singleton — instância única do Supabase Client
 - Observer — reações ao cadastro de processo
 
 ---
@@ -168,6 +181,6 @@ A plataforma permite que advogados em início de carreira organizem seu fluxo de
 
 | Risco | Probabilidade | Impacto | Mitigação |
 |-------|--------------|---------|-----------|
-| Limitações do plano gratuito Firebase | Média | Alto | Créditos US$300 Google Cloud + monitoramento de uso |
+| Limitações do plano gratuito Supabase | Média | Alto | Monitoramento de uso no painel do Supabase |
 | Gestão de tempo e escopo | Alta | Alto | MVP delimitado, sem scope creep, reuniões semanais |
-| Problemas de integração Next.js/Firebase | Média | Alto | Padrão Singleton + Adapter para isolar dependências |
+| Problemas de integração Next.js/Supabase | Média | Alto | Padrão Singleton + Adapter para isolar dependências |

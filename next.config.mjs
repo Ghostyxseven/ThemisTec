@@ -69,6 +69,16 @@ const withPWA = withPWAInit({
 const nextConfig = {
   // Silence Turbopack warning caused by next-pwa injecting Webpack config
   turbopack: {},
+  // Permitir upload de até 25MB via Server Actions
+  serverActions: {
+    bodySizeLimit: "30mb",
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "30mb",
+    },
+    middlewareClientMaxBodySize: "30mb",
+  },
 };
 
 export default withPWA(nextConfig);

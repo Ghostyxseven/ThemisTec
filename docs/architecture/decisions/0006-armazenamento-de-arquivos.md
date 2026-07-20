@@ -3,7 +3,7 @@
 Data: 2026-06-18
 
 ## Status
-Aceito
+Substituído pelo ADR-0009
 
 ## Contexto
 No Épico de Gestão de Processos (US09), o advogado precisa anexar documentos PDF aos processos para guardar documentos importantes. É necessário armazenar isso de forma segura e atrelar ao banco de dados.

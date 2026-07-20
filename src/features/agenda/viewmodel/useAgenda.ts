@@ -1,0 +1,13 @@
+import { useCallback, useEffect, useState } from "react";
+import { authService, eventoRepository, prazoRepository } from "@/services";
+import type { CreateEventoInput, EventoAgenda } from "@/specs/schemas/evento.schema";
+export function useAgenda():{eventos:EventoAgenda[];loading:boolean;erro:string|null;criar:(d:CreateEventoInput)=>Promise<void>;concluir:(id:string)=>Promise<void>;excluir:(id:string)=>Promise<void>;exportarIcs:()=>void}{
+ const[eventos,setEventos]=useState<EventoAgenda[]>([]);const[loading,setLoading]=useState(true);const[erro,setErro]=useState<string|null>(null);
+ const carregar=useCallback(async()=>{try{setLoading(true);const uid=await authService.waitForAuth();if(!uid)throw new Error("Sessão expirada.");const inicio=new Date();inicio.setMonth(inicio.getMonth()-1);const fim=new Date();fim.setMonth(fim.getMonth()+2);const[e,p]=await Promise.all([eventoRepository.listar(uid,inicio.toISOString(),fim.toISOString()),prazoRepository.listarPorUsuario(uid)]);const projetados:EventoAgenda[]=p.map(x=>({id:x.id,userId:x.userId,titulo:x.titulo,tipo:"PRAZO",inicio:`${x.dataVencimento}T12:00:00.000Z`,descricao:x.descricao,processoId:x.processoId,status:x.status,criadoEm:x.criadoEm,atualizadoEm:x.atualizadoEm}));setEventos([...e,...projetados].sort((a,b)=>a.inicio.localeCompare(b.inicio)))}catch(e){setErro(e instanceof Error?e.message:"Erro na agenda.")}finally{setLoading(false)}},[]);
+ // eslint-disable-next-line react-hooks/set-state-in-effect
+ useEffect(()=>{void carregar()},[carregar]);
+ const criar=async(d:CreateEventoInput):Promise<void>=>{const uid=await authService.waitForAuth();if(!uid)throw new Error("Sessão expirada.");await eventoRepository.criar(uid,d);await carregar()};
+ const concluir=async(id:string):Promise<void>=>{const uid=await authService.waitForAuth();if(uid)await eventoRepository.concluir(uid,id);await carregar()};
+ const excluir=async(id:string):Promise<void>=>{const uid=await authService.waitForAuth();if(uid)await eventoRepository.excluir(uid,id);await carregar()};
+ const exportarIcs=():void=>{const linhas=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//ThemisTec//Agenda//PT-BR",...eventos.flatMap(e=>["BEGIN:VEVENT",`UID:${e.id}@themistec`,`DTSTART:${e.inicio.replace(/[-:]/g,"").replace(/\.\d{3}/,"")}`,`SUMMARY:${e.titulo.replace(/[,;]/g," ")}`,"END:VEVENT"]),"END:VCALENDAR"];const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([linhas.join("\r\n")],{type:"text/calendar"}));a.download="agenda-themistec.ics";a.click();URL.revokeObjectURL(a.href)};
+ return{eventos,loading,erro,criar,concluir,excluir,exportarIcs};}

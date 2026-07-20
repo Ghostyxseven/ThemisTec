@@ -1,7 +1,7 @@
 # Story 06: Edição e Exclusão de Cliente (US06)
 
 **Responsável:** Josiane  
-**Status:** review  
+**Status:** done
 **Épico Relacionado:** Épico 02 - Gestão de Clientes  
 
 ## 1. Contexto e Objetivo

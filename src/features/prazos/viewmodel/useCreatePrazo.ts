@@ -4,7 +4,16 @@ import { authService, processoRepository, prazoRepository } from "@/services";
 import { CreatePrazoInput } from "@/specs/schemas/prazo.schema";
 import { Processo } from "@/specs/schemas/processo.schema";
 
-export function useCreatePrazo() {
+interface CreatePrazoViewModel {
+  processos: Processo[];
+  loadProcessos: () => Promise<void>;
+  createPrazo: (data: CreatePrazoInput) => Promise<void>;
+  isLoading: boolean;
+  isSaving: boolean;
+  errorMessage: string | null;
+}
+
+export function useCreatePrazo(): CreatePrazoViewModel {
   const router = useRouter();
   
   const [processos, setProcessos] = useState<Processo[]>([]);
@@ -28,7 +37,7 @@ export function useCreatePrazo() {
     }
   }, []);
 
-  const createPrazo = async (data: CreatePrazoInput) => {
+  const createPrazo = async (data: CreatePrazoInput): Promise<void> => {
     try {
       setIsSaving(true);
       setErrorMessage(null);

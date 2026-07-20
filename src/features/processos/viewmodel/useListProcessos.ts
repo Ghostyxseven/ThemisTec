@@ -83,7 +83,7 @@ export function useListProcessos(): UseListProcessosReturn {
     setIsExporting(true);
     setErrorMessage(null);
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) throw new Error("Usuário não autenticado.");
 
       const response = await processoRepository.listar(
@@ -116,7 +116,7 @@ export function useListProcessos(): UseListProcessosReturn {
 
   const excluirProcesso = async (id: string): Promise<void> => {
     try {
-      const userId = authService.getCurrentUserId();
+      const userId = await authService.waitForAuth();
       if (!userId) throw new Error("Usuário não autenticado.");
       await processoRepository.excluir(id, userId);
       void fetchProcessos();

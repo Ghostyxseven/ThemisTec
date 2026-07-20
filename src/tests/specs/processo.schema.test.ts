@@ -153,8 +153,8 @@ describe("Processo Schemas - Contratos de Entrada", () => {
   });
 
   describe("Constantes de Upload (US09)", () => {
-    it("tamanho máximo deve ser 5MB", () => {
-      expect(TAMANHO_MAXIMO_ARQUIVO).toBe(5 * 1024 * 1024);
+    it("tamanho máximo deve ser 25MB", () => {
+      expect(TAMANHO_MAXIMO_ARQUIVO).toBe(25 * 1024 * 1024);
     });
 
     it("apenas PDF aceito", () => {

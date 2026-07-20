@@ -25,7 +25,7 @@ FR7: O sistema deve garantir persistência local de dados (cache offline) para q
 
 NFR1: As funções de exportação devem rodar 100% no Client-Side (Client SDK), devido à arquitetura de autenticação.
 NFR2: O formato CSV exportado deve ser compatível nativamente com o Microsoft Excel versão PT-BR (uso de ponto e vírgula como separador).
-NFR3: A persistência offline do Firestore deve utilizar a API V9 persistentLocalCache suportando o gerenciador de múltiplas abas (persistentMultipleTabManager), já que enableIndexedDbPersistence foi descontinuada.
+NFR3: A persistência offline deve utilizar IndexedDB (via idb-keyval) com sincronização automática ao reconectar com o Supabase.
 NFR4: Todo o código do projeto deve seguir rigorosamente a arquitetura MVVM, utilizando Adapters.
 
 ### Requisitos Adicionais
@@ -45,7 +45,7 @@ FR3: Épico 2 - UI financeira na edição do Processo
 FR4: Épico 3 - Backend exportação CSV
 FR5: Épico 3 - Botão de exportação no Frontend
 FR6: Épico 4 - Service Worker (PWA)
-FR7: Épico 4 - Persistência Firestore
+FR7: Épico 4 - Persistência Offline (IndexedDB + sync)
 
 ## Lista de Épicos
 
@@ -72,14 +72,14 @@ O advogado ganha uma visão macro do seu escritório através de um Dashboard, n
 ### História 1.1: Consultar Estatísticas Gerais (Backend)
 
 **Como** Desenvolvedor Backend (Micael),
-**Eu quero** recuperar o total de processos e clientes diretamente pelo Firebase,
-**Para que** o Frontend possa construir os cards gerenciais de forma instantânea sem precisar baixar todos os documentos.
+**Eu quero** recuperar o total de processos e clientes diretamente pelo Supabase,
+**Para que** o Frontend possa construir os cards gerenciais de forma instantânea sem precisar baixar todos os registros.
 
 **Critérios de Aceite:**
 
 - **Dado** um usuário logado
-- **Quando** a camada de repositório (FirestoreAdapter) for acionada
-- **Então** deve utilizar o método `getCountFromServer` nativo do Firebase V9+
+- **Quando** a camada de repositório (SupabaseAdapter) for acionada
+- **Então** deve utilizar queries com `count` do Supabase (head: true, count: 'exact')
 - **E** retornar inteiros precisos e otimizados sobre os quantitativos
 
 ### História 1.2: Construir Interface do Dashboard (Frontend)
@@ -102,7 +102,7 @@ O advogado pode acompanhar o valor recebido por processo e saber rapidamente que
 ### História 2.1: Estrutura Financeira no Banco de Dados (Backend)
 
 **Como** Desenvolvedor Backend (Micael),
-**Eu quero** atualizar os esquemas de validação (Zod) e as rotinas de persistência do Firestore,
+**Eu quero** atualizar os esquemas de validação (Zod) e as rotinas de persistência do Supabase,
 **Para que** seja possível gravar atributos monetários de cada processo.
 
 **Critérios de Aceite:**
@@ -110,7 +110,7 @@ O advogado pode acompanhar o valor recebido por processo e saber rapidamente que
 - **Dado** o Schema de Processos
 - **Quando** um novo processo é salvo ou atualizado
 - **Então** os campos numéricos de honorários e enum de status devem ser aceitos e tipados
-- **E** o Adapter do Firestore deve persistí-los corretamente
+- **E** o SupabaseAdapter deve persistí-los corretamente via PostgreSQL
 
 ### História 2.2: UI de Edição e Visualização Financeira (Frontend)
 
@@ -159,17 +159,17 @@ O usuário consegue gerar planilhas (CSV compatível com Excel PT-BR) de todos o
 
 O advogado pode instalar o sistema como um aplicativo (PWA) e consultá-lo/editá-lo em fóruns sem depender de sinal 4G. Quando a internet voltar, tudo sincroniza automaticamente.
 
-### História 4.1: Persistência Offline do Firestore (Backend/Config)
+### História 4.1: Persistência Offline (Backend/Config)
 
 **Como** Desenvolvedor Backend (Micael),
-**Eu quero** configurar a propriedade localCache na instância do Firebase no Next.js,
-**Para que** as gravações e leituras possam ser enfileiradas de forma offline-first.
+**Eu quero** configurar o cache local via IndexedDB (idb-keyval) no Next.js,
+**Para que** as gravações e leituras possam ser enfileiradas de forma offline-first e sincronizadas com o Supabase ao reconectar.
 
 **Critérios de Aceite:**
 
 - **Dado** o bootstrapping da aplicação cliente
-- **Quando** a função de obter o Firestore é invocada
-- **Então** deve ser chamado o método `initializeFirestore` com suporte nativo de Múltiplas Abas
+- **Quando** o módulo de persistência offline é inicializado
+- **Então** deve armazenar dados críticos no IndexedDB local com suporte a múltiplas abas
 - **E** tratar os fallbacks e falhas silenciosamente caso o navegador não dê suporte
 
 ### História 4.2: Configuração do Service Worker e Cache (Frontend)

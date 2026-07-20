@@ -418,6 +418,73 @@ paths:
         "404":
           description: Processo não encontrado
 
+  # ═══════════════════════════════════════════
+  # TEMPLATES E AUTOMAÇÕES (EP03)
+  # ═══════════════════════════════════════════
+
+  /api/templates/generate:
+    post:
+      tags: [Processos]
+      summary: Gerar documento preenchido via Template (US43)
+      operationId: generateDocument
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [templateId, processoId]
+              properties:
+                templateId:
+                  type: string
+                processoId:
+                  type: string
+      responses:
+        "200":
+          description: Documento gerado com sucesso
+          content:
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Template ou Processo não encontrado
+
+  /api/webhooks/tribunais:
+    post:
+      tags: [Processos]
+      summary: Receber webhook de andamento de tribunais (US44)
+      operationId: receiveWebhookTribunal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tipo, numero, data_evento, descricao]
+              properties:
+                tipo:
+                  type: string
+                  example: "movimentacao"
+                numero:
+                  type: string
+                  example: "0001234-56.2023.8.26.0000"
+                data_evento:
+                  type: string
+                  format: date-time
+                descricao:
+                  type: string
+                  example: "Juntada de Petição"
+      responses:
+        "200":
+          description: Webhook processado
+        "401":
+          description: Assinatura/Secret inválida
+        "404":
+          description: Processo não encontrado
+
 # ═══════════════════════════════════════════
 # COMPONENTS
 # ═══════════════════════════════════════════
@@ -428,7 +495,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: Token JWT do Firebase Auth
+      description: Token JWT do Supabase Auth
 
   schemas:
     # --- AUTH ---

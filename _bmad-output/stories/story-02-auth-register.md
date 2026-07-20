@@ -1,7 +1,7 @@
 # Story 02: Cadastro de Conta com Confirmação (US02)
 
 **Responsável:** Josiane / Micael  
-**Status:** planning  
+**Status:** done
 **Épico Relacionado:** Épico 01 - Autenticação  
 
 ## 1. Contexto e Objetivo

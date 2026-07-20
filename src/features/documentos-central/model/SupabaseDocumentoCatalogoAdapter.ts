@@ -1,0 +1,13 @@
+import { supabaseClient } from "@/services/supabase/supabase.client";
+import type { IDocumentoRepository } from "@/shared/interfaces/IDocumentoRepository";
+import type { DocumentoCatalogo } from "@/specs/schemas/documento.schema";
+type Row={id:string;user_id:string;nome:string;storage_path:string;pasta:string;tags:string[];versao:number;versao_ativa:boolean;tamanho:number;mime_type:string;cliente_id:string|null;processo_id:string|null;excluido_em:string|null;criado_em:string;atualizado_em:string};
+const map=(r:Row):DocumentoCatalogo=>({id:r.id,userId:r.user_id,nome:r.nome,storagePath:r.storage_path,pasta:r.pasta,tags:r.tags,versao:r.versao,versaoAtiva:r.versao_ativa,tamanho:r.tamanho,mimeType:r.mime_type,...(r.cliente_id?{clienteId:r.cliente_id}:{}),...(r.processo_id?{processoId:r.processo_id}:{}),...(r.excluido_em?{excluidoEm:r.excluido_em}:{}),criadoEm:r.criado_em,atualizadoEm:r.atualizado_em});
+export class SupabaseDocumentoCatalogoAdapter implements IDocumentoRepository{
+ public async listar(userId:string,incluirLixeira=false):Promise<DocumentoCatalogo[]>{let q=supabaseClient.from("documentos_catalogo").select("*").eq("user_id",userId).order("criado_em",{ascending:false});q=incluirLixeira?q.not("excluido_em","is",null):q.is("excluido_em",null);const{data,error}=await q;if(error)throw new Error("Erro ao carregar documentos.");return(data as Row[]).map(map)}
+ public async cadastrar(userId:string,d:Omit<DocumentoCatalogo,"id"|"userId"|"criadoEm"|"atualizadoEm">):Promise<DocumentoCatalogo>{const{data,error}=await supabaseClient.from("documentos_catalogo").insert({user_id:userId,nome:d.nome,storage_path:d.storagePath,pasta:d.pasta,tags:d.tags,versao:d.versao,versao_ativa:d.versaoAtiva,tamanho:d.tamanho,mime_type:d.mimeType,cliente_id:d.clienteId??null,processo_id:d.processoId??null,excluido_em:d.excluidoEm??null}).select().single<Row>();if(error||!data)throw new Error("Erro ao catalogar documento.");return map(data)}
+ public async moverParaLixeira(userId:string,id:string):Promise<void>{await this.updateTrash(userId,id,new Date().toISOString())}
+ public async restaurar(userId:string,id:string):Promise<void>{await this.updateTrash(userId,id,null)}
+ private async updateTrash(userId:string,id:string,value:string|null):Promise<void>{const{error}=await supabaseClient.from("documentos_catalogo").update({excluido_em:value}).eq("id",id).eq("user_id",userId);if(error)throw new Error("Erro ao atualizar documento.")}
+ public async excluirDefinitivo(userId:string,id:string):Promise<void>{const{error}=await supabaseClient.from("documentos_catalogo").delete().eq("id",id).eq("user_id",userId).not("excluido_em","is",null);if(error)throw new Error("Erro ao excluir documento.")}
+}

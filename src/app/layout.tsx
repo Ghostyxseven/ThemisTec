@@ -1,13 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
-const inter = Inter({
+const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-outfit",
 });
+
+import { OfflineSyncProvider } from "@/components/providers/OfflineSyncProvider";
 
 export const metadata: Metadata = {
   title: "ThemisTec — Gestão Jurídica",
@@ -17,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#4338ca",
+  themeColor: "#1e40af",
 };
 
 interface RootLayoutProps {
@@ -26,8 +29,10 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps): ReactNode {
   return (
-    <html lang="pt-BR" className={inter.variable}>
+    <html lang="pt-BR" className={outfit.variable}>
       <body className="min-h-screen bg-background text-foreground antialiased font-sans">
+        <Toaster position="top-right" richColors />
+        <OfflineSyncProvider />
         {children}
       </body>
     </html>

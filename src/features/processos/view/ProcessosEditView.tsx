@@ -4,8 +4,10 @@ import { use } from "react";
 import Link from "next/link";
 import { Scale, ArrowLeft } from "lucide-react";
 import { useEditProcesso } from "../viewmodel/useEditProcesso";
+import { Timeline } from "../../../components/ui/Timeline";
+import { ProcessoCobrancaSection } from "../../cobrancas/view/ProcessoCobrancaSection";
 
-export function ProcessosEditView({ params }: { params: Promise<{ id: string }> }) {
+export function ProcessosEditView({ params }: { params: Promise<{ id: string }> }): React.JSX.Element {
   const resolvedParams = use(params);
   const {
     register,
@@ -14,6 +16,8 @@ export function ProcessosEditView({ params }: { params: Promise<{ id: string }> 
     isSubmitting,
     isLoading,
     errorMessage,
+    movimentacoes,
+    clienteId,
   } = useEditProcesso(resolvedParams.id);
 
   return (
@@ -45,7 +49,7 @@ export function ProcessosEditView({ params }: { params: Promise<{ id: string }> 
         </div>
 
         {/* Card do formulário */}
-        <div className="rounded-2xl bg-white px-8 py-10 shadow-soft border border-slate-100">
+        <div className="rounded-xl bg-white p-6 sm:p-8 shadow-sm border border-slate-200">
           
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-12">
@@ -54,7 +58,10 @@ export function ProcessosEditView({ params }: { params: Promise<{ id: string }> 
             </div>
           ) : (
             <>
-              <h2 className="mb-6 text-lg font-semibold text-foreground border-b border-slate-100 pb-4">Dados Atualizáveis</h2>
+              <div className="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100">
+                <div className="h-2 w-2 rounded-full bg-violet-600" />
+                <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">Dados Atualizáveis</h2>
+              </div>
 
               {/* Erro geral (vindo do ViewModel) */}
               {errorMessage !== null && (
@@ -225,6 +232,24 @@ export function ProcessosEditView({ params }: { params: Promise<{ id: string }> 
                   </button>
                 </div>
               </form>
+
+              {/* Seção da Timeline (Injetada como Melhoria) */}
+              <div className="mt-12 pt-8 border-t border-slate-200">
+                <h2 className="mb-6 text-lg font-semibold text-foreground">Histórico de Movimentações</h2>
+                {movimentacoes.length > 0 ? (
+                  <Timeline movimentacoes={movimentacoes} />
+                ) : (
+                  <p className="text-sm text-zinc-500">Nenhuma movimentação registrada.</p>
+                )}
+              </div>
+
+              {/* Integração de Cobranças (Faturamento) */}
+              {resolvedParams.id && clienteId && !isLoading && (
+                <ProcessoCobrancaSection 
+                  processoId={resolvedParams.id} 
+                  clienteId={clienteId} 
+                />
+              )}
             </>
           )}
         </div>

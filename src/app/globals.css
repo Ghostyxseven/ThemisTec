@@ -2,29 +2,44 @@
 @config "../../tailwind.config.ts";
 
 :root {
-  /* Colors - Indigo Theme */
-  --background: #f0f2f8;
-  --foreground: #1e1b4b;
+  --background: #f8fafc;
+  --foreground: #0f172a;
   
-  --color-primary: #4338ca;
-  --color-primary-dark: #3730a3;
-  --color-primary-light: #6366f1;
-  --color-accent: #c9a84c;
+  --color-primary: #1e40af;
+  --color-primary-dark: #1e3a8a;
+  --color-primary-light: #3b82f6;
+  --color-accent: #7c3aed;
+  --color-accent-hover: #6d28d9;
+  --color-surface: #ffffff;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-border: #e2e8f0;
+  --color-border-hover: #cbd5e1;
   
-  --color-sidebar-from: #1e1b4b;
-  --color-sidebar-to: #0f0d2e;
+  --color-sidebar-from: rgba(15, 23, 42, 0.98);
+  --color-sidebar-to: rgba(30, 41, 59, 0.98);
   
   /* Semantic */
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #6366f1;
+  --color-success: #059669;
+  --color-success-bg: #ecfdf5;
+  --color-warning: #d97706;
+  --color-warning-bg: #fffbeb;
+  --color-error: #dc2626;
+  --color-error-bg: #fef2f2;
+  --color-info: #2563eb;
+  --color-info-bg: #eff6ff;
   
-  /* Layout variables */
+  /* Layout */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  
+  /* Spacing */
+  --header-height: 4rem;
+  --sidebar-width: 16.5rem;
 }
 
 * {
@@ -32,14 +47,204 @@
 }
 
 body {
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
-  background-color: var(--background);
-  color: var(--foreground);
+  @apply bg-background text-textPrimary;
+  min-height: 100vh;
+  font-family: var(--font-outfit), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background);
+  background-image: 
+    radial-gradient(at 20% 0%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(at 80% 100%, rgba(124, 58, 237, 0.03) 0%, transparent 50%);
+  background-attachment: fixed;
 }
 
-/* Scrollbar styling */
+/* ==============================
+   Layout Utilities
+   ============================== */
+
+.glass-panel {
+  background: var(--color-sidebar-from);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-card {
+  @apply border border-slate-200/80 bg-white shadow-sm;
+  transition: all 0.2s ease;
+}
+
+.glass-card:hover {
+  @apply border-slate-300 shadow-md;
+  transform: translateY(-1px);
+}
+
+/* Stats card specific styling */
+.stat-card {
+  @apply rounded-2xl bg-white border border-slate-200/80 p-6 shadow-sm;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  @apply border-slate-300 shadow-md;
+  transform: translateY(-2px);
+}
+
+/* ==============================
+   Typography Utilities 
+   ============================== */
+
+.page-title {
+  @apply text-2xl font-bold tracking-tight text-slate-900;
+}
+
+.page-subtitle {
+  @apply text-sm text-slate-500 mt-0.5;
+}
+
+.section-label {
+  @apply text-xs font-semibold text-slate-400 uppercase tracking-wider;
+}
+
+/* ==============================
+   Focus & Accessibility
+   ============================== */
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  border-radius: 0.75rem;
+  background: var(--foreground);
+  color: var(--background);
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ==============================
+   Empty State
+   ============================== */
+
+.empty-state {
+  @apply flex flex-col items-center justify-center py-16 text-center;
+}
+
+.empty-state-icon {
+  @apply h-16 w-16 text-slate-300 mb-4;
+}
+
+.empty-state-title {
+  @apply text-lg font-semibold text-slate-700 mb-1;
+}
+
+.empty-state-text {
+  @apply text-sm text-slate-500 max-w-sm;
+}
+
+/* ==============================
+   Badge System 
+   ============================== */
+
+.badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+}
+
+.badge-success {
+  @apply bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20;
+}
+
+.badge-warning {
+  @apply bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20;
+}
+
+.badge-error {
+  @apply bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20;
+}
+
+.badge-info {
+  @apply bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20;
+}
+
+.badge-neutral {
+  @apply bg-slate-100 text-slate-700 ring-1 ring-inset ring-slate-600/10;
+}
+
+/* ==============================
+   Table System 
+   ============================== */
+
+.table-container {
+  @apply overflow-hidden rounded-xl border border-slate-200 bg-white;
+}
+
+.table-header {
+  @apply bg-slate-50/80 border-b border-slate-200;
+}
+
+.table-row {
+  @apply border-b border-slate-100 last:border-b-0 transition-colors hover:bg-slate-50/50;
+}
+
+/* ==============================
+   Animations
+   ============================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  @apply rounded-lg bg-slate-200;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ==============================
+   Reduced Motion
+   ============================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==============================
+   Scrollbar 
+   ============================== */
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -47,9 +252,9 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(100, 116, 139, 0.2);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.4);
+  background: rgba(100, 116, 139, 0.35);
 }

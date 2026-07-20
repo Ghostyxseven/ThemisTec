@@ -1,7 +1,7 @@
 # Story 02: Setup Inicial do Front-end e Roteamento Base
 
 **Responsável:** Josiane  
-**Status:** Done ✅ (Entregue)  
+**Status:** done
 **Épico Relacionado:** Épico 01 - Autenticação / Infraestrutura  
 
 ## 1. Contexto e Objetivo

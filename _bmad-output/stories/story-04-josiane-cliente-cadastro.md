@@ -1,7 +1,7 @@
 # Story 04: Cadastro de Cliente (CPF Único) (US04)
 
 **Responsável:** Josiane  
-**Status:** review  
+**Status:** done
 **Épico Relacionado:** Épico 02 - Gestão de Clientes  
 
 ## 1. Contexto e Objetivo

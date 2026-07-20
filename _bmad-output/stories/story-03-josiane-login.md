@@ -1,7 +1,7 @@
 # Story 03: Implementação Visual da Tela de Login (Front-end)
 
 **Responsável:** Josiane  
-**Status:** review  
+**Status:** done
 **Épico Relacionado:** Épico 01 - Autenticação  
 
 ## 1. Contexto e Objetivo
