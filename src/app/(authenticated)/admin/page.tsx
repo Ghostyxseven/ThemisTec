@@ -103,22 +103,24 @@ export default function SuperAdminPage(): React.ReactElement {
     finally { setSubmitting(false); }
   };
 
-  const removerEscritorio = async (id: string, nome: string): Promise<void> => {
-    if (!confirm(`Tem certeza que deseja remover o escritório "${nome}"? Todos os vínculos serão perdidos.`)) return;
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+
+  const removerEscritorio = async (id: string): Promise<void> => {
     try {
       const res = await fetch("/api/admin", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ acao: "remover_escritorio", id }) });
       if (!res.ok) { const d = await res.json() as { error?: string }; throw new Error(d.error || "Erro"); }
       setMensagem({ tipo: "sucesso", texto: "Escritório removido." });
+      setConfirmDelete(null);
       void loadAll();
     } catch (e) { setMensagem({ tipo: "erro", texto: e instanceof Error ? e.message : "Erro" }); }
   };
 
-  const removerAdvogado = async (id: string, email: string): Promise<void> => {
-    if (!confirm(`Remover ${email} do escritório?`)) return;
+  const removerAdvogado = async (id: string): Promise<void> => {
     try {
       const res = await fetch("/api/admin", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ acao: "remover_advogado", id }) });
       if (!res.ok) { const d = await res.json() as { error?: string }; throw new Error(d.error || "Erro"); }
       setMensagem({ tipo: "sucesso", texto: "Advogado removido." });
+      setConfirmDelete(null);
       void loadAdvogados();
     } catch (e) { setMensagem({ tipo: "erro", texto: e instanceof Error ? e.message : "Erro" }); }
   };
@@ -202,9 +204,16 @@ export default function SuperAdminPage(): React.ReactElement {
                       <p className="text-xs text-slate-500">{e.total_membros} membro{e.total_membros !== 1 ? "s" : ""} · Criado em {new Date(e.criado_em).toLocaleDateString("pt-BR")}</p>
                     </div>
                   </div>
-                  <button onClick={() => void removerEscritorio(e.id, e.nome)} className="p-2 rounded-lg text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="Remover">
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                  {confirmDelete === e.id ? (
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => void removerEscritorio(e.id)} className="px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-medium hover:bg-red-700">Confirmar</button>
+                      <button onClick={() => setConfirmDelete(null)} className="px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 text-xs font-medium hover:bg-slate-50">Cancelar</button>
+                    </div>
+                  ) : (
+                    <button onClick={() => setConfirmDelete(e.id)} className="p-2 rounded-lg text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="Remover">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
               ))}
               {escritorios.length === 0 && <p className="text-center text-slate-500 py-8">Nenhum escritório cadastrado.</p>}
@@ -228,7 +237,7 @@ export default function SuperAdminPage(): React.ReactElement {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input type="text" value={novoAdv.nome} onChange={(e) => setNovoAdv({ ...novoAdv, nome: e.target.value })} placeholder="Nome completo" className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500" disabled={submitting} />
                   <input type="email" value={novoAdv.email} onChange={(e) => setNovoAdv({ ...novoAdv, email: e.target.value })} placeholder="E-mail" className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500" disabled={submitting} />
-                  <input type="text" value={novoAdv.senha} onChange={(e) => setNovoAdv({ ...novoAdv, senha: e.target.value })} placeholder="Senha inicial" className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500" disabled={submitting} />
+                  <input type="password" value={novoAdv.senha} onChange={(e) => setNovoAdv({ ...novoAdv, senha: e.target.value })} placeholder="Senha inicial" className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500" disabled={submitting} />
                   <select value={novoAdv.escritorio_id} onChange={(e) => setNovoAdv({ ...novoAdv, escritorio_id: e.target.value })} className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 bg-white" disabled={submitting}>
                     <option value="">Selecione o escritório</option>
                     {escritorios.map((e) => <option key={e.id} value={e.id}>{e.nome}</option>)}
@@ -258,9 +267,16 @@ export default function SuperAdminPage(): React.ReactElement {
                     <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${a.papel === "admin" ? "bg-violet-100 text-violet-700" : "bg-slate-200 text-slate-600"}`}>
                       {a.papel}
                     </span>
-                    <button onClick={() => void removerAdvogado(a.id, a.email)} className="p-2 rounded-lg text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="Remover">
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                    {confirmDelete === a.id ? (
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => void removerAdvogado(a.id)} className="px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-medium hover:bg-red-700">Confirmar</button>
+                        <button onClick={() => setConfirmDelete(null)} className="px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 text-xs font-medium hover:bg-slate-50">Cancelar</button>
+                      </div>
+                    ) : (
+                      <button onClick={() => setConfirmDelete(a.id)} className="p-2 rounded-lg text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="Remover">
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}

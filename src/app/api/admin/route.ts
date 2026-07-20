@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { createSupabaseServerClient } from "@/services/supabase/supabase.server";
 
 // Super admin email - only this user can access admin APIs
-const SUPER_ADMIN_EMAIL = "cardosomicael245@gmail.com";
+const SUPER_ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL || "";
 
 async function verifySuperAdmin(): Promise<{ authorized: boolean; error?: NextResponse }> {
   const supabase = await createSupabaseServerClient();

@@ -55,7 +55,7 @@ export function LandingView(): React.JSX.Element {
                 href="/login"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-slate-900/20 transition-all hover:bg-slate-800 hover:shadow-2xl hover:-translate-y-1 active:scale-95"
               >
-                Começar Agora <ArrowRight className="h-5 w-5" />
+                Acessar Sistema <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
           </div>

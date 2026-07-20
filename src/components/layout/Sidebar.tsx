@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { LayoutDashboard, Users, Scale, ChevronDown, Calendar, User as UserIcon, LogOut, WalletCards, Files, CalendarCheck, Settings, Building2, ShieldCheck } from "lucide-react";
 import { authService } from "@/services";
+import { supabaseClient } from "@/services/supabase/supabase.client";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -31,6 +32,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
   const [userName, setUserName] = useState("Carregando...");
   const [userInitial, setUserInitial] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [userPapel, setUserPapel] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -60,6 +62,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
         setUserName(name);
         setUserInitial(name.charAt(0).toUpperCase());
         setUserEmail(user.email || "");
+        void supabaseClient
+          .from("escritorio_usuarios")
+          .select("papel")
+          .eq("user_id", user.id)
+          .limit(1)
+          .single()
+          .then(({ data }) => {
+            if (data) setUserPapel(data.papel === "admin" ? "Administrador" : "Membro");
+          });
       }
     });
     return () => unsubscribe();
@@ -180,7 +191,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.JSX.Element {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-slate-200 truncate">{userName}</p>
-                <p className="text-[11px] text-slate-500">Advogado</p>
+                <p className="text-[11px] text-slate-500">{userPapel || "Carregando..."}</p>
               </div>
               <ChevronDown className={`h-4 w-4 shrink-0 text-slate-500 transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`} />
             </button>

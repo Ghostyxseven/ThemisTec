@@ -1,36 +1,33 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { jwtVerify } from 'jose';
+import { jwtVerify } from "jose";
 
-const JWT_SECRET = new TextEncoder().encode(process.env.SUPABASE_JWT_SECRET || "sua_chave_secreta_padrao_para_desenvolvimento");
-const protectedPrefixes = ["/dashboard", "/clientes", "/processos", "/prazos", "/perfil", "/configuracoes", "/agenda", "/financeiro", "/documentos", "/onboarding", "/admin"];
+const JWT_SECRET = new TextEncoder().encode(process.env.SUPABASE_JWT_SECRET || "");
+const SUPER_ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL || "";
+const protectedPrefixes = ["/dashboard", "/clientes", "/processos", "/prazos", "/perfil", "/configuracoes", "/agenda", "/financeiro", "/documentos", "/admin"];
 
 export async function proxy(request: NextRequest): Promise<NextResponse> {
   let response = NextResponse.next({ request });
   const { pathname } = request.nextUrl;
 
-  // Bloquear registro público - só admin cria contas
+  // Bloquear registro público — só admin cria contas
   if (pathname === "/register") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Lógica do portal
-  if (pathname.startsWith('/portal/dashboard')) {
-    const token = request.cookies.get('portal_token')?.value;
-
-    if (!token) {
-      return NextResponse.redirect(new URL('/portal', request.url));
-    }
-
+  // Portal do cliente (autenticação via JWT customizado)
+  if (pathname.startsWith("/portal/dashboard")) {
+    const token = request.cookies.get("portal_token")?.value;
+    if (!token) return NextResponse.redirect(new URL("/portal", request.url));
     try {
       await jwtVerify(token, JWT_SECRET);
       return response;
     } catch {
-      return NextResponse.redirect(new URL('/portal', request.url));
+      return NextResponse.redirect(new URL("/portal", request.url));
     }
   }
 
-  // Lógica de proteção do Supabase Auth para as rotas internas da aplicação
+  // Proteção via Supabase Auth para rotas internas
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !anonKey) return response;
@@ -48,6 +45,8 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
   const { data: { user } } = await supabase.auth.getUser();
   const isProtected = protectedPrefixes.some((prefix) => pathname.startsWith(prefix));
+
+  // Redirecionar para login se não autenticado
   if (!user && isProtected) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
@@ -55,27 +54,10 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Se o usuário está logado e acessando rotas protegidas, verificar se precisa de onboarding
-  if (user && isProtected && !pathname.startsWith("/onboarding")) {
-    const { data: vinculo } = await supabase
-      .from("escritorio_usuarios")
-      .select("escritorio_id, papel")
-      .eq("user_id", user.id)
-      .limit(1)
-      .single();
-
-    if (vinculo) {
-      const { data: escritorio } = await supabase
-        .from("escritorios")
-        .select("nome")
-        .eq("id", vinculo.escritorio_id)
-        .single();
-
-      if (escritorio && escritorio.nome === "Escritorio Padrao") {
-        const onboardingUrl = request.nextUrl.clone();
-        onboardingUrl.pathname = "/onboarding";
-        return NextResponse.redirect(onboardingUrl);
-      }
+  // Proteger rota /admin — apenas super admin pode acessar
+  if (user && pathname.startsWith("/admin")) {
+    if (user.email !== SUPER_ADMIN_EMAIL) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
 
