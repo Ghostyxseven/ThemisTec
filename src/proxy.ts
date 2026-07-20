@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { jwtVerify } from 'jose';
 
 const JWT_SECRET = new TextEncoder().encode(process.env.SUPABASE_JWT_SECRET || "sua_chave_secreta_padrao_para_desenvolvimento");
-const protectedPrefixes = ["/dashboard", "/clientes", "/processos", "/prazos", "/perfil", "/configuracoes"];
+const protectedPrefixes = ["/dashboard", "/clientes", "/processos", "/prazos", "/perfil", "/configuracoes", "/agenda", "/financeiro", "/documentos", "/onboarding", "/admin"];
 
 export async function proxy(request: NextRequest): Promise<NextResponse> {
   let response = NextResponse.next({ request });
@@ -48,6 +48,30 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     loginUrl.pathname = "/login";
     loginUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // Se o usuário está logado e acessando rotas protegidas, verificar se precisa de onboarding
+  if (user && isProtected && !pathname.startsWith("/onboarding")) {
+    const { data: vinculo } = await supabase
+      .from("escritorio_usuarios")
+      .select("escritorio_id, papel")
+      .eq("user_id", user.id)
+      .limit(1)
+      .single();
+
+    if (vinculo) {
+      const { data: escritorio } = await supabase
+        .from("escritorios")
+        .select("nome")
+        .eq("id", vinculo.escritorio_id)
+        .single();
+
+      if (escritorio && escritorio.nome === "Escritorio Padrao") {
+        const onboardingUrl = request.nextUrl.clone();
+        onboardingUrl.pathname = "/onboarding";
+        return NextResponse.redirect(onboardingUrl);
+      }
+    }
   }
 
   return response;
