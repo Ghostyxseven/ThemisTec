@@ -1,14 +1,14 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Cobranca, CobrancaStatus } from "@/specs/schemas/cobranca.schema";
+import { Cobranca, CobrancaRow, CobrancaStatus, cobrancaRowToDomain } from "@/specs/schemas/cobranca.schema";
 
 export interface CobrancaComProcesso extends Cobranca {
-  processos?: { numero: string | null } | null;
+  processoNumero?: string | null;
 }
 
 export class SupabaseCobrancaAdapter {
   constructor(private readonly supabase: SupabaseClient) {}
 
-  async create(data: Omit<Cobranca, "id" | "criado_em" | "atualizado_em">): Promise<Cobranca> {
+  async create(data: { processo_id: string; cliente_id: string; user_id: string; gateway_id?: string | null; valor: number; vencimento: string; status?: string; link_pagamento?: string | null; payload_gateway?: unknown }): Promise<Cobranca> {
     const { data: result, error } = await this.supabase
       .from("cobrancas")
       .insert(data)
@@ -19,7 +19,7 @@ export class SupabaseCobrancaAdapter {
       throw new Error(`Erro ao criar cobranca: ${error.message}`);
     }
 
-    return result as unknown as Cobranca;
+    return cobrancaRowToDomain(result as CobrancaRow);
   }
 
   async getById(id: string): Promise<Cobranca | null> {
@@ -33,7 +33,7 @@ export class SupabaseCobrancaAdapter {
       return null;
     }
 
-    return data as unknown as Cobranca;
+    return cobrancaRowToDomain(data as CobrancaRow);
   }
 
   async getByProcesso(processoId: string): Promise<Cobranca[]> {
@@ -47,7 +47,7 @@ export class SupabaseCobrancaAdapter {
       throw new Error(`Erro ao buscar cobrancas do processo: ${error.message}`);
     }
 
-    return (data || []) as unknown as Cobranca[];
+    return (data || []).map((row) => cobrancaRowToDomain(row as CobrancaRow));
   }
 
   async getByCliente(clienteId: string): Promise<CobrancaComProcesso[]> {
@@ -61,7 +61,10 @@ export class SupabaseCobrancaAdapter {
       throw new Error(`Erro ao buscar cobrancas do cliente: ${error.message}`);
     }
 
-    return (data || []) as unknown as CobrancaComProcesso[];
+    return (data || []).map((row) => {
+      const base = cobrancaRowToDomain(row as CobrancaRow);
+      return { ...base, processoNumero: row.processos?.numero ?? null };
+    });
   }
 
   async updateStatus(gatewayId: string, status: CobrancaStatus): Promise<boolean> {

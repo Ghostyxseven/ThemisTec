@@ -9,9 +9,7 @@ import { SupabasePortalAdapter } from "@/features/portal-cliente/model/SupabaseP
 import type { Cobranca } from "@/specs/schemas/cobranca.schema";
 
 type PortalCobranca = Cobranca & {
-  processos?: {
-    numero?: string | null;
-  } | null;
+  processoNumero?: string | null;
 };
 
 const JWT_SECRET = new TextEncoder().encode(
@@ -173,9 +171,9 @@ export default async function PortalDashboardPage(): Promise<ReactElement> {
                           <p className="mt-1 text-sm text-textSecondary">
                             Vencimento: {formatDate(`${cob.vencimento}T12:00:00Z`)}
                           </p>
-                          {cob.processos && (
+                          {cob.processoNumero && (
                             <p className="mt-1 text-sm text-textSecondary">
-                              Ref: Proc. {cob.processos.numero}
+                              Ref: Proc. {cob.processoNumero}
                             </p>
                           )}
                         </div>
@@ -188,10 +186,10 @@ export default async function PortalDashboardPage(): Promise<ReactElement> {
                         </span>
                       </div>
                     </CardHeader>
-                    {cob.status === "PENDENTE" && cob.link_pagamento && (
+                    {cob.status === "PENDENTE" && cob.linkPagamento && (
                       <CardContent className="pt-0">
                         <a
-                          href={cob.link_pagamento}
+                          href={cob.linkPagamento}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 rounded-xl bg-violet-50 px-3 py-2 text-sm font-medium text-violet-700 transition-all hover:-translate-y-0.5 hover:bg-violet-100 focus:outline-none focus:ring-2 focus:ring-violet-500/70 focus:ring-offset-2"

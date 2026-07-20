@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import { supabaseClient } from "@/services/supabase/supabase.client";
+import type { Cobranca, CobrancaRow } from "@/specs/schemas/cobranca.schema";
+import { cobrancaRowToDomain } from "@/specs/schemas/cobranca.schema";
+
+export type CobrancaComProcesso = Cobranca & { processoNumero?: string | null };
 
 export function useListCobrancas(clienteId?: string) {
-  const [cobrancas, setCobrancas] = useState<any[]>([]);
+  const [cobrancas, setCobrancas] = useState<CobrancaComProcesso[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -13,8 +17,6 @@ export function useListCobrancas(clienteId?: string) {
       setIsLoading(true);
       setError(null);
       try {
-        // Em um sistema real poderíamos usar o SupabaseCobrancaAdapter no servidor via Server Actions,
-        // mas como este é Client Side, fazemos a chamada direta no banco respeitando RLS.
         const { data, error: sbError } = await supabaseClient
           .from("cobrancas")
           .select("*, processos(numero)")
@@ -22,7 +24,11 @@ export function useListCobrancas(clienteId?: string) {
           .order("vencimento", { ascending: true });
 
         if (sbError) throw sbError;
-        setCobrancas(data || []);
+        const mapped = (data || []).map((row) => {
+          const base = cobrancaRowToDomain(row as CobrancaRow);
+          return { ...base, processoNumero: row.processos?.numero ?? null };
+        });
+        setCobrancas(mapped);
       } catch (err: any) {
         setError(err.message || "Erro ao carregar cobranças");
       } finally {
