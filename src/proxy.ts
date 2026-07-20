@@ -9,6 +9,11 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   let response = NextResponse.next({ request });
   const { pathname } = request.nextUrl;
 
+  // Bloquear registro público - só admin cria contas
+  if (pathname === "/register") {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
   // Lógica do portal
   if (pathname.startsWith('/portal/dashboard')) {
     const token = request.cookies.get('portal_token')?.value;
